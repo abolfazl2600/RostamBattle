@@ -115,8 +115,9 @@ export function createTitle(el, flow) {
       <div class="t-press"><b>${viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید'}</b><small>${viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی'}</small></div>
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>
-        <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p><p class="t-cline"><b></b><small></small></p>
-          <p class="t-cfoot"></p></div></div>
+        <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p>
+          <div class="t-cdetail" role="region" aria-label="جزئیات گزینه" tabindex="0"><p class="t-cline"><b></b><small></small></p>
+            <p class="t-cfoot"></p></div></div></div>
       <div class="t-dpanel"><nav class="t-menu t-dif">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${difficultyFa(d.id).name}<i class="t-lk">قفل</i><i class="t-rk"></i></b><small>درجهٔ سختی</small>${SWASH}</button>`).join('')}</nav>
         <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
           <ul class="s-stats t-dbars">${[['فشار دشمن', 'تعداد مهاجمان'], ['فرماندهان', 'قدرت افسران'], ['آسیب', 'شدت ضربات']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
@@ -170,12 +171,14 @@ export function createTitle(el, flow) {
     $('.t-cfoot').innerHTML = who.length ? `<span>شخصیت‌ها<small>قابل بازی</small></span>${who.map((id) => `<em><canvas width="20" height="20"></canvas>${officerFa(id)}${rk(best(CH.id, id)?.rank)}</em>`).join('')}`
       : b ? `<span>بهترین<small>رکورد ثبت‌شده</small></span>${(CH.best === 'kos' ? [`${b.kos} شکست`, mmss(b.time)] : [mmss(b.time), `${b.kos} شکست`]).map((t) => `<em>${t}</em>`).join('')}<strong class="r${b.rank}"><b>${b.rank}</b></strong>` : '';
     el.querySelectorAll('.t-cfoot canvas').forEach((cv, k) => paintPortrait(cv, CHARS[who[k]]));
+    $('.t-cdetail').scrollTop = 0; // A newly focused chapter starts with its own description visible.
+    if (viewport.touch && !quiet) cbtns[i].scrollIntoView({ block: 'nearest' });
     if (!quiet) sfx('move');
   };
   /** Open the chapter panel for mode ('story' | 'trial' | 'free'; null closes it), focused on entry id (default: story
    *  = the furthest open chapter, else the first). */
   const setCh = (mode, id) => {
-    cmode = mode; el.classList.toggle('chp', !!mode); foot();
+    cmode = mode; el.classList.toggle('chp', !!mode); el.classList.toggle('story-chapters', mode === 'story'); foot();
     if (mode) {
       const story = mode === 'story';
       list = LISTS[mode];

@@ -1,3 +1,4 @@
+import { createLandscapeScroll } from './ui/landscape-scroll.js';
 // Boot, flow and the fixed 60 Hz loop. Sim modules (hero, combat, crowd, actors, pickups, musou, story, camera control yaw) advance only
 // in step(); render-side modules read sim state in render() and never write it.
 // Flow: title → select → loading → (story: prologue →) battle → (story / trial: result →) title. Each non-battle state is a DOM screen (index.html
@@ -81,6 +82,7 @@ game.pickups = createPickups(game);               // 肉包 heals dropped by off
 game.musou = game.hero.kit.createMusou(game);     // the character's Musou (rebuilt with the kit in startBattle)
 game.story = createStory(game);
 const input = createInput();
+createLandscapeScroll(document.getElementById('game-shell'));
 
 // ---- render side
 let crowdView = createCrowdView(scene, game);          // rebuilt when the battle's army pair changes (startBattle)
