@@ -331,6 +331,13 @@ let lastTitleBack = -Infinity, titleBackTimer = 0;
 const exitHint = document.createElement('p');
 exitHint.setAttribute('role', 'status');
 exitHint.className = 'native-exit-hint';
+Object.assign(exitHint.style, {
+  position: 'absolute', zIndex: '12000', left: '50%', bottom: '10%',
+  transform: 'translateX(-50%)', padding: '12px 20px', borderRadius: '12px',
+  background: 'rgba(20, 19, 15, .92)', color: '#f4ead8',
+  font: '600 17px/1.7 var(--sans)', textAlign: 'center',
+  maxWidth: '85%', pointerEvents: 'none',
+});
 exitHint.hidden = true;
 exitHint.textContent = 'برای خروج از بازی، دوباره بازگشت را بزنید';
 document.getElementById('game-shell').append(exitHint);
