@@ -72,3 +72,54 @@ jobs:
           name: rostams-battle-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+  emulator-smoke:
+    needs: native
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/download-artifact@v4
+        with:
+          name: rostams-battle-debug-apk
+          path: android-apk
+      - name: Enable KVM acceleration on Ubuntu runner
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install and launch on Android 9 emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: |
+            mkdir -p emulator-evidence
+            adb install -r android-apk/app-debug.apk
+            adb logcat -c
+            adb shell am start -W -n io.github.abolfazl.nabardrostam.dev/io.github.abolfazl.nabardrostam.MainActivity
+            sleep 15
+            adb shell pidof io.github.abolfazl.nabardrostam.dev
+            adb shell dumpsys activity activities > emulator-evidence/activity.txt
+            grep 'io.github.abolfazl.nabardrostam' emulator-evidence/activity.txt
+            adb logcat -d -t 3000 > emulator-evidence/logcat.txt
+            adb shell screencap -p /sdcard/rostam-startup.png
+            adb pull /sdcard/rostam-startup.png emulator-evidence/rostam-startup.png
+      - name: Preserve emulator screenshot and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rostam-android9-emulator-evidence
+          path: emulator-evidence/
+          if-no-files-found: warn
