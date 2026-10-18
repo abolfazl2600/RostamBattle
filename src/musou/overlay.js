@@ -13,19 +13,20 @@ export function createOverlay({ sub, seal, css }) {
   const dim = layer('multiply'), wash = layer('screen');
   (document.getElementById('c') || document.body.firstChild).after(dim, wash);
   // integration r1: placed under the HUD's square minimap (ends ≈ 34 vh) and left of the HUD's vertical musou copy
+  const logicalCss = (s = '') => s.replace(/(-?\d*\.?\d+)vh\b/g, 'calc($1 * var(--game-vh))');
   const style = document.createElement('style');
   style.textContent = `
     .mu-cut { position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: 0; display: none; font-family: "Xingkai SC", "STXingkai", "Libian SC", "Kaiti SC", "STKaiti", serif; }
-    .mu-cut .big { position: absolute; right: 11%; top: 36%; writing-mode: vertical-rl; font-size: 18vh; line-height: 1; transform-origin: 50% 40%; letter-spacing: -1vh; ${css.big} }
-    .mu-cut .seal { position: absolute; right: 21.5%; top: 64%; width: 7vh; height: 7vh; background: #a8261b; color: #f3e2c8; border-radius: 0.8vh;
-      font: 3.1vh/3.4vh "Kaiti SC", "STKaiti", serif; writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 0 0.35vh rgba(243,226,200,.25) inset, 3px 4px 0 rgba(0,0,0,.4); transform-origin: 50% 50%; }
-    .mu-cut .sub { position: absolute; right: 22.5%; top: 37%; writing-mode: vertical-rl; font: 3vh/1 "Kaiti SC", "STKaiti", serif; letter-spacing: 1.2vh; ${css.sub} }`;
+    .mu-cut .big { position: absolute; right: 11%; top: 36%; writing-mode: vertical-rl; font-size: calc(18 * var(--game-vh)); line-height: 1; transform-origin: 50% 40%; letter-spacing: calc(-1 * var(--game-vh)); ${logicalCss(css.big)} }
+    .mu-cut .seal { position: absolute; right: 21.5%; top: 64%; width: calc(7 * var(--game-vh)); height: calc(7 * var(--game-vh)); background: #a8261b; color: #f3e2c8; border-radius: calc(0.8 * var(--game-vh));
+      font: calc(3.1 * var(--game-vh))/calc(3.4 * var(--game-vh)) "Kaiti SC", "STKaiti", serif; writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 calc(0.35 * var(--game-vh)) rgba(243,226,200,.25) inset, 3px 4px 0 rgba(0,0,0,.4); transform-origin: 50% 50%; }
+    .mu-cut .sub { position: absolute; right: 22.5%; top: 37%; writing-mode: vertical-rl; font: calc(3 * var(--game-vh))/1 "Kaiti SC", "STKaiti", serif; letter-spacing: calc(1.2 * var(--game-vh)); ${logicalCss(css.sub)} }`;
   document.head.appendChild(style);
   const cutEl = document.createElement('div');
   cutEl.className = 'mu-cut';
   cutEl.innerHTML = `<div class="sub">${sub}</div><div class="big">無雙</div><div class="seal">${seal}</div>`;
-  document.body.appendChild(cutEl);
+  document.getElementById('game-shell').appendChild(cutEl);
   const [cutSub, cutBig, cutSeal] = cutEl.children;
   const setStyle = (el, k, v) => { if (el.style[k] !== v) el.style[k] = v; };
   const show = (el, v) => { setStyle(el, 'display', v > 0 ? 'block' : 'none'); setStyle(el, 'opacity', v.toFixed(3)); };   // unused layers leave the compositor
@@ -37,7 +38,7 @@ export function createOverlay({ sub, seal, css }) {
       show(cutEl, k);
       if (k <= 0) return;
       const se = ramp(t, t0 + 8, t0 + 12);
-      setStyle(cutBig, 'transform', `scale(${(1.6 - 0.6 * st * st).toFixed(3)}) translateY(${((t - t0) * -0.06).toFixed(2)}vh)`);
+      setStyle(cutBig, 'transform', `scale(${(1.6 - 0.6 * st * st).toFixed(3)}) translateY(calc(${((t - t0) * -0.06).toFixed(2)} * var(--game-vh)))`);
       setStyle(cutSeal, 'transform', `scale(${(2.2 - 1.2 * se).toFixed(3)}) rotate(-8deg)`);
       setStyle(cutSeal, 'opacity', se.toFixed(3));
       setStyle(cutSub, 'opacity', ramp(t, t0 + 10, t0 + 20).toFixed(3));

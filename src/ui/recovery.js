@@ -12,7 +12,7 @@ export function showRecovery(message) {
     const low = document.createElement('button'); low.type = 'button'; low.textContent = 'تلاش با کیفیت سبک';
     low.style.cssText = b.style.cssText;
     low.addEventListener('click', () => { const url = new URL(location.href); url.searchParams.set('quality', 'low'); url.searchParams.delete('hq'); location.href = url.href; });
-    el.append(p, b, low); document.body.append(el);
+    el.append(p, b, low); document.getElementById('game-shell').append(el);
   }
   el.querySelector('p').textContent = message;
 }

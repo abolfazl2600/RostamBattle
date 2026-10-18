@@ -17,7 +17,7 @@
 // 3D is render-only: view(scene, camera, focus, dt) runs after the gameplay camera rig while this screen is up; an
 // officer's model is built the first time he is focused (kept for the session).
 import * as THREE from 'three';
-import { viewport } from '../core/viewport.js';
+import { viewport, gamePoint } from '../core/viewport.js';
 import { on } from '../core/events.js';
 import { CHARS, CHAR_ORDER, paintPortrait } from '../chars/index.js';
 import { sampleClip, POSE_SIZE } from '../hero/rig.js';
@@ -148,11 +148,12 @@ export function createSelect(el, flow) {
   };
   el.addEventListener('pointerdown', (e) => {
     if (el.hidden || drag || e.button !== 0 || e.target.closest('button, .s-info, .s-roster, .s-head, .ui-foot')) return;
-    drag = { id: e.pointerId, x: e.clientX }; el.setPointerCapture(e.pointerId); e.preventDefault();
+    drag = { id: e.pointerId, x: gamePoint(e.clientX, e.clientY).x }; el.setPointerCapture(e.pointerId); e.preventDefault();
   });
   el.addEventListener('pointermove', (e) => {
     if (drag?.id !== e.pointerId) return;
-    userYaw += (e.clientX - drag.x) * 0.012; drag.x = e.clientX; e.preventDefault();
+    const p = gamePoint(e.clientX, e.clientY);
+    userYaw += (p.x - drag.x) * 0.012; drag.x = p.x; e.preventDefault();
   });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) el.addEventListener(type, (e) => { if (drag?.id === e.pointerId) stopDrag(); });
   addEventListener('blur', stopDrag); addEventListener('pagehide', stopDrag); on('viewport', stopDrag);

@@ -14,10 +14,10 @@
 </script>
 <style>
   html, body { margin: 0; height: 100%; background: #1a120d; overflow: hidden; }
-  canvas#c { display: block; width: 100vw; height: 100vh; image-rendering: pixelated; }
+  canvas#c { display: block; width: calc(100 * var(--game-vw)); height: calc(100 * var(--game-vh)); image-rendering: pixelated; }
 
   /* ---- HUD (owned by the hud part). DW8 layout, concept calligraphy. 1rem = 1/72 viewport height (10 px @720p). ---- */
-  html { font-size: calc(100vh / 72); }
+  html { font-size: calc(calc(100 * var(--game-vh)) / 72); }
   :root { --brush: "Xingkai SC", "STXingkai", "HudBrush", serif; --kai: "Kaiti SC", "STKaiti", "KaiTi", "HudBrush", serif;
     --sans: "Avenir Next", "Helvetica Neue", sans-serif; }
   /* Portable brush fallback for machines without the macOS Xingkai/Kaiti assets: Yuji Boku (SIL OFL 1.1, Kinuta Font
@@ -244,7 +244,7 @@
   #hud .morale span:last-of-type { right: -2rem; color: var(--foe); }
   #hud .h-map .seal { position: absolute; left: .5rem; bottom: .5rem; font-size: 1.05rem; padding: .2rem .15rem; opacity: .9; }
   /* start / pause menu: the sim waits behind it (Esc reopens it). Ink band + brush name, the title's menu vocabulary */
-  #menu { position: fixed; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 0 0 0 9vw;
+  #menu { position: fixed; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 0 0 0 calc(9 * var(--game-vw));
     color: #f4ead8; font-family: var(--kai); user-select: none;
     background: linear-gradient(90deg, rgba(12,8,6,.92) 0, rgba(12,8,6,.78) 40%, rgba(12,8,6,.15) 75%, rgba(12,8,6,0)); }
   #menu[hidden] { display: none; }
@@ -329,12 +329,12 @@
   .ui-stamp { position: absolute; z-index: 2; pointer-events: none; white-space: nowrap; letter-spacing: 0;
     --sz: 3rem; --pad: .45rem .35rem; --rad: .35rem; --r1: .2rem; --r2: .34rem; --ra: .8; --drop: 0 .3rem 1rem rgba(0,0,0,.55); }
   /* ink wipe layer (menu.js inkWipe): ragged dry-brush edges via an SVG mask set from JS. .boot: the page opens under it */
-  #ink { position: fixed; top: 0; left: 0; width: 230vw; height: 100vh; z-index: 10; pointer-events: none; will-change: transform;
+  #ink { position: fixed; top: 0; left: 0; width: calc(230 * var(--game-vw)); height: calc(100 * var(--game-vh)); z-index: 10; pointer-events: none; will-change: transform;
     background: repeating-linear-gradient(177deg, rgba(255,240,210,.02) 0 .2rem, transparent .2rem 1.1rem), linear-gradient(#17100c, #0c0806 55%, #17100c);
-    -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; transform: translateX(100vw); }
-  #ink.boot { transform: translateX(-60vw); }
-  /* waiting seal, centred on the screen while the ink holds (x = 60vw + 50vw along the layer); shows only on a hold > .3 s */
-  .ink-wait { position: absolute; left: 110vw; top: 50%; width: 15rem; height: 15rem; margin: -7.5rem 0 0 -7.5rem; display: grid; place-items: center;
+    -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; transform: translateX(calc(100 * var(--game-vw))); }
+  #ink.boot { transform: translateX(calc(-60 * var(--game-vw))); }
+  /* waiting seal, centred on the screen while the ink holds (x = calc(60 * var(--game-vw)) + calc(50 * var(--game-vw)) along the layer); shows only on a hold > .3 s */
+  .ink-wait { position: absolute; left: calc(110 * var(--game-vw)); top: 50%; width: 15rem; height: 15rem; margin: -7.5rem 0 0 -7.5rem; display: grid; place-items: center;
     opacity: 0; transition: opacity .2s; background: radial-gradient(closest-side, rgba(120,60,20,.28), transparent); }
   .inkhold .ink-wait { opacity: 1; transition: opacity .4s .3s; }
   .ink-wait svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: inkTurn 2.4s linear infinite; }
@@ -429,7 +429,7 @@
   :is(.t-ctl, .t-rec) { position: absolute; z-index: 2; right: 6rem; top: 50%; transform: translate(3rem, -50%); opacity: 0; pointer-events: none; padding: 2.4rem 3rem 2rem;
     background: linear-gradient(135deg, rgba(20,13,10,.96), rgba(14,9,7,.94)); border-left: .35rem solid var(--sealr);
     box-shadow: 0 0 0 .1rem rgba(214,170,90,.45), 0 1.5rem 4rem rgba(0,0,0,.6); transition: opacity .3s, transform .35s cubic-bezier(.3,0,.2,1);
-    max-width: calc(100vw - 12rem); box-sizing: border-box; overflow: auto; max-height: calc(100vh - 16rem); }
+    max-width: calc(calc(100 * var(--game-vw)) - 12rem); box-sizing: border-box; overflow: auto; max-height: calc(calc(100 * var(--game-vh)) - 16rem); }
   #title.ctl .t-ctl, #title.rec .t-rec { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
   :is(.t-ctl, .t-rec) h2 { margin: 0 0 1.4rem; font: 700 3.6rem/1 var(--brush); color: var(--paper); letter-spacing: .3rem; }
   :is(.t-ctl, .t-rec) h2 small, .t-ctl th small { font: 600 max(13px, 1.3rem)/1 var(--sans); letter-spacing: .12em; margin-left: .9rem; color: #c9b995; }
@@ -537,7 +537,7 @@
   .t-dcard.lock .t-dbars { opacity: .4; }
 
   /* narrow windows (≤ 4:3): tighter band so the officers keep the right half */
-  @media (max-aspect-ratio: 4/3) {
+  @container game-surface (max-aspect-ratio: 4/3) {
     .t-band { left: 4rem; }
     .t-logo h1 { font-size: 14rem; }
     .t-menu b { font-size: 3.6rem; }
@@ -547,7 +547,7 @@
       linear-gradient(0deg, rgba(8,5,4,.92) 0, rgba(8,5,4,.55) 9rem, transparent 18rem), linear-gradient(rgba(8,5,4,.55), transparent 11rem); }
     #title .ui-foot { left: 4rem; right: 3rem; gap: 2rem; }
     .t-tag { display: none; }   /* the pair is small beside the band here: the tags would sit on the bodies */
-    .t-rec { right: 4rem; max-width: calc(100vw - 8rem); max-height: calc(100vh - 12rem); padding: 1.8rem 2.4rem 1.4rem; }
+    .t-rec { right: 4rem; max-width: calc(calc(100 * var(--game-vw)) - 8rem); max-height: calc(calc(100 * var(--game-vh)) - 12rem); padding: 1.8rem 2.4rem 1.4rem; }
     .t-rbody { gap: 1rem 2rem; }
     .t-rec th { font-size: 2rem; padding: .2rem 1.4rem .2rem 0; }
     .t-rec td { width: 6rem; padding: .2rem 0; }
@@ -690,7 +690,7 @@
   #select.in .s-head { animation: menuIn .45s cubic-bezier(.2,0,.2,1) .2s backwards; }
   #select.in .s-roster { animation: menuIn .5s cubic-bezier(.2,0,.2,1) .28s backwards; }
   #select.in :is(.s-act, .s-rec, .ui-foot) { animation: fadeIn .5s ease .4s backwards; }
-  @media (max-aspect-ratio: 4/3) {
+  @container game-surface (max-aspect-ratio: 4/3) {
     .s-head { left: 4rem; right: 3rem; flex-wrap: wrap; gap: .6rem 1rem; }
     .s-roster { left: 4rem; width: 22rem; }
     .s-info { left: 31rem; top: 20rem; width: 32rem; max-height: calc(100% - 28rem); }
@@ -758,7 +758,7 @@
   #loading.in .l-name h1 { animation: nameIn .6s cubic-bezier(.3,0,.2,1) .12s both; }
   #loading.in :is(.l-ch, .l-en, .l-line, .l-foot) { animation: fadeIn .5s ease .25s both; }
   @keyframes barSheen { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
-  #result .ui-foot { left: 8vw; right: 6rem; pointer-events: none; }
+  #result .ui-foot { left: calc(8 * var(--game-vw)); right: 6rem; pointer-events: none; }
 
   /* story lane: #prologue / #result styles */
   /* prologue: a handscroll on dark brocade. The paper unrolls from the centre (clip-path) as the two rods slide out; the
@@ -771,15 +771,15 @@
   /* out (prologue.js go): the scroll lifts toward the lens and fades off the live field; the HUD then slides in (#hud.in) */
   #prologue.out { opacity: 0; transition: opacity .5s ease-in .05s; }
   #prologue.out :is(.pl-paper, .pl-rod) { scale: 1.05; transition: scale .6s cubic-bezier(.3,0,.2,1); }
-  #prologue .pl-paper { position: absolute; inset: 4.4vh 4.6vw; overflow: hidden; background: #d8c197; clip-path: inset(0 50% 0 50%);
+  #prologue .pl-paper { position: absolute; inset: calc(4.4 * var(--game-vh)) calc(4.6 * var(--game-vw)); overflow: hidden; background: #d8c197; clip-path: inset(0 50% 0 50%);
     box-shadow: 0 0 0 .25rem #b8893a, 0 0 0 .6rem #2a1c10, 0 1.2rem 3rem rgba(0,0,0,.7); }
   #prologue.open .pl-paper { clip-path: inset(0 0 0 0); transition: clip-path 1.15s cubic-bezier(.6,.05,.25,1); }
-  #prologue .pl-rod { position: absolute; top: 2.2vh; bottom: 2.2vh; width: 1.9vw; left: calc(50% - .95vw); border-radius: .5rem;
+  #prologue .pl-rod { position: absolute; top: calc(2.2 * var(--game-vh)); bottom: calc(2.2 * var(--game-vh)); width: calc(1.9 * var(--game-vw)); left: calc(50% - calc(.95 * var(--game-vw))); border-radius: .5rem;
     background: linear-gradient(90deg, #2a160a, #6b3f1e 35%, #8a5a2c 50%, #4a2a12 75%, #1e1006);
     box-shadow: 0 -.9rem 0 -.2rem #c79a3e, 0 .9rem 0 -.2rem #c79a3e, 0 .6rem 1.4rem rgba(0,0,0,.6); }
   #prologue.open .pl-rod { transition: left 1.15s cubic-bezier(.6,.05,.25,1); }
-  #prologue.open .pl-rod.l { left: 2.7vw; }
-  #prologue.open .pl-rod.r { left: calc(100% - 4.6vw); }
+  #prologue.open .pl-rod.l { left: calc(2.7 * var(--game-vw)); }
+  #prologue.open .pl-rod.r { left: calc(100% - calc(4.6 * var(--game-vw))); }
   #prologue .pl-map { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform 2.8s cubic-bezier(.4,0,.2,1); }
   #prologue .pl-mark { opacity: .42; transition: opacity 1s; }
   #prologue .pl-mark.on { opacity: .8; }
@@ -801,10 +801,10 @@
   #prologue .pl-arw .hd { opacity: 0; }
   #prologue .pl-arw.on > path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.7s cubic-bezier(.5,0,.3,1) .5s; }
   #prologue .pl-arw.on .hd { opacity: 1; transition: opacity .25s 2s; }
-  #prologue .pl-card { position: absolute; right: 7vw; top: 6vh; bottom: 19vh; opacity: 0; transition: opacity .35s; }
+  #prologue .pl-card { position: absolute; right: calc(7 * var(--game-vw)); top: calc(6 * var(--game-vh)); bottom: calc(19 * var(--game-vh)); opacity: 0; transition: opacity .35s; }
   #prologue .pl-card.on { opacity: 1; }
   /* the inscription panel: paper washed pale behind the columns, so the map never fights the calligraphy */
-  #prologue .pl-card::before { content: ""; position: absolute; top: -10vh; bottom: -30vh; left: -9rem; right: -8vw; z-index: -1;
+  #prologue .pl-card::before { content: ""; position: absolute; top: calc(-10 * var(--game-vh)); bottom: calc(-30 * var(--game-vh)); left: -9rem; right: calc(-8 * var(--game-vw)); z-index: -1;
     background: linear-gradient(90deg, rgba(226,206,166,0), rgba(226,206,166,.86) 8rem); }
   #prologue .pl-cols { writing-mode: vertical-rl; height: 100%; font: 700 5rem/1.3 var(--brush); letter-spacing: .6rem; color: var(--ink);
     text-shadow: .1rem .15rem .2rem rgba(60,30,10,.25); }
@@ -813,15 +813,15 @@
   #prologue .pl-cols span:first-child { color: #6e1a12; }
   #prologue .pl-card.on .pl-cols span { -webkit-mask-position: 0 0; mask-position: 0 0;
     transition: -webkit-mask-position 1.05s cubic-bezier(.55,.1,.35,1) calc(var(--i) * .55s + .2s), mask-position 1.05s cubic-bezier(.55,.1,.35,1) calc(var(--i) * .55s + .2s); }
-  #prologue .pl-en { position: absolute; right: 7vw; bottom: 10.5vh; margin: 0; max-width: 56rem; text-align: right; text-wrap: balance; opacity: 0;
+  #prologue .pl-en { position: absolute; right: calc(7 * var(--game-vw)); bottom: calc(10.5 * var(--game-vh)); margin: 0; max-width: 56rem; text-align: right; text-wrap: balance; opacity: 0;
     font: italic 500 1.75rem/1.45 var(--sans); letter-spacing: .04em; color: #3b2a1a; transition: opacity .3s; }
   #prologue .pl-card.on + .pl-en, #prologue .pl-en.on { opacity: .9; transition: opacity .8s 1.9s; }
-  #prologue .pl-pips { position: absolute; left: 4vw; bottom: 5vh; display: flex; gap: 1.1rem; font: 700 2.2rem/1 var(--brush); color: rgba(42,26,14,.58); }
+  #prologue .pl-pips { position: absolute; left: calc(4 * var(--game-vw)); bottom: calc(5 * var(--game-vh)); display: flex; gap: 1.1rem; font: 700 2.2rem/1 var(--brush); color: rgba(42,26,14,.58); }
   #prologue .pl-pips b { transition: color .4s; }
   #prologue .pl-pips b.past { color: rgba(42,26,14,.85); }
   #prologue .pl-pips b.on { color: var(--wei); }
   /* skip legend in the brocade strip under the scroll: same kbd + label + romanisation layout as .ui-foot */
-  #prologue .pl-skip { position: absolute; right: 5.5vw; bottom: max(2px, calc(2.2vh - 1.4rem)); display: flex; align-items: center; gap: 3rem;
+  #prologue .pl-skip { position: absolute; right: calc(5.5 * var(--game-vw)); bottom: max(2px, calc(calc(2.2 * var(--game-vh)) - 1.4rem)); display: flex; align-items: center; gap: 3rem;
     font: 700 max(15px, 1.9rem)/1 var(--kai); color: #f6ecd9; text-shadow: 0 .1rem .3rem #000, 0 0 .8rem #000; }
   #prologue .pl-skip span { display: flex; align-items: center; }
   #prologue .pl-skip small { display: inline; margin-left: .7rem; font: 600 max(13px, 1.3rem)/1 var(--sans); letter-spacing: .12em; color: #e2d4b6; }
@@ -856,7 +856,7 @@
     animation: rsArt 1.2s cubic-bezier(.2,0,.2,1) both .2s; }
   #result.art.lose::before { filter: grayscale(.75) brightness(.7) sepia(.2); }
   @keyframes rsArt { from { opacity: 0; transform: scale(1.12) translateX(3%); } to { transform: scale(1.06); } }
-  #result .rs { position: relative; margin-left: 8vw; width: min(82rem, 86vw); display: flex; flex-direction: column; gap: 1.2rem; }
+  #result .rs { position: relative; margin-left: calc(8 * var(--game-vw)); width: min(82rem, calc(86 * var(--game-vw))); display: flex; flex-direction: column; gap: 1.2rem; }
   #result .rs-head { display: flex; align-items: center; gap: 2.6rem; animation: rsIn .6s both; }
   #result .rs-badge { position: relative; flex: none; width: 10rem; height: 10rem; border-radius: 50%; overflow: hidden;
     background: radial-gradient(circle at 50% 38%, #3c6f72, #16262a 70%); border: .32rem solid #d9d2c6;
@@ -952,14 +952,14 @@
   #menu .t { font-size: 7rem; }
   #menu .sub { letter-spacing: 0; line-height: 1.6; }
   #menu .en, #menu button small, .t-menu small { letter-spacing: 0; }
-  @media (max-aspect-ratio: 4/3) {
+  @container game-surface (max-aspect-ratio: 4/3) {
     .t-logo h1 { font-size: 11rem; }
     .s-name h1 { font-size: 5.5rem; }
     .s-line { right: 2rem; max-width: 18rem; bottom: 12rem; }
   }
 
   /* Narrative and battle overlays: horizontal, readable Persian rather than CJK vertical calligraphy. */
-  #prologue .pl-card { top: 18vh; bottom: auto; right: 7vw; width: min(65rem, 55vw); max-height: 61vh; overflow-y: auto; }
+  #prologue .pl-card { top: calc(18 * var(--game-vh)); bottom: auto; right: calc(7 * var(--game-vw)); width: min(65rem, calc(55 * var(--game-vw))); max-height: calc(61 * var(--game-vh)); overflow-y: auto; }
   #prologue .pl-cols { writing-mode: horizontal-tb; direction: rtl; height: auto; display: grid; gap: 1.2rem;
     font: 700 clamp(21px, 2.7rem, 38px)/1.7 var(--brush); letter-spacing: 0; text-align: right; }
   #prologue .pl-cols span { display: block; margin: 0; -webkit-mask: none; mask: none; }
@@ -968,7 +968,7 @@
   #prologue .pl-stamp small, #prologue .pl-stamp em { letter-spacing: 0; line-height: 1.4; }
   #prologue .pl-skip { direction: rtl; gap: 1.4rem; flex-wrap: wrap; line-height: 1.3; }
   #prologue .pl-skip small { letter-spacing: 0; }
-  #result .rs { max-height: calc(100vh - 6rem); overflow-y: auto; padding-bottom: 1rem; }
+  #result .rs { max-height: calc(calc(100 * var(--game-vh)) - 6rem); overflow-y: auto; padding-bottom: 1rem; }
   #result .rs-head h2 { font-size: 6rem; letter-spacing: 0; line-height: 1.3; }
   #result .rs-head em, #result .rs-head small { letter-spacing: 0; line-height: 1.4; }
   #result .rs-stats th { font-size: 1.9rem; line-height: 1.5; white-space: normal; }
@@ -981,11 +981,11 @@
   #hud .h-band, #hud .h-obj, #hud .h-dlg, #hud .h-target, #hud .h-boss { direction: rtl; }
   #hud :is(.h-band p, .h-dlg p, .h-obj b) { line-height: 1.5; letter-spacing: 0; }
   #hud .h-map .seal { font-size: 1.2rem; max-width: 19rem; line-height: 1.4; }
-  @media (max-width: 850px) {
-    #prologue .pl-card { right: 6vw; width: 80vw; top: 17vh; }
+  @container game-surface (max-width: 850px) {
+    #prologue .pl-card { right: calc(6 * var(--game-vw)); width: calc(80 * var(--game-vw)); top: calc(17 * var(--game-vh)); }
     #prologue .pl-cols { font-size: clamp(18px, 2rem, 26px); }
-    #result .rs { width: min(82rem, 92vw); margin-left: 4vw; }
-    #result .rs-stats { min-width: min(46rem, 86vw); }
+    #result .rs { width: min(82rem, calc(92 * var(--game-vw))); margin-left: calc(4 * var(--game-vw)); }
+    #result .rs-stats { min-width: min(46rem, calc(86 * var(--game-vw))); }
     #result .rs-body { flex-wrap: wrap; }
   }
 
@@ -1020,10 +1020,10 @@
     letter-spacing: 0;
   }
   /* Title screen: keep the brand in the left column, clear of the chapter list and officer art. */
-  .t-band { width: min(50vw, 64rem); }
+  .t-band { width: min(calc(50 * var(--game-vw)), 64rem); }
   .t-logo { width: 100%; }
   .t-logo h1 {
-    font-size: clamp(4.8rem, 9vh, 8.2rem);
+    font-size: clamp(4.8rem, calc(9 * var(--game-vh)), 8.2rem);
     line-height: 1.5;
     margin-left: 4rem;
     max-width: calc(100% - 4rem);
@@ -1096,7 +1096,7 @@
     flex: 1 1 0;
     min-width: 0;
     padding: 1.3rem 1.5rem;
-    max-height: calc(100vh - 23rem);
+    max-height: calc(calc(100 * var(--game-vh)) - 23rem);
     overflow-y: auto;
   }
   :is(.t-ccard, .t-dcard) h3 { font-size: 1.45rem; line-height: 1.5; letter-spacing: 0; }
@@ -1143,68 +1143,63 @@
   .ui-foot span { display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; }
   .ui-foot small { font-size: 1.05rem; line-height: 1.5; }
   #title .ui-foot { left: 48%; right: 3rem; font-size: 1.3rem; gap: 1.2rem; }
-  #hud .h-dlg { max-width: min(74rem, 73vw); padding-right: 2rem; }
+  #hud .h-dlg { max-width: min(74rem, calc(73 * var(--game-vw))); padding-right: 2rem; }
   #hud .h-dlg p {
     white-space: normal;
     overflow-wrap: break-word;
-    max-width: min(54rem, 59vw);
+    max-width: min(54rem, calc(59 * var(--game-vw)));
     font-size: 1.8rem;
     line-height: 1.75;
   }
   #hud .h-band p { font-size: 2.1rem; line-height: 1.6; }
   #hud .h-band.big p { font-size: 3.3rem; line-height: 1.5; }
   #hud .h-intro .zh { line-height: 1.5; }
-  @media (max-aspect-ratio: 4/3) {
-    .t-band { width: min(58vw, 55rem); }
+  @container game-surface (max-aspect-ratio: 4/3) {
+    .t-band { width: min(calc(58 * var(--game-vw)), 55rem); }
     .t-logo h1 { font-size: 6rem; }
     :is(.t-cpanel, .t-dpanel) .t-menu { flex-basis: 17rem; width: 17rem; }
     #title :is(.t-chs, .t-dif) b { font-size: 1.85rem; }
     .t-cname b { font-size: 2.3rem; }
     .t-tag { display: none; }
   }
-  @media (max-width: 850px) {
-    .t-band { left: 3rem; width: 59vw; top: 4rem; }
+  @container game-surface (max-width: 850px) {
+    .t-band { left: 3rem; width: calc(59 * var(--game-vw)); top: 4rem; }
     .t-logo h1 { font-size: 5.2rem; }
     .t-seal { left: 4rem; }
     :is(.t-cpanel, .t-dpanel) .t-menu { flex-basis: 15rem; width: 15rem; }
     #title :is(.t-chs, .t-dif) b { font-size: 1.65rem; }
     #title :is(.t-chs, .t-dif) small { font-size: 1rem; }
-    :is(.t-ccard, .t-dcard) { padding: 1rem; max-height: 54vh; }
+    :is(.t-ccard, .t-dcard) { padding: 1rem; max-height: calc(54 * var(--game-vh)); }
     .t-cname b { font-size: 2rem; }
     #title .ui-foot { left: 3rem; right: 2rem; justify-content: flex-end; }
   }
-  @media (max-width: 600px) {
-    .t-band { width: calc(100vw - 6rem); }
+  @container game-surface (max-width: 600px) {
+    .t-band { width: calc(calc(100 * var(--game-vw)) - 6rem); }
     .t-logo h1 { font-size: 4.4rem; }
     :is(.t-cpanel, .t-dpanel) { flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
     :is(.t-cpanel, .t-dpanel) .t-menu { flex: 0 0 100%; width: 100%; }
     #title :is(.t-chs, .t-dif) button { padding: .2rem 0 .3rem 1.6rem; }
-    :is(.t-ccard, .t-dcard) { width: 100%; flex: 1 1 100%; max-height: 30vh; }
+    :is(.t-ccard, .t-dcard) { width: 100%; flex: 1 1 100%; max-height: calc(30 * var(--game-vh)); }
     .t-chs b em { margin-right: .5rem; }
     .t-cfoot em { white-space: normal; }
     #title .ui-foot { font-size: 1rem; gap: .5rem; }
   }
 
   /* Viewport shell; scrolling remains available inside menu panels. */
-  html, body { height: 100dvh; overscroll-behavior: none; }
-  canvas#c { height: var(--view-height, 100dvh); touch-action: none; }
-  #rotate-device { position: fixed; inset: 0; z-index: 10000; display: grid; place-content: center;
-    padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right));
-    background: #1a120d; color: #f4ead8; text-align: center; font: 600 20px/1.9 var(--sans); }
-  #rotate-device[hidden] { display: none; }
-  #rotate-device small { font-size: 15px; }
+  html, body { height: calc(100 * var(--game-vh)); overscroll-behavior: none; }
+  canvas#c { height: var(--view-height, calc(100 * var(--game-vh))); touch-action: none; }
   .touch-device .scr, .touch-device #menu { overscroll-behavior: contain; touch-action: pan-y; }
   #touch-controls { position: fixed; inset: 0; z-index: 25; pointer-events: none; user-select: none; direction: ltr; }
   #touch-controls[hidden] { display: none; }
-  .touch-stick { position: absolute; left: max(16px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
-    width: clamp(108px, 25dvh, 152px); aspect-ratio: 1; border: 2px solid #f4ead866; border-radius: 50%;
+  .touch-stick { position: absolute; left: max(16px, var(--safe-left)); bottom: max(12px, var(--safe-bottom));
+    width: clamp(108px, calc(25 * var(--game-vh)), 152px); aspect-ratio: 1; border: 2px solid #f4ead866; border-radius: 50%;
     background: #1a120d66; pointer-events: auto; touch-action: none; display: grid; place-items: center; }
   .touch-stick i { width: 38%; aspect-ratio: 1; border-radius: 50%; background: #f2c14e88; border: 1px solid #f4ead8aa; }
   .touch-stick span { position: absolute; bottom: 7px; color: #fff; font: 12px var(--sans); pointer-events: none; }
   .touch-stick.held { border-color: #f2c14e; }
-  .touch-actions { position: absolute; right: max(12px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom));
+  .touch-actions { position: absolute; right: max(12px, var(--safe-right)); bottom: max(10px, var(--safe-bottom));
     display: grid; grid-template-columns: repeat(3, var(--touch-button)); grid-template-rows: repeat(2, var(--touch-button)); gap: 8px;
-    --touch-button: clamp(48px, 12dvh, 66px); }
+    --touch-button: clamp(48px, calc(12 * var(--game-vh)), 66px); }
   .touch-actions button { pointer-events: auto; touch-action: none; border: 1px solid #f4ead899; border-radius: 50%;
     background: #1a120da8; color: #fff1ce; font: 600 13px var(--sans); padding: 0; min-width: 48px; min-height: 48px; }
   .touch-actions button[data-action="attack"] { grid-column: 3; grid-row: 2; transform: scale(1.12); background: #775b20bb; }
@@ -1216,13 +1211,13 @@
   .touch-actions button.held { background: #ac7c24; box-shadow: 0 0 12px #f2c14e88; }
   .touch-actions button[aria-disabled="true"] { color: #b8b0a0; border-style: dashed; }
   .touch-actions button.ready { border-color: #ffe09a; box-shadow: 0 0 12px #f2c14eaa; }
-  .touch-pause { position: absolute; top: max(8px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right));
+  .touch-pause { position: absolute; top: max(8px, var(--safe-top)); right: max(12px, var(--safe-right));
     min-width: 64px; min-height: 48px; pointer-events: auto; touch-action: manipulation; padding: 6px 10px;
     border: 1px solid #d8bd7e; border-radius: 10px; background: #1a120dcc; color: #fff1ce; font: 600 14px var(--sans); }
   /* Battle touch layout reserves the entire bottom corners for controls. */
-  .touch-device:not(.portrait-blocked) #hud { --safe-l: max(10px, env(safe-area-inset-left)); --safe-r: max(12px, env(safe-area-inset-right));
-    --safe-t: max(8px, env(safe-area-inset-top)); --map-size: clamp(72px, 20dvh, 138px); }
-  .touch-device #hud .h-player { left: var(--safe-l); top: var(--safe-t); bottom: auto; right: auto; width: clamp(170px, 27vw, 300px); height: 48px; }
+  .touch-device #hud { --safe-l: max(10px, var(--safe-left)); --safe-r: max(12px, var(--safe-right));
+    --safe-t: max(8px, var(--safe-top)); --map-size: clamp(72px, calc(20 * var(--game-vh)), 138px); }
+  .touch-device #hud .h-player { left: var(--safe-l); top: var(--safe-t); bottom: auto; right: auto; width: clamp(170px, calc(27 * var(--game-vw)), 300px); height: 48px; }
   .touch-device #hud .h-player .badge { display: none; }
   .touch-device #hud .h-player .name { top: 0; left: 0; bottom: auto; font-size: 14px; }
   .touch-device #hud .h-player .hp { left: 0; right: 0; top: 23px; bottom: auto; height: 9px; }
@@ -1234,24 +1229,24 @@
   .touch-device #hud .h-def { top: calc(var(--safe-t) + 65px + var(--map-size)); right: var(--safe-r); width: var(--map-size); white-space: normal; }
   .touch-device #hud .h-def b { font-size: 12px; }
   .touch-device #hud .h-def span { display: none; }
-  .touch-device #hud .h-obj { top: calc(var(--safe-t) + 54px); left: var(--safe-l); max-width: min(55vw, 430px); max-height: 44px; overflow: hidden; padding: 3px 6px; white-space: normal; font-size: 14px; line-height: 1.5; }
+  .touch-device #hud .h-obj { top: calc(var(--safe-t) + 54px); left: var(--safe-l); max-width: min(calc(55 * var(--game-vw)), 430px); max-height: 44px; overflow: hidden; padding: 3px 6px; white-space: normal; font-size: 14px; line-height: 1.5; }
   .touch-device #hud .h-obj small { display: none; }
   .touch-device #hud .h-obj .go, .touch-device #hud .h-obj .tm b { font-size: 12px; }
-  .touch-device #hud .h-target { top: calc(var(--safe-t) + 99px); left: var(--safe-l); width: 24vw; }
+  .touch-device #hud .h-target { top: calc(var(--safe-t) + 99px); left: var(--safe-l); width: calc(24 * var(--game-vw)); }
   .touch-device #hud .h-target b { font-size: 13px; }
   .touch-device #hud .h-target span { display: none; }
   .touch-device #hud .h-boss { top: var(--safe-t); left: 35%; right: auto; width: 33%; }
   .touch-device #hud .h-boss b { font-size: 15px; letter-spacing: 0; }
   .touch-device #hud .h-boss span { display: none; }
   .touch-device #hud .h-boss .bhp { height: 8px; }
-  .touch-device #hud .h-dlg { left: 29%; top: auto; bottom: max(14px, env(safe-area-inset-bottom)); width: 33%; max-height: 28dvh;
+  .touch-device #hud .h-dlg { left: 29%; top: auto; bottom: max(14px, var(--safe-bottom)); width: 33%; max-height: calc(28 * var(--game-vh));
     box-sizing: border-box; overflow: hidden; padding: 6px; gap: 5px; background: #160f0cbb; }
   .touch-device #hud .h-dlg canvas, .touch-device #hud .h-dlg .dseal { width: 28px; height: 28px; flex: none; font-size: 20px; line-height: 28px; }
   .touch-device #hud .h-dlg b { font-size: 12px; }
   .touch-device #hud .h-dlg p { white-space: normal; font-size: 13px; line-height: 1.55; margin: 2px 0; }
   .touch-device #hud .h-dlg small, .touch-device #hud .h-dlg b span { display: none; }
-  .touch-device #hud .h-band, .touch-device #hud .h-band.lo { left: 25%; right: 30%; top: 40%; max-height: 24dvh; overflow: hidden; padding: 5px; }
-  .touch-device #hud .h-band p, .touch-device #hud .h-band.big p { font-size: clamp(14px, 3dvh, 24px); letter-spacing: 0; }
+  .touch-device #hud .h-band, .touch-device #hud .h-band.lo { left: 25%; right: 30%; top: 40%; max-height: calc(24 * var(--game-vh)); overflow: hidden; padding: 5px; }
+  .touch-device #hud .h-band p, .touch-device #hud .h-band.big p { font-size: clamp(14px, calc(3 * var(--game-vh)), 24px); letter-spacing: 0; }
   .touch-device #hud .h-band small { display: none; }
   .touch-device #hud .h-ko { right: calc(var(--safe-r) + var(--map-size) + 15px); bottom: auto; top: calc(var(--safe-t) + 58px); }
   .touch-device #hud .num b, .touch-device #hud .num u { font-size: 30px; }
@@ -1264,16 +1259,16 @@
   .touch-device #hud .h-intro .sub { font-size: 13px; }
   .touch-device #hud .h-intro .keys, .touch-device #hud .h-intro .en { display: none; }
   .touch-device #hud .h-copy { top: 35%; right: 23%; font-size: 20px; }
-  @media (max-height: 420px) and (min-aspect-ratio: 3/2) {
+  @container game-surface (max-height: 420px) and (min-aspect-ratio: 3/2) {
     .touch-device #hud .h-def span, .touch-device #hud .h-player .name { font-size: 12px; }
     .touch-device #hud .h-intro .sub { display: none; }
   }
   .t-back { display: none; }
-  .touch-device .scr { padding-top: env(safe-area-inset-top); box-sizing: border-box; }
+  .touch-device .scr { padding-top: var(--safe-top); box-sizing: border-box; }
   .touch-device :is(.scr, #menu) button { min-height: 48px; touch-action: manipulation; }
-  .touch-device #title .t-band { left: max(16px, env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top));
-    bottom: max(35px, env(safe-area-inset-bottom)); width: min(68vw, 760px); overflow: auto; padding: 4px 12px 12px; box-sizing: border-box; }
-  .touch-device #title .t-logo h1 { font-size: clamp(32px, 8dvh, 65px); line-height: 1.3; }
+  .touch-device #title .t-band { left: max(16px, var(--safe-left)); top: max(12px, var(--safe-top));
+    bottom: max(35px, var(--safe-bottom)); width: min(calc(68 * var(--game-vw)), 760px); overflow: auto; padding: 4px 12px 12px; box-sizing: border-box; }
+  .touch-device #title .t-logo h1 { font-size: clamp(32px, calc(8 * var(--game-vh)), 65px); line-height: 1.3; }
   .touch-device #title .t-en { font-size: 12px; margin-bottom: 4px; }
   .touch-device #title .t-logo { min-height: 64px; }
   .touch-device #title .t-menu { margin-top: 5px; flex: none; gap: 4px; }
@@ -1287,19 +1282,19 @@
   .touch-device #title :is(.t-ccard, .t-dcard) { flex: 1; width: auto; max-height: none; font-size: 14px; }
   .touch-device #title .t-cname b { font-size: 21px; }
   .touch-device #title .t-cline b, .touch-device #title .t-dline b { font-size: 14px; line-height: 1.7; }
-  .touch-device #title .t-back { position: absolute; right: max(16px, env(safe-area-inset-right)); top: max(10px, env(safe-area-inset-top));
+  .touch-device #title .t-back { position: absolute; right: max(16px, var(--safe-right)); top: max(10px, var(--safe-top));
     z-index: 5; border: 1px solid #b8893a; background: #1a120ddd; color: #ffe3a0; padding: 8px 18px; font: 600 15px var(--sans); }
   .touch-device #title:is(.chp, .dif, .ctl, .rec) .t-back { display: block; }
-  .touch-device #title :is(.t-ctl, .t-rec) { inset: max(68px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 35px max(16px, env(safe-area-inset-left));
+  .touch-device #title :is(.t-ctl, .t-rec) { inset: max(68px, var(--safe-top)) max(16px, var(--safe-right)) 35px max(16px, var(--safe-left));
     transform: none; overflow: auto; max-height: none; max-width: none; padding: 12px; box-sizing: border-box; background: #1a120df5; }
   .touch-device #title.ctl .t-ctl, .touch-device #title.rec .t-rec { transform: none; }
   .touch-device #title .t-ctl :is(th, td), .touch-device #menu td { font-size: 14px; line-height: 1.7; }
-  .touch-device .ui-foot { left: max(16px, env(safe-area-inset-left)) !important; right: max(16px, env(safe-area-inset-right));
-    bottom: max(6px, env(safe-area-inset-bottom)); font-size: 12px !important; line-height: 1.4; pointer-events: none; }
-  .touch-device #select .s-head { top: max(8px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); }
+  .touch-device .ui-foot { left: max(16px, var(--safe-left)) !important; right: max(16px, var(--safe-right));
+    bottom: max(6px, var(--safe-bottom)); font-size: 12px !important; line-height: 1.4; pointer-events: none; }
+  .touch-device #select .s-head { top: max(8px, var(--safe-top)); left: max(16px, var(--safe-left)); }
   .touch-device #select .s-head h2 { font-size: 22px; }
   .touch-device #select .s-head > small { display: none; }
-  .touch-device #select .s-roster { top: 54px; bottom: 85px; left: max(16px, env(safe-area-inset-left)); width: 23vw; overflow: auto; padding: 4px; }
+  .touch-device #select .s-roster { top: 54px; bottom: 85px; left: max(16px, var(--safe-left)); width: calc(23 * var(--game-vw)); overflow: auto; padding: 4px; }
   .touch-device #select .s-fac { display: none; }
   .touch-device #select .s-card { min-height: 52px; flex: none; grid-template-columns: 32px 1fr; padding: 4px; column-gap: 6px; }
   .touch-device #select .s-card canvas { width: 32px; height: 32px; }
@@ -1312,11 +1307,11 @@
   .touch-device #select .s-rec { left: 29%; top: 46px; width: 32%; max-height: 36px; overflow: auto; }
   .touch-device #select .s-rec b { font-size: 13px; }
   .touch-device #select .s-rec small, .touch-device #select .s-line { display: none; }
-  .touch-device #select .s-act { right: max(16px, env(safe-area-inset-right)); bottom: max(32px, calc(env(safe-area-inset-bottom) + 24px)); gap: 12px; }
+  .touch-device #select .s-act { right: max(16px, var(--safe-right)); bottom: max(32px, calc(var(--safe-bottom) + 24px)); gap: 12px; }
   .touch-device #select .s-act b, .touch-device #select .s-go b { font-size: 17px; }
   .touch-device #select .s-act button { padding: 8px 20px; }
   .touch-device #select .s-act small { display: none; }
-  .touch-device #menu { z-index: 30; overflow-y: auto; justify-content: flex-start; padding: max(16px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); }
+  .touch-device #menu { z-index: 30; overflow-y: auto; justify-content: flex-start; padding: max(16px, var(--safe-top)) max(20px, var(--safe-right)) max(20px, var(--safe-bottom)) max(20px, var(--safe-left)); }
   .touch-device #menu .t { font-size: 30px; line-height: 1.6; }
   .touch-device #menu .en { display: none; }
   .touch-device #menu .sub { font-size: 16px; margin: 5px 0; line-height: 1.5; }
@@ -1327,10 +1322,10 @@
   .touch-device #menu td { padding: 6px; white-space: normal; }
   .touch-device #menu td.pad { display: none; }
   .touch-device #prologue { touch-action: none; }
-  .touch-device #prologue .pl-skip { left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); font-size: 13px; gap: 12px; }
+  .touch-device #prologue .pl-skip { left: max(16px, var(--safe-left)); right: max(16px, var(--safe-right)); bottom: max(10px, var(--safe-bottom)); font-size: 13px; gap: 12px; }
   .touch-device #prologue .pl-skip-now { padding: 8px 16px; background: #26170bdd; color: #fff1ce; border: 1px solid #b8893a; font: 600 14px var(--sans); }
-  .touch-device #result { overflow-y: auto; align-items: flex-start; padding: max(16px, env(safe-area-inset-top)) 16px max(50px, env(safe-area-inset-bottom)); }
-  .touch-device #result .rs { margin: 0 auto; width: min(680px, 90vw); gap: 12px; flex: none; }
+  .touch-device #result { overflow-y: auto; align-items: flex-start; padding: max(16px, var(--safe-top)) 16px max(50px, var(--safe-bottom)); }
+  .touch-device #result .rs { margin: 0 auto; width: min(680px, calc(90 * var(--game-vw))); gap: 12px; flex: none; }
   .touch-device #result .rs-head h2 { font-size: 34px; letter-spacing: 0; }
   .touch-device #result .rs-badge { width: 48px; height: 48px; }
   .touch-device #result .rs-stats { min-width: 0; flex: 1; }
@@ -1341,14 +1336,14 @@
   .touch-device #result .rs-btns { position: sticky; bottom: 0; padding: 6px; background: #1a120dee; }
   .touch-device #result .rs-btns button { font-size: 18px; letter-spacing: 0; padding: 10px 20px; }
   .touch-device #result .ui-foot { display: none; }
-  @media (min-aspect-ratio: 3/2) and (max-height: 440px) {
+  @container game-surface (min-aspect-ratio: 3/2) and (max-height: 440px) {
     .touch-device #title:not(.pre) .t-logo { display: none; }
-    .touch-device #title .t-band { width: 80vw; }
+    .touch-device #title .t-band { width: calc(80 * var(--game-vw)); }
   }
-  .quality-choice { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+  .quality-choice { position: absolute; right: max(16px, var(--safe-right)); bottom: max(12px, var(--safe-bottom));
     z-index: 5; display: flex; align-items: center; gap: 8px; color: #ffe3a0; font: 600 13px var(--sans); }
   .quality-choice select { min-height: 44px; background: #1a120d; color: #fff1ce; border: 1px solid #b8893a; font: inherit; padding: 6px; }
-  .touch-device #title .quality-choice { top: max(68px, env(safe-area-inset-top)); bottom: auto; flex-direction: column; }
+  .touch-device #title .quality-choice { top: max(68px, var(--safe-top)); bottom: auto; flex-direction: column; }
   .touch-device #title:is(.chp, .dif, .ctl, .rec) .quality-choice { display: none; }
   .touch-device #menu .quality-choice { position: static; order: 2; align-self: flex-start; margin-top: 8px; }
   .touch-device #select .s-name { flex-wrap: wrap; gap: 4px; }
@@ -1366,7 +1361,7 @@
   .touch-device #result .rs-stats th small { display: none; }
   .touch-device #result .rs-btns button small { display: block; margin: 4px 0 0; font-size: 11px; line-height: 1.5; }
   #title .t-chs .t-lk { white-space: nowrap; }
-  #title .t-status { position: absolute; z-index: 6; top: max(8px, env(safe-area-inset-top)); left: 15%; right: 15%;
+  #title .t-status { position: absolute; z-index: 6; top: max(8px, var(--safe-top)); left: 15%; right: 15%;
     margin: 0; padding: 8px 12px; color: #ffe3a0; background: #27170ef2; border: 1px solid #b8893a;
     font: 600 14px/1.6 var(--sans); text-align: center; pointer-events: none; }
   #title .t-status[hidden] { display: none; }
@@ -1378,8 +1373,8 @@
   #title.chp .t-chs b em { display: block; margin: 0 0 3px; font-size: 12px; line-height: 1.4; }
   #title.chp .t-chs small { max-width: 100%; font-size: 12px; line-height: 1.5; margin-top: 4px; }
   #title.chp .quality-choice { display: none; }
-  #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); flex-wrap: wrap; }
-  .touch-device #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); }
+  #title.chp .ui-foot { right: max(16px, var(--safe-right)); flex-wrap: wrap; }
+  .touch-device #title.chp .ui-foot { right: max(16px, var(--safe-right)); }
 
   /* Officer selection: bounded independent columns; the model keeps its own drag area. */
   #select { --select-bottom: max(86px, 12rem); }
@@ -1406,7 +1401,7 @@
   #select .s-card b, #select .s-card small { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
   #select .s-scroll-hint { flex: none; text-align: center; color: #ffe3a0; font: 500 12px/1.6 var(--sans); }
   #select .s-scroll-hint[hidden] { display: none; }
-  #select .s-act { z-index: 4; right: max(16px, env(safe-area-inset-right)); bottom: max(32px, calc(env(safe-area-inset-bottom) + 24px));
+  #select .s-act { z-index: 4; right: max(16px, var(--safe-right)); bottom: max(32px, calc(var(--safe-bottom) + 24px));
     flex-direction: row; gap: 12px; padding: 6px; background: #20160fe8; border-radius: 6px; }
   #select .s-act button { box-sizing: border-box; min-width: 44px; min-height: 48px; padding: 10px 18px; border: 1px solid #d8bd83; }
   #select .s-back { color: #fff1d5; background: #493426; box-shadow: none; }
@@ -1415,18 +1410,29 @@
   #select .s-act button:focus-visible, #select .s-card:focus-visible { outline: 3px solid #fff0bc; outline-offset: -3px; }
   #select .s-act button:active { translate: 0 2px; }
   #select .s-go[aria-disabled="true"] { border-style: dashed; }
-  .touch-device #select { --select-bottom: max(100px, calc(env(safe-area-inset-bottom) + 90px)); }
+  .touch-device #select { --select-bottom: max(100px, calc(var(--safe-bottom) + 90px)); }
   .touch-device #select .s-roster { bottom: var(--select-bottom); overflow: hidden; }
   .touch-device #select .s-info { top: 92px; bottom: var(--select-bottom); }
   .touch-device #select .s-info h1 { font-size: clamp(24px, 17cqi, 38px); }
   .touch-device #select .s-rec { max-height: 42px; }
   .touch-device #select .s-stats { grid-template-columns: minmax(0, 1fr); }
-  .touch-device #select .s-act { left: max(16px, env(safe-area-inset-left)); justify-content: flex-end; }
-  .touch-device #select .ui-foot { bottom: max(3px, env(safe-area-inset-bottom)); font-size: 11px; line-height: 1.5; }
+  .touch-device #select .s-act { left: max(16px, var(--safe-left)); justify-content: flex-end; }
+  .touch-device #select .ui-foot { bottom: max(3px, var(--safe-bottom)); font-size: 11px; line-height: 1.5; }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  :root { --game-vw: 1vw; --game-vh: 1vh; --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px); }
+  :root.rotated-landscape { --safe-top: env(safe-area-inset-right, 0px); --safe-right: env(safe-area-inset-bottom, 0px);
+    --safe-bottom: env(safe-area-inset-left, 0px); --safe-left: env(safe-area-inset-top, 0px); }
+  #game-shell { position: absolute; left: var(--surface-x, 0px); top: var(--surface-y, 0px);
+    width: var(--game-width, 100%); height: var(--game-height, 100%); transform-origin: 0 0;
+    transform: translateZ(0); container: game-surface / size; overflow: hidden; isolation: isolate; }
+  .rotated-landscape #game-shell { transform: rotate(90deg); }
+  #game-shell canvas#c { width: 100%; height: 100%; }
 </style>
 </head>
 <body class="inkhold">
-<div id="rotate-device" role="status" hidden><b>برای بازی، دستگاه را افقی کنید</b><small>پس از چرخاندن دستگاه می‌توانید ادامه دهید.</small></div>
+<div id="game-shell">
 <canvas id="c"></canvas>
 <div id="hud" hidden></div>
 <div id="menu" hidden>
@@ -1445,6 +1451,7 @@
 <div id="result" class="scr" hidden></div>
 <div id="ink" class="boot"><div class="ink-wait"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" stroke-width="2.6" stroke-dasharray="120 163"/>
   <circle cx="50" cy="50" r="41" stroke-width="1.2" stroke-dasharray="36 222" stroke-dashoffset="-150" opacity=".6"/></svg><i>موسو</i></div></div>
+</div>
 <script>
   // boot failure (a module that 404s or won't link, e.g. a stale cached copy next to fresh ones): the page opens under the
   // ink and only main.js lifts it, so say what happened instead of turning the seal forever

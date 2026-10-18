@@ -40,7 +40,7 @@ export function createInput() {
   let lastTouch = -Infinity;
   addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') lastTouch = performance.now(); }, true);
   const locked = () => document.pointerLockElement === canvas;
-  const live = () => battle && menu && menu.hidden && !viewport.blocked && !document.hidden;                 // battle running, pause menu closed
+  const live = () => battle && menu && menu.hidden && !document.hidden;                 // battle running, pause menu closed
   // requestPointerLock returns a promise in current browsers (rejects without a user gesture, e.g. the ?go= shortcut)
   const lock = (click = false) => { if (!click && viewport.touch) return; clickLock = click; if (live() && !locked() && !noLock) { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) { noLock = true; } } };
 
