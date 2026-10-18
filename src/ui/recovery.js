@@ -8,7 +8,11 @@ export function showRecovery(message) {
     const p = document.createElement('p'), b = document.createElement('button');
     b.textContent = 'بارگذاری دوباره'; b.type = 'button';
     Object.assign(b.style, { minHeight: '48px', padding: '10px 24px', font: 'inherit', cursor: 'pointer' });
-    b.addEventListener('click', () => location.reload()); el.append(p, b); document.body.append(el);
+    b.addEventListener('click', () => location.reload());
+    const low = document.createElement('button'); low.type = 'button'; low.textContent = 'تلاش با کیفیت سبک';
+    Object.assign(low.style, b.style);
+    low.addEventListener('click', () => { const url = new URL(location.href); url.searchParams.set('quality', 'low'); url.searchParams.delete('hq'); location.href = url.href; });
+    el.append(p, b, low); document.body.append(el);
   }
   el.querySelector('p').textContent = message;
 }

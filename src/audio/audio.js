@@ -42,6 +42,7 @@ const BED = [0.16, 0.4], DRUMS = [0.06, 0.7], MUSIC = [0.18, 0.46];
 const SIDE = [0.3, 0.5, 0.45, 0.5], SIDE_MU = [0.25, 0.4, 0.55, 0.4];
 
 export function createAudio(game) {
+  let paused = false;
   let ctx = null, mix, post, ceiling, sfx, vox, bedBus, bedDuck, revIn, bedG, drumG, musicG, live = 0;
   let underBus, sides = [];                   // sfx that yield to impacts (whooshes, body falls) + the sidechain gains
                                               // (under bus, bed, voice, reverb return)
@@ -66,8 +67,10 @@ export function createAudio(game) {
   on('scenario', useVoice);
 
   function start() {
-    if (ctx) { if (ctx.state !== 'running') ctx.resume(); return; }
-    ctx = new AudioContext({ latencyHint: 'interactive' });
+    if (ctx) { if (!paused && !document.hidden && ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {}); return; }
+    const Context = globalThis.AudioContext || globalThis.webkitAudioContext;
+    if (!Context) return;
+    try { ctx = new Context({ latencyHint: 'interactive' }); } catch { return; }
     const comp = ctx.createDynamicsCompressor();
     // 25 ms attack: the first frame of every hit passes the compressor untouched (6 ms flattened the impacts); a gentle
     // -6 dB / 2:1 so dense melee still reads louder than a lull (LRA)
@@ -91,21 +94,27 @@ export function createAudio(game) {
     sides = SIDE.map(() => ctx.createGain());
     underBus = ctx.createGain(); underBus.connect(sides[0]).connect(sfx);
     vox = ctx.createGain(); vox.gain.value = VOX; vox.connect(sides[2]).connect(mix);
-    const rev = ctx.createConvolver(); rev.buffer = makeIR();
+    const rev = ctx.createConvolver(); rev.buffer = makeIR(ctx.sampleRate);
     revIn = ctx.createGain(); revIn.connect(rev); rev.connect(sides[3]).connect(mix);   // the wash ducks under hits too
     bedDuck = ctx.createGain(); bedDuck.connect(mix);
     bedBus = ctx.createGain(); bedBus.connect(sides[1]).connect(bedDuck);
     const bedSend = ctx.createGain(); bedSend.gain.value = 0.4; bedDuck.connect(bedSend).connect(revIn);
     startBed();
   }
-  addEventListener('pointerdown', start);
+  // Capture runs even when a touch control prevents bubbling. iOS may allow resume only on touchend.
+  for (const type of ['pointerdown', 'pointerup', 'touchend']) addEventListener(type, start, { capture: true, passive: true });
+  const suspend = () => { if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {}); };
+  on('pause', (e) => { paused = e.paused; if (paused) suspend(); else start(); });
+  on('flow', (e) => { if (e.state !== 'battle') { paused = true; suspend(); } else { paused = !document.getElementById('menu').hidden; if (!paused) start(); } });
+  addEventListener('pagehide', suspend);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
   addEventListener('keydown', start);
   // musou part r3: build the context + graph at boot (it stays 'suspended' until the first key/pointer gesture resumes
   // it). Building it inside the first keydown stalled that frame 0.2-1 s (the first Musou of a session hitched when I
   // was the first key pressed).
   start();
 
-  const ok = () => ctx && ctx.state === 'running';
+  const ok = () => !paused && !document.hidden && ctx && ctx.state === 'running';
   /** One-shot buffer → gain → pan → bus (+ reverb send). */
   function play(buf, { gain = 1, rate = 1, pan = 0, delay = 0, send = 0.12, bus = sfx, prio = 0 } = {}) {
     if (!buf || (live > 56 && prio < 1)) return null;

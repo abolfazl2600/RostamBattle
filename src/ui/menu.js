@@ -11,7 +11,7 @@ import { noiseBuf } from '../audio/bank.js';
 let ac = null;
 function actx() {
   if (!ac) try { ac = new AudioContext({ latencyHint: 'interactive' }); } catch { return null; }
-  if (ac.state === 'suspended') ac.resume();
+  if (ac.state === 'suspended' || ac.state === 'interrupted') ac.resume().catch(() => {});
   return ac;
 }
 // one voice: oscillator (type, f0 → f1) or filtered noise, exponential decay
@@ -51,6 +51,7 @@ const OK = new Set(['Enter', 'NumpadEnter', 'Space', 'KeyJ']), BACK = new Set(['
 export function createNav(cb) {
   let on = false, raf = 0, held = {}, rep = 0, repT = 0;
   const key = (e) => {
+    if (e.target?.closest?.('select,input,textarea')) return;
     if (!on || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.code in KEYS) { e.preventDefault(); cb.move(KEYS[e.code]); }
     else if (e.repeat) return;

@@ -158,7 +158,7 @@ for (const timely of [true, false]) {
     else {
       first(f); step(f, deadline - f.game.frame - 1); f.game.hero.kos = 1000; step(f);
       assert.equal(f.game.story.timer, 1, 'failure presentation keeps the prior HUD until results');
-      step(f, 120); assert.equal(f.seen.ends[0]?.win, false); assert.match(f.seen.ends[0]?.reason?.zh, /時限/);
+      step(f, 120); assert.equal(f.seen.ends[0]?.win, false); assert.equal(f.seen.ends[0]?.reason?.zh, f.C.BEATS[0].fail.zh);
     }
   } finally { f.off(); }
 }
@@ -173,7 +173,7 @@ try {
   c.N = 600;
   for (let i = 0; i < c.N; i++) { c.x[i] = d.x; c.z[i] = d.z; c.st[i] = ST.IDLE; }
   for (let i = 0; i < 600 && !lost.seen.ends.length; i++) step(lost);
-  assert.equal(lost.seen.ends[0]?.win, false); assert.match(lost.seen.ends[0]?.reason?.zh, /失守/);
+  assert.equal(lost.seen.ends[0]?.win, false); assert.equal(lost.seen.ends[0]?.reason?.zh, lost.C.BEATS[0].fail.zh);
 } finally { lost.off(); }
 console.log('PASS hold loses when live foes drain the defend point');
 

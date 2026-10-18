@@ -40,7 +40,7 @@ export function createInput() {
   let lastTouch = -Infinity;
   addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') lastTouch = performance.now(); }, true);
   const locked = () => document.pointerLockElement === canvas;
-  const live = () => battle && menu && menu.hidden && !viewport.blocked;                 // battle running, pause menu closed
+  const live = () => battle && menu && menu.hidden && !viewport.blocked && !document.hidden;                 // battle running, pause menu closed
   // requestPointerLock returns a promise in current browsers (rejects without a user gesture, e.g. the ?go= shortcut)
   const lock = (click = false) => { if (!click && viewport.touch) return; clickLock = click; if (live() && !locked() && !noLock) { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) { noLock = true; } } };
 
@@ -60,7 +60,7 @@ export function createInput() {
     unlockT = performance.now();
     dispatchEvent(new Event('blur'));
   });
-  document.getElementById('go')?.addEventListener('click', () => { noLock = false; setTimeout(lock); });   // resume button → take the mouse back
+  document.getElementById('go')?.addEventListener('click', () => { noLock = false; setTimeout(() => lock()); });   // resume button → take the mouse back
   addEventListener('keydown', (e) => {                              // capture: runs before main.js's Esc toggle
     if (e.code === 'Escape' && performance.now() - unlockT < 300) e.stopImmediatePropagation();
   }, true);
@@ -99,7 +99,7 @@ export function createInput() {
 
   function pollPad() {
     const p = navigator.getGamepads ? navigator.getGamepads()[0] : null;
-    if (!p) return null;
+    if (!p) { dev.pad = {}; dev.padBlocked = {}; return null; }
     for (const [btn, a] of Object.entries(PADMAP)) {
       const down = !!(p.buttons[btn] && p.buttons[btn].pressed);
       if (down && !dev.pad[btn]) dev.latch[a] = true;

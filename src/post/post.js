@@ -290,7 +290,7 @@ export function createPost({ canvas, width, height }) {
       renderer.setRenderTarget(atmosRT); renderer.clear();
       if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('Incomplete HDR target');
       renderer.setRenderTarget(null);
-    } catch (e) { showRecovery('حافظه یا امکانات گرافیکی کافی نیست. کیفیت سبک را با نشانی ?quality=low امتحان کنید.'); throw e; }
+    } catch (e) { showRecovery('حافظه یا امکانات گرافیکی کافی نیست. بارگذاری دوباره با کیفیت سبک را امتحان کنید.'); throw e; }
   }
   function setQuality(value, persist = true) {
     choice = value === 'auto' || QUALITY[value] ? value : 'auto';
@@ -318,7 +318,7 @@ export function createPost({ canvas, width, height }) {
       renderer.setRenderTarget(sceneRT);
       const p = renderer.compileAsync(scene, camera);             // programs are chosen synchronously, in this call
       renderer.setRenderTarget(null);
-      return p;
+      return p.catch((e) => { showRecovery('آماده‌سازی گرافیک ناموفق بود. بازی را دوباره بارگذاری کنید.'); throw e; });
     },
     setSize, setQuality,
     setLook(o) { setLook(o); if (!profile.dof) { fin.material.uniforms.uNearBlur.value = 0; fin.material.uniforms.uFarBlur.value = 0; } },
