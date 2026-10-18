@@ -21,6 +21,7 @@
 // Dev shortcut: ?go=free|story|trial[&char=id][&ch=chapter / trial id][&map=map id] skips the screens straight into a
 // battle (story without &ch: the first chapter that lists the officer).
 import * as THREE from 'three';
+import { viewport } from './core/viewport.js';
 import { vrng, rng } from './core/rng.js';
 import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
@@ -57,7 +58,7 @@ const params = new URLSearchParams(location.search);
 const ENEMIES = Math.max(0, Math.min(2000, params.get('enemies') ? Number(params.get('enemies')) | 0 : 300));
 
 const canvas = document.getElementById('c');
-let vw = innerWidth, vh = innerHeight;
+let vw = viewport.width, vh = viewport.height;
 
 const post = createPost({ canvas, width: vw, height: vh });
 const scene = new THREE.Scene();
@@ -156,8 +157,9 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   emit('scenario', { mode, char, ch, map });
 }
 
-addEventListener('resize', () => {
-  vw = innerWidth; vh = innerHeight;
+on('viewport', () => {
+  input.reset();
+  vw = viewport.width; vh = viewport.height;
   post.setSize(vw, vh);
   camRig.resize(vw, vh);
   render();
@@ -190,6 +192,8 @@ const mOk = () => {
 };
 const mNav = createNav({ move: (d) => { mFocus(mCur + d); sfx('move'); }, ok: mOk, back: () => setPaused(false) });
 const setPaused = (v) => {
+  if (!v && state === 'battle' && viewport.blocked) v = true;
+  input.reset();
   paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample();   // sample(): drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
@@ -269,6 +273,7 @@ addEventListener('keydown', (e) => {
   if (state === 'battle' && !paused && e.code === 'Escape' && !e.defaultPrevented) setPaused(true);
 });
 addEventListener('blur', () => { if (state === 'battle') setPaused(true); });
+on('viewport', ({ blocked }) => { if (blocked && state === 'battle') setPaused(true); });
 
 // ---- loop
 let acc = 0, last = performance.now();
