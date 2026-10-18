@@ -13,7 +13,7 @@
 - `server.url` is absent; Capacitor origin stays at `https://localhost`; no arbitrary navigation allowlist or mixed content.
 - The Android HTML CSP restricts connect/font/script resources to local assets. JS and Three.js importmaps resolve through bundled `src/` and `vendor/`.
 - `npm run check:build` validates bundled import graph, font, license, local HTML styling and zero HTTP(S) CSS URL references. The test is not an exhaustive dynamic network monitor.
-- Emulator API 34 uses Airplane Mode, disables Wi-Fi and mobile data, cold restarts the app, and verifies that **both the title and locally loaded font** become ready again; screenshots and Logcat are preserved.
+- Emulator API 34 verifies that **both the title and locally loaded font** become ready; screenshots and Logcat are preserved. **Airplane Mode cold-start was attempted but was unreliable in the hosted emulator**; it is not a passing automated check and remains mandatory for physical-device QA.
 - Android 9 factory emulator uses a WebView too old to support import maps; it will show a Persian WebView-upgrade instruction rather than run the game. Android 9 **with an updated WebView** still needs hardware evaluation.
 
 ## Explicit remaining work
