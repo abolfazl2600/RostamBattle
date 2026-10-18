@@ -39,6 +39,8 @@ export const BATTLE_NAMES_FA = {
 };
 
 export const BATTLE_EVENTS_FA = {
+  'The Qinggang sword is yours — attack up': 'شمشیر چینگ‌گانگ به دست آمد؛ قدرت حمله افزایش یافت!',
+  'Zhang Wenyuan, terror of the south': 'ژانگ ون‌یوان، سردار هراس‌انگیز جنوب، وارد میدان شد!',
   // Hulao Gate objectives and banners
   "Break Dong Zhuo's army on the plain": 'سپاه دونگ ژو را در دشت شکست دهید.',
   'Slay Hua Xiong before the wine cools': 'پیش از سردشدن شراب، هوآ شیونگ را شکست دهید.',
