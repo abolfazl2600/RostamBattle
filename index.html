@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>趙雲 — Voxel Musou</title>
+<title>وُکسل موسو — نبرد سه پادشاهی</title>
 <script type="importmap">
 { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
 </script>
@@ -920,18 +920,51 @@
     .ink-wait svg { animation: none; }
     #prologue.out :is(.pl-paper, .pl-rod) { scale: none; }
   }
+
+  /* Persian presentation: preserve the game's left-anchored stage geometry while text flows RTL. */
+  :root {
+    --brush: "Noto Naskh Arabic", "Vazirmatn", Tahoma, serif;
+    --kai: "Noto Sans Arabic", "Vazirmatn", Tahoma, sans-serif;
+    --sans: "Noto Sans Arabic", "Vazirmatn", Tahoma, sans-serif;
+  }
+  body, .scr, #menu { direction: ltr; }
+  .scr :is(h1,h2,h3,p,b,small,button,th,td,span), #menu :is(.t,.sub,.hint,button,td) {
+    direction: rtl;
+  }
+  :is(.scr,#menu) kbd { direction: ltr; unicode-bidi: isolate; }
+  .t-logo h1, .t-menu b, .s-name h1, .s-musou b, #menu .t { letter-spacing: 0; }
+  .t-logo h1 { font-size: 17rem; }
+  .t-seal { --sz: 2.1rem; --pad: .5rem; }
+  .s-court { writing-mode: horizontal-tb; letter-spacing: 0; max-width: 16rem; line-height: 1.4; }
+  .s-name h1 { font-size: 7rem; }
+  .s-musou b { font-size: 2.6rem; line-height: 1.4; }
+  .s-bio span { line-height: 1.6; }
+  .s-line { top: auto; bottom: 14rem; right: 4rem; max-width: 27rem; flex-direction: column; gap: .4rem; }
+  .s-line p, .s-line small { writing-mode: horizontal-tb; max-height: none; letter-spacing: 0; padding: .4rem 0;
+    border: 0; overflow-wrap: anywhere; }
+  .s-line p { font-size: 2rem; line-height: 1.5; }
+  .s-line small { font-size: 1.5rem; line-height: 1.6; }
+  .s-stats li { grid-template-columns: minmax(7rem,auto) 1fr; }
+  #menu .t { font-size: 7rem; }
+  #menu .sub { letter-spacing: 0; line-height: 1.6; }
+  #menu .en, #menu button small, .t-menu small { letter-spacing: 0; }
+  @media (max-aspect-ratio: 4/3) {
+    .t-logo h1 { font-size: 11rem; }
+    .s-name h1 { font-size: 5.5rem; }
+    .s-line { right: 2rem; max-width: 18rem; bottom: 12rem; }
+  }
 </style>
 </head>
 <body class="inkhold">
 <canvas id="c"></canvas>
 <div id="hud" hidden></div>
 <div id="menu" hidden>
-  <div class="t">趙雲<i>常山</i></div>
-  <div class="en" style="--d:.04s">VOXEL MUSOU</div>
-  <div class="sub" style="--d:.08s">戰局暫停<small>Battle paused</small></div>
-  <button id="go" style="--d:.14s">繼續<small>Resume</small></button>
-  <button id="quit" style="--d:.18s">撤退<small>Quit to title</small></button>
-  <div class="hint" style="--d:.22s"><kbd>↑</kbd><kbd>↓</kbd> 選擇 Select · <kbd>Enter</kbd><kbd class="pad">A</kbd> 決定 Confirm · <kbd>Esc</kbd><kbd class="pad">B</kbd> 繼續 Resume</div>
+  <div class="t">ژائو یون<i>سردار</i></div>
+  <div class="en" style="--d:.04s">وُکسل موسو</div>
+  <div class="sub" style="--d:.08s">نبرد متوقف شد<small>توقف بازی</small></div>
+  <button id="go" style="--d:.14s">ادامه<small>بازگشت به میدان</small></button>
+  <button id="quit" style="--d:.18s">بازگشت به منو<small>خروج از نبرد</small></button>
+  <div class="hint" style="--d:.22s"><kbd>↑</kbd><kbd>↓</kbd> انتخاب · <kbd>Enter</kbd><kbd class="pad">A</kbd> تأیید · <kbd>Esc</kbd><kbd class="pad">B</kbd> ادامه</div>
 </div>
 <!-- flow screens (main.js). ui lane: #title #select · story lane: #prologue #result -->
 <div id="title" class="scr" hidden></div>
@@ -940,13 +973,13 @@
 <div id="prologue" class="scr" hidden></div>
 <div id="result" class="scr" hidden></div>
 <div id="ink" class="boot"><div class="ink-wait"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" stroke-width="2.6" stroke-dasharray="120 163"/>
-  <circle cx="50" cy="50" r="41" stroke-width="1.2" stroke-dasharray="36 222" stroke-dashoffset="-150" opacity=".6"/></svg><i>無雙</i></div></div>
+  <circle cx="50" cy="50" r="41" stroke-width="1.2" stroke-dasharray="36 222" stroke-dashoffset="-150" opacity=".6"/></svg><i>موسو</i></div></div>
 <script>
   // boot failure (a module that 404s or won't link, e.g. a stale cached copy next to fresh ones): the page opens under the
   // ink and only main.js lifts it, so say what happened instead of turning the seal forever
   addEventListener('error', () => {
     const w = document.querySelector('#ink.boot .ink-wait');
-    if (w) w.innerHTML = '<p>載入失敗<small>Failed to load · force-reload (Ctrl/Cmd+Shift+R)</small></p>';
+    if (w) w.innerHTML = '<p>بارگذاری ناموفق بود<small>برای بارگذاری دوباره: Ctrl/Cmd+Shift+R</small></p>';
   }, true);
 </script>
 <script type="module" src="./src/main.js"></script>
