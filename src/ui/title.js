@@ -102,7 +102,7 @@ const SMOKE = [[-17, 16, 40, 38, 24, 0.2, 0.1, 0.06, 0.9], [-26, 22, 46, 44, 26,
 export function createTitle(el, flow) {
   el.innerHTML = `
     <div class="t-veil"></div>
-    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${c.seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
+    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
       <div class="t-logo"><i class="t-seal">سه پادشاهی</i><h1 data-t="موسو"><span>موسو</span></h1>
         <p class="t-en"><span>وُکسل موسو</span></p></div>
@@ -155,7 +155,7 @@ export function createTitle(el, flow) {
     const [zh, en] = lock || [stageFa(CH.id).description, story ? 'داستان سه پادشاهی' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
     $('.t-ccard').classList.toggle('lock', !!lock);
     $('.t-ccard h3').innerHTML = cmode === 'free' ? 'میدان نبرد<small>انتخاب نقشه</small>' : `${stageFa(CH.id).num}<small>${modeFa(cmode)}</small>`;
-    $('.t-cname b').textContent = stageFa(CH.id).title; $('.t-cname i').textContent = CH.seal;
+    $('.t-cname b').textContent = stageFa(CH.id).title; $('.t-cname i').textContent = stageFa(CH.id).seal;
     $('.t-cera').innerHTML = !trial ? `${stageFa(CH.id).era}<small>زمان نبرد</small>` : field ? `میدان · ${stageFa(CH.map).title}<small>نقشه</small>` : '';
     $('.t-cline b').textContent = zh; $('.t-cline small').textContent = en;
     // foot: a chapter's officers, each with his own best rank; a trial's best record (the stat it is ranked on first)
