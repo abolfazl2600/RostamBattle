@@ -139,7 +139,7 @@ export function createPrologue(el, flow) {
   };
   el.addEventListener('pointerdown', (e) => {
     if (el.hidden || e.button !== 0 || pointer !== null || e.target.closest('button')) return;
-    pointer = e.pointerId; el.setPointerCapture(pointer); down(); e.preventDefault();
+    pointer = e.pointerId; try { el.setPointerCapture(pointer); } catch { /* inactive synthetic pointer */ } down(); e.preventDefault();
   });
   el.addEventListener('pointerup', (e) => { if (e.pointerId === pointer) { up(); cancelHold(); } });
   for (const type of ['pointercancel', 'lostpointercapture']) el.addEventListener(type, (e) => { if (e.pointerId === pointer) cancelHold(); });
