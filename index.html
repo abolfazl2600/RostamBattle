@@ -1345,6 +1345,12 @@
     .touch-device #title:not(.pre) .t-logo { display: none; }
     .touch-device #title .t-band { width: 80vw; }
   }
+  .quality-choice { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 5; display: flex; align-items: center; gap: 8px; color: #ffe3a0; font: 600 13px var(--sans); }
+  .quality-choice select { min-height: 44px; background: #1a120d; color: #fff1ce; border: 1px solid #b8893a; font: inherit; padding: 6px; }
+  .touch-device #title .quality-choice { top: max(68px, env(safe-area-inset-top)); bottom: auto; flex-direction: column; }
+  .touch-device #title:is(.chp, .dif, .ctl, .rec) .quality-choice { display: none; }
+  .touch-device #menu .quality-choice { position: static; order: 2; align-self: flex-start; margin-top: 8px; }
 </style>
 </head>
 <body class="inkhold">

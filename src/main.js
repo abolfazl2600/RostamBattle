@@ -25,6 +25,7 @@ import { viewport } from './core/viewport.js';
 import { vrng, rng } from './core/rng.js';
 import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
+import { QUALITY } from './post/quality.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { createPost } from './post/post.js';
 import { createWorld } from './world/world.js';
@@ -195,7 +196,7 @@ const mOk = () => {
 const mNav = createNav({ move: (d) => { mFocus(mCur + d); sfx('move'); }, ok: mOk, back: () => setPaused(false) });
 const setPaused = (v) => {
   if (!v && state === 'battle' && viewport.blocked) v = true;
-  input.reset();
+  input.reset(); post.resetTiming();
   paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
@@ -265,6 +266,17 @@ const screens = {
   title: createTitle($('title'), flow), select: createSelect($('select'), flow), loading: createLoading($('loading')),
   prologue: createPrologue($('prologue'), flow), result: createResult($('result'), flow),
 };
+// Quality is purely render-side; both menus share the same persistent selection.
+for (const parent of [$('title'), menu]) {
+  const label = document.createElement('label'); label.className = 'quality-choice';
+  label.innerHTML = `کیفیت گرافیک <select aria-label="کیفیت گرافیک"><option value="auto">خودکار</option>${Object.entries(QUALITY).map(([id, q]) => `<option value="${id}">${q.label}</option>`).join('')}</select>`;
+  parent.append(label);
+  label.querySelector('select').value = post.quality.choice;
+  label.querySelector('select').addEventListener('change', (e) => {
+    input.reset(); post.setQuality(e.target.value);
+    for (const select of document.querySelectorAll('.quality-choice select')) select.value = post.quality.choice;
+  });
+}
 // a win goes into the records (rec: what it beat and what it opened — the result screen shows both); reason: a fail
 // beat's defeat line
 on('story:end', (e) => {

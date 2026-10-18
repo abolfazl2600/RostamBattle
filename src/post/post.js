@@ -15,6 +15,9 @@
 import * as THREE from 'three';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
+import { viewport } from '../core/viewport.js';
+import { QUALITY, defaultQuality, createAdaptiveScale } from './quality.js';
+import { showRecovery } from '../ui/recovery.js';
 import { SUN_DIR } from '../world/sky.js';
 
 // Tunables. Every key k is uniform u<K> in all passes.
@@ -203,7 +206,19 @@ const mat = (fragmentShader, uniforms) => new THREE.ShaderMaterial({ vertexShade
 const v3 = (a) => new THREE.Vector3(...a);
 
 export function createPost({ canvas, width, height }) {
-  const renderer = new THREE.WebGLRenderer({ canvas, powerPreference: 'high-performance' });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, powerPreference: 'high-performance' });
+    if (!renderer.getContext().getExtension('EXT_color_buffer_float')) throw new Error('HDR render targets unsupported');
+  } catch (e) {
+    showRecovery('اجرای گرافیک بازی ممکن نشد. مرورگر سازگار با WebGL2 و حافظهٔ گرافیکی کافی لازم است.'); throw e;
+  }
+  const query = new URLSearchParams(location.search);
+  let choice = 'auto';
+  try { choice = localStorage.getItem('voxel-quality') || 'auto'; } catch { /* storage disabled */ }
+  choice = query.has('hq') ? 'high' : query.get('quality') || choice;
+  let profile, qualityId, renderScale, adaptive;
+  const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1); black.needsUpdate = true;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -259,27 +274,40 @@ export function createPost({ canvas, width, height }) {
   setLook();
 
   function setSize(w, h) {
+    width = w; height = h;
+    w = Math.max(2, Math.round(w * renderScale)); h = Math.max(2, Math.round(h * renderScale));
     renderer.setSize(w, h, false);
     const hw = Math.round(w / 2), hh = Math.round(h / 2);
-    sceneRT.setSize(w, h); atmosRT.setSize(w, h); dofRT.setSize(hw, hh); raysRT.setSize(hw, hh);
+    sceneRT.setSize(w, h); atmosRT.setSize(w, h); dofRT.setSize(profile.dof ? hw : 1, profile.dof ? hh : 1); raysRT.setSize(profile.rays ? hw : 1, profile.rays ? hh : 1);
     rays.material.uniforms.uAspect.value.set(w / h, 1);
-    bloom.setSize(hw, hh);
+    bloom.setSize(profile.bloom ? Math.max(32, hw) : 32, profile.bloom ? Math.max(32, hh) : 32);
     fin.material.uniforms.uRes.value.set(w, h);
     dof.material.uniforms.uTexel.value.set(1 / hw, 1 / hh);
+    try {
+      renderer.setRenderTarget(sceneRT); renderer.clear();
+      const gl = renderer.getContext();
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('Incomplete render target');
+      renderer.setRenderTarget(atmosRT); renderer.clear();
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('Incomplete HDR target');
+      renderer.setRenderTarget(null);
+    } catch (e) { showRecovery('حافظه یا امکانات گرافیکی کافی نیست. کیفیت سبک را با نشانی ?quality=low امتحان کنید.'); throw e; }
   }
-  setSize(width, height);
-
-  // quality tier: sustained frames over budget (EMA > 20 ms for 2 s) step the scene MSAA 4× → 2× → off. Never steps
-  // back up (no oscillation). ?hq pins full quality (captures).
-  const autoQ = !new URLSearchParams(location.search).has('hq');
-  let lastT = 0, ema = 16.7, slow = 0;
-  function tier(now) {
-    const dt = lastT ? now - lastT : 16.7; lastT = now;
-    if (!autoQ || dt > 250 || sceneRT.samples === 0) return;              // a long stall (tab hidden, compile) isn't load
-    ema += (dt - ema) * 0.05;
-    slow = ema > 20 ? slow + 1 : 0;
-    if (slow > 120) { sceneRT.samples = sceneRT.samples > 2 ? 2 : 0; sceneRT.dispose(); slow = 0; ema = 16.7; }
+  function setQuality(value, persist = true) {
+    choice = value === 'auto' || QUALITY[value] ? value : 'auto';
+    qualityId = choice === 'auto' ? defaultQuality({ touch: viewport.touch, cores: navigator.hardwareConcurrency, memory: navigator.deviceMemory }) : choice;
+    profile = QUALITY[qualityId]; renderScale = profile.scale;
+    renderer.shadowMap.enabled = profile.shadows;
+    sceneRT.samples = Math.min(profile.samples, renderer.capabilities.maxSamples); sceneRT.dispose();
+    fin.material.uniforms.tDof.value = profile.dof ? dofRT.texture : atmosRT.texture;
+    fin.material.uniforms.tBloom.value = profile.bloom ? bloom.renderTargetsHorizontal[0].texture : black;
+    fin.material.uniforms.tRays.value = profile.rays ? raysRT.texture : black;
+    fin.material.uniforms.uNearBlur.value = profile.dof ? L.nearBlur : 0;
+    fin.material.uniforms.uFarBlur.value = profile.dof ? L.farBlur : 0;
+    adaptive = createAdaptiveScale(profile.scale, viewport.touch ? 33.3 : 20, (scale) => { renderScale = scale; setSize(width, height); });
+    setSize(width, height);
+    if (persist) try { localStorage.setItem('voxel-quality', choice); } catch { /* storage disabled */ }
   }
+  setQuality(choice, false);
 
   return {
     /** Warm-up (main.js, behind the loading card / ink wipe): compile the scene's programs for the pass that draws them,
@@ -292,10 +320,13 @@ export function createPost({ canvas, width, height }) {
       renderer.setRenderTarget(null);
       return p;
     },
-    setSize, setLook,
+    setSize, setQuality,
+    setLook(o) { setLook(o); if (!profile.dof) { fin.material.uniforms.uNearBlur.value = 0; fin.material.uniforms.uFarBlur.value = 0; } },
+    get quality() { return { choice, id: qualityId, scale: renderScale }; },
+    resetTiming() { adaptive.reset(); },
     /** focus: world point the camera frames (hero) → DoF focus plane; flash: white screen flash (0..1). */
     render(scene, camera, time, focus, flash) {
-      tier(performance.now());
+      if (!query.has('hq')) adaptive.frame(performance.now());
       renderer.setRenderTarget(sceneRT);
       renderer.render(scene, camera);
 
@@ -310,16 +341,16 @@ export function createPost({ canvas, width, height }) {
       u.uFarScale.value = THREE.MathUtils.clamp(7 / f, 1, 3);   // close-ups: stronger background bokeh
       u.uNearScale.value = THREE.MathUtils.clamp(8 / f, 0.25, 1);   // wide/high shots: no tilt-shift miniature at the bottom
       u.uFocus.value = f; u.uBandN.value = Math.max(L.bandNear, f * 0.22); u.uBandF.value = Math.max(L.bandFar, f * 0.6);
-      renderer.setRenderTarget(dofRT); dof.render(renderer);
+      if (profile.dof) { renderer.setRenderTarget(dofRT); dof.render(renderer); }
 
-      bloom.render(renderer, null, dofRT, 1 / 60, false);
+      if (profile.bloom) bloom.render(renderer, null, profile.dof ? dofRT : atmosRT, 1 / 60, false);
 
       // god rays: sun's screen position; fade out as it leaves the frame or goes behind the camera
       const g = fin.material.uniforms;
       sunNdc.copy(SUN_DIR).multiplyScalar(800).add(camera.position).project(camera);
       const facing = camera.getWorldDirection(camFwd).dot(SUN_DIR);
       const off = Math.max(Math.abs(sunNdc.x), Math.abs(sunNdc.y));
-      const rg = facing > 0 ? L.rays * THREE.MathUtils.smoothstep(facing, 0.2, 0.6) * (1 - THREE.MathUtils.smoothstep(off, 1.0, 1.8)) : 0;
+      const rg = profile.rays && facing > 0 ? L.rays * THREE.MathUtils.smoothstep(facing, 0.2, 0.6) * (1 - THREE.MathUtils.smoothstep(off, 1.0, 1.8)) : 0;
       g.uRayGain.value = rg;
       if (rg > 0) {
         const ru = rays.material.uniforms;
