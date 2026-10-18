@@ -198,7 +198,7 @@ const setPaused = (v) => {
   paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
-const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && !viewport.blocked && state === 'battle' && !paused, musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
+const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && !viewport.blocked && state === 'battle' && !paused, pause: () => setPaused(true), musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
 mBtns.forEach((b, i) => {
   b.addEventListener('pointerenter', () => { if (mCur !== i) { mFocus(i); sfx('move'); } });
   b.addEventListener('click', () => { mFocus(i); mOk(); });
