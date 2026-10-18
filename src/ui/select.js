@@ -44,8 +44,8 @@ export function createSelect(el, flow) {
     <div class="s-veil"></div>
     <header class="s-head"><h2>انتخاب شخصیت</h2><small>جنگجوی خود را انتخاب کنید</small><span class="s-mode"><b></b><small></small></span></header>
     <aside class="s-roster"><div class="s-fac"><i></i><small></small></div>
-      ${ALL.map((id) => { const c = CHARS[id]; return `<button class="s-card" data-id="${id}" style="--acc:${c.accent}" title="${officerFa(id)} — برای شروع، دوبار کلیک کنید">
-        <canvas width="20" height="20"></canvas><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small><i>${OFFICERS_FA[id].seal}</i><em class="t-rk"></em></button>`; }).join('')}
+      <div class="s-list" tabindex="0" aria-label="فهرست شخصیت‌ها">${ALL.map((id) => { const c = CHARS[id]; return `<button class="s-card" data-id="${id}" style="--acc:${c.accent}" title="${officerFa(id)} — برای شروع، دوبار کلیک کنید">
+        <canvas width="20" height="20"></canvas><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small><i>${OFFICERS_FA[id].seal}</i><em class="t-rk"></em></button>`; }).join('')}</div><small class="s-scroll-hint" hidden>برای دیدن شخصیت‌های بیشتر بکشید ↓</small>
     </aside>
     <article class="s-info">
       <div class="s-name"><h1></h1><div><i class="s-seal"></i><p class="s-court"></p></div></div>
@@ -66,6 +66,11 @@ export function createSelect(el, flow) {
   for (const b of el.querySelectorAll('.s-card')) { cards[b.dataset.id] = b; paintPortrait(b.querySelector('canvas'), CHARS[b.dataset.id]); }
   let ctx = {}, ids = ALL, cur = ALL[0], busy = false, spinT = 0;   // ids: this visit's roster; cur: the focused id
 
+  const list = $('.s-list'), hint = $('.s-scroll-hint');
+  const updateOverflow = () => { hint.hidden = list.scrollHeight <= list.clientHeight + 1; };
+  new ResizeObserver(updateOverflow).observe(list);
+  on('viewport', () => requestAnimationFrame(updateOverflow));
+
   // ---- 2D: info panel
   function show(i, quiet) {
     const id = ids[(i + ids.length) % ids.length];
@@ -74,6 +79,8 @@ export function createSelect(el, flow) {
     // DOM focus follows the selection (a clicked card kept focus and its ring after ↑/↓: two cards looked lit)
     if (document.activeElement?.classList.contains('s-card')) cards[cur].focus({ preventScroll: true });
     replay(cards[cur], 'pick');                           // the chosen card flashes in
+    cards[cur].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    updateOverflow();
     const c = CHARS[id], side = c.side || SHU;
     el.style.setProperty('--acc', c.accent);
     $('.s-fac i').textContent = side === SHU ? 'شو' : (side.en === 'Warlords' ? 'جنگ‌سالاران' : 'شو'); $('.s-fac small').textContent = OFFICERS_FA[id].side;
@@ -95,6 +102,7 @@ export function createSelect(el, flow) {
     const [zh, en] = lk ? [unlockFa(id).rule, 'شخصیت قفل است'] : r ? [`رتبه ${r.rank} · زمان ${mmss(r.time)} · ${r.kos} شکست`, `بهترین رکورد در سطح ${difficultyFa(d.id).name}`] : ['هنوز رکوردی ثبت نشده است', `سطح ${difficultyFa(d.id).name}`];
     $('.s-rec').hidden = !lk && ctx.mode === 'free';
     $('.s-rec').classList.toggle('lock', !!lk); $('.s-go').classList.toggle('lock', !!lk);
+    $('.s-go').setAttribute('aria-disabled', String(!!lk));
     $('.s-rec span').textContent = lk ? 'قفل' : 'رکورد'; $('.s-rec b').textContent = zh; $('.s-rec small').textContent = en;
     $('.s-info').scrollTop = 0;
     replay(el, 'swap');                                    // name ink-in, stat bars refill, voice line brush reveal
@@ -223,7 +231,7 @@ export function createSelect(el, flow) {
       }
       if (!ids.includes(cur)) { cards[cur].classList.remove('on'); cur = ids[0]; }
       show(ids.indexOf(cur), true); replay(el, 'in');       // header, roster and actions slide in as the ink uncovers
-      nav.start();
+      nav.start(); requestAnimationFrame(() => { updateOverflow(); cards[cur].scrollIntoView({ block: 'nearest', inline: 'nearest' }); });
     },
     exit() { stopDrag(); nav.stop(); drag = null; if (group) group.visible = false; if (key) key.position.copy(keyHome); },
   };
