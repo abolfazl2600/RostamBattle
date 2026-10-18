@@ -1202,6 +1202,20 @@
   .touch-stick i { width: 38%; aspect-ratio: 1; border-radius: 50%; background: #f2c14e88; border: 1px solid #f4ead8aa; }
   .touch-stick span { position: absolute; bottom: 7px; color: #fff; font: 12px var(--sans); pointer-events: none; }
   .touch-stick.held { border-color: #f2c14e; }
+  .touch-actions { position: absolute; right: max(12px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom));
+    display: grid; grid-template-columns: repeat(3, var(--touch-button)); grid-template-rows: repeat(2, var(--touch-button)); gap: 8px;
+    --touch-button: clamp(48px, 12dvh, 66px); }
+  .touch-actions button { pointer-events: auto; touch-action: none; border: 1px solid #f4ead899; border-radius: 50%;
+    background: #1a120da8; color: #fff1ce; font: 600 13px var(--sans); padding: 0; min-width: 48px; min-height: 48px; }
+  .touch-actions button[data-action="attack"] { grid-column: 3; grid-row: 2; transform: scale(1.12); background: #775b20bb; }
+  .touch-actions button[data-action="charge"] { grid-column: 2; grid-row: 2; }
+  .touch-actions button[data-action="jump"] { grid-column: 3; grid-row: 1; }
+  .touch-actions button[data-action="dodge"] { grid-column: 1; grid-row: 2; }
+  .touch-actions button[data-action="musou"] { grid-column: 2; grid-row: 1; }
+  .touch-actions button[data-action="target"] { grid-column: 1; grid-row: 1; }
+  .touch-actions button.held { background: #ac7c24; box-shadow: 0 0 12px #f2c14e88; }
+  .touch-actions button[aria-disabled="true"] { color: #b8b0a0; border-style: dashed; }
+  .touch-actions button.ready { border-color: #ffe09a; box-shadow: 0 0 12px #f2c14eaa; }
 </style>
 </head>
 <body class="inkhold">

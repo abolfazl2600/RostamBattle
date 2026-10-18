@@ -8,10 +8,32 @@ export function joystickVector(dx, dy, radius, dead = 0.12) {
     knobX: dx / distance * length * radius, knobY: dy / distance * length * radius } : { x: 0, y: 0, knobX: 0, knobY: 0 };
 }
 
-export function createTouchControls(touch, { isActive }) {
+export function createTouchControls(touch, { isActive, musouReady = () => false }) {
   const root = document.createElement('div'); root.id = 'touch-controls'; root.hidden = true;
   root.innerHTML = '<div class="touch-stick" role="group" aria-label="جوی‌استیک حرکت"><i></i><span>حرکت</span></div>';
+  const actions = [['attack', 'حمله'], ['charge', 'قدرتی'], ['jump', 'پرش'], ['dodge', 'جاخالی'], ['musou', 'موسو'], ['target', 'هدف']];
+  root.insertAdjacentHTML('beforeend', `<div class="touch-actions">${actions.map(([a, label]) => `<button type="button" data-action="${a}" aria-label="${label}" aria-pressed="false">${label}</button>`).join('')}</div>`);
   document.body.append(root);
+  const buttons = [...root.querySelectorAll('[data-action]')];
+  const paintButtons = () => {
+    for (const b of buttons) {
+      const held = [...touch.pointers.values()].some((p) => p.action === b.dataset.action);
+      b.classList.toggle('held', held); b.setAttribute('aria-pressed', String(held));
+    }
+  };
+  touch.onReset(paintButtons);
+  for (const b of buttons) {
+    b.addEventListener('pointerdown', (e) => {
+      if (b.dataset.action === 'musou' && !musouReady()) { e.preventDefault(); return; }
+      if (touch.claim(e, 'action', b.dataset.action)) paintButtons();
+    });
+    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) b.addEventListener(name, (e) => {
+      touch.release(e.pointerId, name !== 'pointerup'); paintButtons();
+      if (e.pointerType === 'touch') e.preventDefault();
+    });
+    // Actions are driven by pointer edges, never compatibility clicks.
+    b.addEventListener('click', (e) => e.preventDefault());
+  }
   const stick = root.querySelector('.touch-stick'), knob = stick.querySelector('i');
   let center = null;
   const clearStick = () => { center = null; knob.style.transform = 'translate(0px, 0px)'; stick.classList.remove('held'); };
@@ -36,6 +58,8 @@ export function createTouchControls(touch, { isActive }) {
     const active = isActive();
     if (!active && !root.hidden) touch.reset();
     root.hidden = !active;
+    const ready = musouReady(), musou = buttons.find((b) => b.dataset.action === 'musou');
+    musou.classList.toggle('ready', ready); musou.setAttribute('aria-disabled', String(!ready));
   }
   on('viewport', update);
   return { update, root };
