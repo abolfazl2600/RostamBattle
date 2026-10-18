@@ -1,0 +1,74 @@
+name: Android native build
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "android/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install Android API 36 and build tools
+        run: |
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+          # The wrapper JAR is currently bootstrapped below and not yet committed.
+          validate-wrappers: false
+      - name: Install locked Capacitor tools
+        run: npm ci
+      - name: Web packaging and game checks
+        run: |
+          npm run check:build
+          npm run check:game
+      - name: Sync local assets into native application
+        run: npm run android:sync
+      - name: Bootstrap Gradle wrapper from pinned distribution
+        run: gradle -p android wrapper --gradle-version 8.14.3 --distribution-type all
+      - name: Assemble debug and unsigned release variants
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew --no-daemon assembleDebug assembleRelease
+      - name: Verify Android application metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
+          DEBUG="android/app/build/outputs/apk/debug/app-debug.apk"
+          RELEASE="android/app/build/outputs/apk/release/app-release-unsigned.apk"
+          test -f "$DEBUG"
+          test -f "$RELEASE"
+          "$AAPT" dump badging "$DEBUG" > /tmp/rostam-debug.badging
+          "$AAPT" dump badging "$RELEASE" > /tmp/rostam-release.badging
+          grep -F "name='io.github.abolfazl.nabardrostam.dev'" /tmp/rostam-debug.badging
+          grep -F "name='io.github.abolfazl.nabardrostam'" /tmp/rostam-release.badging
+          grep -F "sdkVersion:'28'" /tmp/rostam-debug.badging
+          grep -F "targetSdkVersion:'36'" /tmp/rostam-debug.badging
+          grep -F "targetSdkVersion:'36'" /tmp/rostam-release.badging
+          # Ensure release variant is not mistakenly uploaded as signed.
+          echo "Native Debug APK compiled; release compiled for verification only (unsigned)."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rostams-battle-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

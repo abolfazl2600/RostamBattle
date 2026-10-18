@@ -21,9 +21,9 @@ npm run android:sync
 npm run android:open
 ```
 
-These last commands require the native project from #34. Until then they should fail visibly rather than silently creating an unreviewed release identity. The configured `io.github.abolfazl2600.voxelgame.dev` is a development-only placeholder, **not** an approved Play package ID. No signing or publishing is implemented here. Final identity and channel decisions remain in #32/#43.
+The native project from #34 is now tracked. Do **not** run `npx cap add android` again or overwrite it. Capacitor uses the approved release ID `io.github.abolfazl.nabardrostam`; the Gradle debug variant adds `.dev` so it can coexist with Release. Release signing/Play are separate issues #43–#46. See [NATIVE_BUILD.md](NATIVE_BUILD.md) for native setup.
 
-Capacitor 8 native setup will use JDK 21 and Android SDK 36. Gradle/AGP versions must come from the pinned Capacitor template and be committed with the wrapper in #34, then verified with an actual build. Minimum Android support is not claimed without device evidence.
+Capacitor 8 native setup will use JDK 21 and Android SDK 36. Android native files follow Capacitor 8.5.3: Gradle 8.14.3, AGP 8.13.0, JDK 21, compile/target API 36 and preliminary minSdk 28. The binary Gradle wrapper JAR cannot currently be transferred by the connector, so CI regenerates it from the pinned Gradle distribution with `gradle wrapper`; include verified JAR in a follow-up #34 commit. Android 9/WebGL2/audio/input require device testing.
 
 ## Offline boundary and CSP
 
