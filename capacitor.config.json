@@ -1,0 +1,13 @@
+{
+  "appId": "io.github.abolfazl2600.voxelgame.dev",
+  "appName": "Voxel Musou Dev",
+  "webDir": "dist",
+  "server": {
+    "hostname": "localhost",
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  }
+}

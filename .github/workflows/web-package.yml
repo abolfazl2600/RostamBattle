@@ -1,0 +1,29 @@
+name: Web package
+on:
+  push:
+    branches: [main, "android/**"]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install pinned tools
+        run: |
+          npm ci
+      - name: Packaging and regression checks
+        run: |
+          npm run check:build
+          npm run check:game
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-package
+          path: |
+            dist/
+            package-lock.json
