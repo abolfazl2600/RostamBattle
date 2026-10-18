@@ -32,8 +32,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.14.3'
-          # The wrapper JAR is currently bootstrapped below and not yet committed.
-          validate-wrappers: false
+          validate-wrappers: true
       - name: Install locked Capacitor tools
         run: npm ci
       - name: Web packaging and game checks
@@ -42,17 +41,6 @@ jobs:
           npm run check:game
       - name: Sync local assets into native application
         run: npm run android:sync
-      - name: Bootstrap Gradle wrapper from pinned distribution
-        run: gradle -p android wrapper --gradle-version 8.14.3 --distribution-type all
-      - name: Export pinned Gradle wrapper binary for issue 34
-        if: github.event_name == 'push' && github.ref == 'refs/heads/android/34-native-api36'
-        shell: bash
-        run: |
-          sha256sum android/gradle/wrapper/gradle-wrapper.jar
-          echo 'ROSTAM_GRADLE_WRAPPER_BEGIN'
-          base64 -w 16000 android/gradle/wrapper/gradle-wrapper.jar
-          echo
-          echo 'ROSTAM_GRADLE_WRAPPER_END'
       - name: Assemble debug and unsigned release variants
         run: |
           chmod +x android/gradlew

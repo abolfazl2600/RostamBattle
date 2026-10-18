@@ -20,7 +20,7 @@ The temporary vector launcher icon and simple dark launch theme are **not** fina
 
 ## Local build
 
-Install Android SDK Platform 36 and Build Tools 36.0.0 (Android Studio SDK Manager), JDK 21, Node 22.22.0, and Gradle 8.14.3.
+Install Android SDK Platform 36 and Build Tools 36.0.0 (Android Studio SDK Manager), JDK 21 and Node 22.22.0. The committed Gradle wrapper downloads Gradle 8.14.3.
 
 ```sh
 nvm use
@@ -30,23 +30,27 @@ npm run check:game
 npm run android:sync
 ```
 
-**Important bootstrap limitation:** The binary `android/gradle/wrapper/gradle-wrapper.jar` could not be transferred through this repository's GitHub connector; it is not checked in by this PR. Regenerate the official wrapper locally using a trusted installation of the pinned Gradle 8.14.3 distribution:
+The official `android/gradle/wrapper/gradle-wrapper.jar` is committed and was verified to match **SHA-1 Git blob `1b33c55baabb587c669f562ae36f953de2481846`**, the binary in the official Capacitor 8.5.3 Android template. Use the committed Gradle wrapper (it downloads pinned Gradle 8.14.3) — **no global Gradle install or manual wrapper bootstrap is required**:
 
 ```sh
-gradle -p android wrapper --gradle-version 8.14.3 --distribution-type all
-# Then use the wrapper for the actual build
 cd android
 ./gradlew --no-daemon assembleDebug
 ./gradlew --no-daemon assembleRelease
 ```
 
-On Windows use `gradlew.bat`. Once generated, commit the verified `gradle-wrapper.jar` in a follow-up update to #34; verify the wrapper integrity before using it. **Do not download an unverified replacement JAR from an arbitrary site.** The [Android native CI](../../.github/workflows/android-native.yml) performs the same bootstrap using `gradle/actions/setup-gradle@v4` and uploads only the debug APK.
+On Windows use `gradlew.bat`. CI validates the wrapper and uploads only the Debug APK; the Release APK built by this command is **unsigned**.
 
 Debug output: `android/app/build/outputs/apk/debug/app-debug.apk` (debug-signed, *not for distribution*).
 
 Release compilation output: `android/app/build/outputs/apk/release/app-release-unsigned.apk` (**not signed**, for compilation verification only). **Never publish this as a signed APK.** Actual secured Direct APK signing is #43/#44; independently Upload-signed AAB is #45, with separate workflows #46. No Play account is required for native build compilation or future Direct APK signing.
 
-## Smoke test on Android device/emulator (pending)
+## WebView compatibility and Android emulator smoke checks
+
+Android 9 (API 28) supports installing this app, but the *factory emulator's* outdated WebView cannot parse the game's modern JavaScript and lacks import-map support. The Android-only HTML boot guard reports that the user must update **Android System WebView/Chrome** instead of showing a misleading generic load failure. Do not interpret that old emulator as evidence Android 9 with a newer supported WebView is incompatible. The emulator CI matrix checks for an upgrade message on factory API 28 and a rendered title on a newer API emulator. The actual minimum supported **WebView version and GPU/WebGL2 features** still require physical Android 9 tests (#40).
+
+The native game Activity currently requests landscape orientation. Android 16 tablets may ignore orientation requests, and Safe Area, immersive UI and multitouch testing remain #36/#11.
+
+## Smoke test on Android device/emulator (partly automated; physical QA pending)
 
 ```sh
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
