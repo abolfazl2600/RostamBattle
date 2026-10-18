@@ -141,7 +141,44 @@ export const battleNameFa = (name) => {
   const raw = typeof name === 'string' ? name : (name.en || name.zh || '');
   return BATTLE_NAMES_FA[raw] || CASELESS_NAMES_FA[raw.toLocaleLowerCase('en')] || raw;
 };
+
+// Story dialogue lines translated by their original English text (stable lookup key).
+export const BATTLE_DIALOGUE_FA = {
+  "Wait, General! The way ahead isn't secured — don't go in alone.": "سردار، صبر کنید! راه پیش رو هنوز امن نیست؛ تنها پیش نروید!",
+  "The gate is barred. Defeat Zhang He, who guards it!": "دروازه بسته است. نخست ژانگ هه، نگهبان آن را شکست دهید!",
+  "Mount Dingjun is the gate of Hanzhong. Everything rides on this battle!": "کوه دینگ‌جون دروازهٔ هان‌ژونگ است؛ سرنوشت ما به این نبرد بستگی دارد!",
+  "Xiahou Yuan is brave but rash. Take the ford, then the pass, then strike his camp.": "شیا‌هو یوان شجاع اما شتاب‌زده است. نخست گذرگاه رود را بگیرید، سپس به اردوگاهش حمله کنید.",
+  "Seventy winters or not, these old bones still have a war in them!": "اگرچه نزدیک هفتاد سال دارم، هنوز توان جنگیدن در این تن هست!",
+  "Let me lead the van. My spear will open the road!": "بگذارید من پیشاپیش سپاه بروم؛ نیزه‌ام راه را باز خواهد کرد!",
+  "General Hansheng, I'll hold the rear. Fight without fear!": "سردار هان‌شنگ، من پشت سرتان را حفظ می‌کنم؛ بی‌دغدغه بجنگید!",
+  "Go on, Zilong. But this old man won't let you take all the glory!": "پیش برو زی‌لونگ! اما خیال نکن همهٔ افتخار این نبرد مال تو می‌شود!",
+  "Not one Shu soldier crosses the Han! Archers, loose!": "هیچ سرباز شویی نباید از رود هان بگذرد! کمانداران، شلیک کنید!",
+  "Arrows? You'd trade shots with me?": "تیر و کمان؟ می‌خواهید با من تیراندازی کنید؟",
+  "The ford is thinly held. Through them in one charge!": "مدافعان گذرگاه اندک‌اند. با یک یورش از میانشان می‌گذریم!",
+  "I am Xiahou Shang! Name yourself!": "من شیا‌هو شانگ هستم! نامت را بگو!",
+  "The ford is ours! The pass is narrow. Wei will have an ambush waiting.": "گذرگاه را گرفتیم! راه کوهستانی باریک است؛ احتمالاً نیروهای وی در کمین‌اند.",
+  "Shu troops in the pass! Warn General Xiahou!": "سپاه شو وارد گذرگاه شد! به سردار شیا‌هو خبر دهید!",
+  "Ha! You walked right in. This pass will be your grave!": "هاها! درست به دام افتادید. این گذرگاه گورستان شما می‌شود!",
+  "An ambush! Cut down Du Xi and the rest will scatter!": "کمین است! دو شی را شکست دهید تا بقیه پراکنده شوند!",
+  "General Hansheng! The road behind is clear. The gate is yours!": "سردار هان‌شنگ! مسیر پشت سرتان امن است؛ حمله به دروازه با شما!",
+  "Well fought, Zilong! The gate is ahead, and Zhang He stands before it!": "آفرین زی‌لونگ! دروازه پیش روست و ژانگ هه از آن پاسداری می‌کند!",
+  "While Zhang He stands here, no Shu soldier sets foot past this gate!": "تا زمانی که ژانگ هه اینجا ایستاده، هیچ سرباز شویی از این دروازه نمی‌گذرد!",
+  "Zhang Junyi! I've long wanted to test your famous blade!": "ژانگ جون‌یی! مدت‌ها بود می‌خواستم قدرت شمشیر معروف تو را بیازمایم!",
+  "Zhang He. Not since Changban. Let us settle it!": "ژانگ هه! از چانگ‌بان تاکنون ندیده بودمت؛ امروز تکلیف نبردمان را روشن می‌کنیم!",
+  "...Curse it, the camp is lost. All troops, fall back!": "لعنت! اردوگاه سقوط کرد. همهٔ نیروها عقب‌نشینی کنند!",
+  "Zhang He has fled. Xiahou Yuan stands alone! Take the summit and end this!": "ژانگ هه گریخت و شیا‌هو یوان تنها ماند! به قله بروید و کار را تمام کنید!",
+  "Hold him! Don't let him near General Xiahou!": "جلویش را بگیرید! نگذارید به سردار شیا‌هو نزدیک شود!",
+  "A white-haired old man, come here to die?": "پیرمرد مو‌سپید! آمده‌ای همین‌جا کشته شوی؟",
+  "Zhao Zilong! Today I repay you for Changban!": "ژائو زی‌لونگ! امروز انتقام شکست چانگ‌بان را می‌گیرم!",
+  "Old, and only stronger for it! Xiahou Yuan, your head is mine!": "با افزایش سن نیرومندتر شده‌ام! شیا‌هو یوان، امروز شکستت می‌دهم!",
+  "Xiahou Yuan, this mountain belongs to the Han today!": "شیا‌هو یوان، از امروز این کوه از آن خاندان هان است!",
+  "Beat the drums! All troops, crush him!": "طبل‌ها را بزنید! همهٔ نیروها، نابودش کنید!",
+  "Leave the reinforcements to me. Take Xiahou Yuan!": "نیروهای کمکی با من؛ تو شیا‌هو یوان را شکست بده!",
+  "This old man will hold their reinforcements. Go, Zilong!": "من جلوی نیروهای کمکی را می‌گیرم. برو زی‌لونگ!",
+  "Old Huang Zhong has cut down Xiahou Yuan!": "هوانگ ژونگِ کهنه‌کار شیا‌هو یوان را شکست داد!",
+  "Xiahou Yuan has fallen to Zhao Zilong of Changshan!": "شیا‌هو یوان به دست ژائو زی‌لونگ از چانگ‌شان شکست خورد!"
+};
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
-  return BATTLE_EVENTS_FA[en] || en;
+  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || en;
 };
