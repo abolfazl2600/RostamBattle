@@ -1380,6 +1380,164 @@
   #title.chp .quality-choice { display: none; }
   #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); flex-wrap: wrap; }
   .touch-device #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); }
+
+  /* The chapter picker is its own compact, two-pane landscape screen on touch devices.
+     Do not change Trials, Free Battle, desktop chapter layout, or the difficulty picker. */
+  .touch-device #title.chp.story-chapters:not(.dif) .t-band {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    top: max(62px, calc(env(safe-area-inset-top) + 54px));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    padding: 0;
+    overflow: hidden;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cpanel {
+    display: grid;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    gap: clamp(8px, 1.5vw, 18px);
+    direction: ltr; /* the chapter list remains physically on the left */
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    margin: 0;
+    align-items: stretch;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs {
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    gap: 5px;
+    padding: 4px 6px max(18px, env(safe-area-inset-bottom)) 4px;
+    box-sizing: border-box;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs button {
+    min-height: 54px;
+    flex: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 10px;
+    border: 1px solid rgba(214,170,90,.24);
+    border-radius: 4px;
+    background: rgba(18,12,9,.82);
+    text-align: right;
+    transform: none;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs button.on {
+    transform: none;
+    border-color: #f2c14e;
+    background: rgba(82,61,30,.9);
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs button::before,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs .swash,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs button > small {
+    display: none;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs b {
+    display: block;
+    width: auto;
+    font-size: clamp(14px, 2.4vw, 19px);
+    line-height: 1.45;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs b em {
+    display: block;
+    margin: 0 0 2px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs .t-lk {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 11px;
+    line-height: 1.3;
+    vertical-align: baseline;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-chs button:not(.lock) .t-lk {
+    display: none;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-ccard {
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: clamp(10px, 2.2dvh, 18px);
+    box-sizing: border-box;
+    overflow: hidden;
+    background: rgba(17,12,10,.95);
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-ccard h3 {
+    flex: none;
+    margin: 0 0 6px;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-ccard h3 small,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cname i,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cera,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cline small,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cfoot,
+  .touch-device #title.chp.story-chapters:not(.dif) .ui-foot,
+  .touch-device #title.chp.story-chapters:not(.dif) .t-tag {
+    display: none;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cname {
+    flex: none;
+    min-width: 0;
+    margin: 0 0 8px;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cname b {
+    font-size: clamp(18px, 3.8dvh, 27px);
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cdetail {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    padding-inline-end: 3px;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cline {
+    margin: 0;
+    min-height: 0;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-cline b {
+    font-size: clamp(13px, 2.8dvh, 16px);
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) > .ui-foot {
+    display: none; /* no prompt bar over the bottom chapter rows */
+  }
+  .touch-device #title.chp.story-chapters:not(.dif) .t-tag {
+    display: none; /* stage character labels must not overlap chapter information */
+  }
 </style>
 </head>
 <body class="inkhold">
