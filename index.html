@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
+<!-- Persian/Arabic variable font (OFL 1.1), with pinned CDN and system fallbacks. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400..900&amp;display=swap">
 <title>وُکسل موسو — نبرد سه پادشاهی</title>
 <script type="importmap">
 { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
@@ -984,6 +988,202 @@
     #result .rs-stats { min-width: min(46rem, 86vw); }
     #result .rs-body { flex-wrap: wrap; }
   }
+
+  /* Persian typography pass (2026-10): the legacy layout was designed for compact CJK glyphs.
+     Vazirmatn is the primary face; the pinned upstream variable WOFF2 and Tahoma are fallbacks. */
+  @font-face {
+    font-family: "Vazirmatn CDN";
+    src: url("https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn%5Bwght%5D.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+  }
+  :root {
+    --fa-font: "Vazirmatn", "Vazirmatn CDN", Tahoma, "DejaVu Sans", sans-serif;
+    --brush: var(--fa-font);
+    --kai: var(--fa-font);
+    --sans: var(--fa-font);
+  }
+  body { font-family: var(--fa-font); font-synthesis: none; }
+  :is(#title, #select, #prologue, #result, #hud, #menu) {
+    font-family: var(--fa-font);
+  }
+  :is(#title, #select, #prologue, #result, #hud, #menu) :is(h1, h2, h3, b, p, small, th, td, button) {
+    text-rendering: optimizeLegibility;
+  }
+  /* Stop the CJK tracking and single-line sizing from stretching Persian words beyond their panels. */
+  :is(.t-menu b, .t-menu small, .t-en, .t-tag b, .t-tag small, .t-cname b, .t-cera,
+      .t-cline b, .t-ccard h3, .t-ccard h3 small, .t-cfoot, .s-head h2, .s-card b,
+      .s-card small, .s-name h1, .s-wpn, .s-musou b, .s-line p, .ui-foot, .ui-foot small,
+      #menu .t, #menu .en, #menu button, #menu button small, #hud .h-band p,
+      #hud .h-dlg p, #hud .h-boss b, #hud .h-intro .en) {
+    letter-spacing: 0;
+  }
+  /* Title screen: keep the brand in the left column, clear of the chapter list and officer art. */
+  .t-band { width: min(50vw, 64rem); }
+  .t-logo { width: 100%; }
+  .t-logo h1 {
+    font-size: clamp(4.8rem, 9vh, 8.2rem);
+    line-height: 1.5;
+    margin-left: 4rem;
+    max-width: calc(100% - 4rem);
+  }
+  .t-logo h1::before { -webkit-text-stroke: .45rem #150903; }
+  .t-logo .t-en {
+    margin: -.6rem 0 0 4.5rem;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    white-space: normal;
+  }
+  .t-seal {
+    writing-mode: horizontal-tb;
+    top: -1rem;
+    left: 4rem;
+    --sz: 1.25rem;
+    --pad: .35rem .7rem;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+  #title .t-menu { margin-top: 1.6rem; }
+  .t-menu b { font-size: 3rem; line-height: 1.5; }
+  .t-main b { font-size: 3.15rem; }
+  .t-menu small { font-size: 1.2rem; line-height: 1.45; }
+  .t-menu b, .t-menu small {
+    width: auto;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+  #title .t-main button { padding-top: .35rem; padding-bottom: .55rem; }
+  .t-main .swash { bottom: 1.2rem; width: 25rem; }
+  .t-press { top: 29rem; max-width: 46rem; white-space: normal; }
+  .t-press b { font-size: 3.1rem; line-height: 1.5; letter-spacing: 0; }
+  .t-press small { line-height: 1.5; letter-spacing: 0; }
+  .t-press::before { top: 5.5rem; }
+  /* Chapter/difficulty selectors occupy two explicit columns, not two overflowing auto-width boxes. */
+  :is(.t-cpanel, .t-dpanel) {
+    width: 100%;
+    gap: 1.6rem;
+    margin-top: 1.8rem;
+    align-items: flex-start;
+  }
+  :is(.t-cpanel, .t-dpanel) .t-menu {
+    flex: 0 0 23rem;
+    width: 23rem;
+    min-width: 0;
+    margin-top: 0;
+  }
+  #title :is(.t-chs, .t-dif) button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: .35rem 0 .65rem 2.2rem;
+  }
+  #title :is(.t-chs, .t-dif) b {
+    font-size: 2.35rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  #title :is(.t-chs, .t-dif) small {
+    font-size: 1.05rem;
+    line-height: 1.45;
+    max-width: 21rem;
+  }
+  .t-chs b em { font-size: 1.35rem; line-height: 1.4; }
+  .t-chs .swash, .t-dif .swash { width: 20rem; bottom: 1.3rem; }
+  :is(.t-ccard, .t-dcard) {
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 1.3rem 1.5rem;
+    max-height: calc(100vh - 23rem);
+    overflow-y: auto;
+  }
+  :is(.t-ccard, .t-dcard) h3 { font-size: 1.45rem; line-height: 1.5; letter-spacing: 0; }
+  :is(.t-ccard, .t-dcard) h3 small { letter-spacing: 0; line-height: 1.4; }
+  .t-cname { align-items: center; flex-wrap: wrap; gap: .6rem; }
+  .t-cname b { font-size: clamp(2rem, 3rem, 3.2rem); line-height: 1.5; white-space: normal; overflow-wrap: anywhere; }
+  .t-cname i { writing-mode: horizontal-tb; --sz: 1.1rem; --pad: .25rem .4rem; }
+  .t-cera { font-size: 1.55rem; line-height: 1.5; }
+  .t-cline { margin-top: .75rem; min-height: 0; }
+  .t-cline b { font-size: 1.6rem; line-height: 1.7; overflow-wrap: anywhere; }
+  .t-cline small { line-height: 1.5; }
+  .t-cfoot { margin-top: .8rem; padding-top: .8rem; }
+  .t-cfoot em { font-size: 1.45rem; line-height: 1.5; white-space: nowrap; }
+  .t-cfoot span { font-size: 1.2rem; line-height: 1.5; }
+  .t-dline b { font-size: 1.9rem; line-height: 1.65; }
+  /* Officer head tags: horizontal Persian rather than letter-by-letter vertical columns. */
+  .t-tag { gap: .25rem; max-width: 14rem; }
+  .t-tag b {
+    writing-mode: horizontal-tb;
+    direction: rtl;
+    font-size: 2rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .t-tag small {
+    width: auto;
+    max-width: 13rem;
+    white-space: normal;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+  .t-tag i { writing-mode: horizontal-tb; --sz: 1.1rem; --pad: .3rem .4rem; }
+  /* Select, controls and battle messages share the same readable font metrics. */
+  .s-head h2 { font-size: 3.6rem; line-height: 1.5; }
+  .s-name h1 { font-size: 5rem; line-height: 1.4; }
+  .s-card b { font-size: 2rem; line-height: 1.5; }
+  .s-card small { line-height: 1.45; white-space: normal; }
+  .s-bio span { line-height: 1.85; }
+  .s-musou b { line-height: 1.6; }
+  .s-line p { line-height: 1.7; }
+  .ui-foot { align-items: center; gap: 1.2rem; font-size: 1.3rem; line-height: 1.6; }
+  .ui-foot span { display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; }
+  .ui-foot small { font-size: 1.05rem; line-height: 1.5; }
+  #title .ui-foot { left: 48%; right: 3rem; font-size: 1.3rem; gap: 1.2rem; }
+  #hud .h-dlg { max-width: min(74rem, 73vw); padding-right: 2rem; }
+  #hud .h-dlg p {
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: min(54rem, 59vw);
+    font-size: 1.8rem;
+    line-height: 1.75;
+  }
+  #hud .h-band p { font-size: 2.1rem; line-height: 1.6; }
+  #hud .h-band.big p { font-size: 3.3rem; line-height: 1.5; }
+  #hud .h-intro .zh { line-height: 1.5; }
+  @media (max-aspect-ratio: 4/3) {
+    .t-band { width: min(58vw, 55rem); }
+    .t-logo h1 { font-size: 6rem; }
+    :is(.t-cpanel, .t-dpanel) .t-menu { flex-basis: 17rem; width: 17rem; }
+    #title :is(.t-chs, .t-dif) b { font-size: 1.85rem; }
+    .t-cname b { font-size: 2.3rem; }
+    .t-tag { display: none; }
+  }
+  @media (max-width: 850px) {
+    .t-band { left: 3rem; width: 59vw; top: 4rem; }
+    .t-logo h1 { font-size: 5.2rem; }
+    .t-seal { left: 4rem; }
+    :is(.t-cpanel, .t-dpanel) .t-menu { flex-basis: 15rem; width: 15rem; }
+    #title :is(.t-chs, .t-dif) b { font-size: 1.65rem; }
+    #title :is(.t-chs, .t-dif) small { font-size: 1rem; }
+    :is(.t-ccard, .t-dcard) { padding: 1rem; max-height: 54vh; }
+    .t-cname b { font-size: 2rem; }
+    #title .ui-foot { left: 3rem; right: 2rem; justify-content: flex-end; }
+  }
+  @media (max-width: 600px) {
+    .t-band { width: calc(100vw - 6rem); }
+    .t-logo h1 { font-size: 4.4rem; }
+    :is(.t-cpanel, .t-dpanel) { flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+    :is(.t-cpanel, .t-dpanel) .t-menu { flex: 0 0 100%; width: 100%; }
+    #title :is(.t-chs, .t-dif) button { padding: .2rem 0 .3rem 1.6rem; }
+    :is(.t-ccard, .t-dcard) { width: 100%; flex: 1 1 100%; max-height: 30vh; }
+    .t-chs b em { margin-right: .5rem; }
+    .t-cfoot em { white-space: normal; }
+    #title .ui-foot { font-size: 1rem; gap: .5rem; }
+  }
+
 </style>
 </head>
 <body class="inkhold">
