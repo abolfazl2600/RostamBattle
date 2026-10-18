@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="data:,">
 <!-- Persian/Arabic variable font (OFL 1.1), with pinned CDN and system fallbacks. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1185,9 +1185,19 @@
     #title .ui-foot { font-size: 1rem; gap: .5rem; }
   }
 
+  /* Viewport shell; scrolling remains available inside menu panels. */
+  html, body { height: 100dvh; overscroll-behavior: none; }
+  canvas#c { height: var(--view-height, 100dvh); touch-action: none; }
+  #rotate-device { position: fixed; inset: 0; z-index: 10000; display: grid; place-content: center;
+    padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right));
+    background: #1a120d; color: #f4ead8; text-align: center; font: 600 20px/1.9 var(--sans); }
+  #rotate-device[hidden] { display: none; }
+  #rotate-device small { font-size: 15px; }
+  .touch-device .scr, .touch-device #menu { overscroll-behavior: contain; touch-action: pan-y; }
 </style>
 </head>
 <body class="inkhold">
+<div id="rotate-device" role="status" hidden><b>برای بازی، دستگاه را افقی کنید</b><small>پس از چرخاندن دستگاه می‌توانید ادامه دهید.</small></div>
 <canvas id="c"></canvas>
 <div id="hud" hidden></div>
 <div id="menu" hidden>

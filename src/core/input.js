@@ -8,6 +8,7 @@
 //   pad     right stick yaw + pitch, cubic response, rate eased over ≈4 steps (no twitch off the deadzone)
 //   R / L1 / L2   'target': recenter behind the hero, or onto the nearest officer (camera.js)
 import { on } from './events.js';
+import { viewport } from './viewport.js';
 
 const ACTIONS = ['attack', 'charge', 'jump', 'dodge', 'musou', 'target'];
 
@@ -35,7 +36,7 @@ export function createInput() {
   // resume · clickLock: the pending request came from a canvas click
   let battle = false, unlockT = -1e9, noLock = false, clickLock = false;
   const locked = () => document.pointerLockElement === canvas;
-  const live = () => battle && menu && menu.hidden;                 // battle running, pause menu closed
+  const live = () => battle && menu && menu.hidden && !viewport.blocked;                 // battle running, pause menu closed
   // requestPointerLock returns a promise in current browsers (rejects without a user gesture, e.g. the ?go= shortcut)
   const lock = (click = false) => { clickLock = click; if (live() && !locked() && !noLock) { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) { noLock = true; } } };
 
@@ -95,7 +96,12 @@ export function createInput() {
     return p;
   }
 
+  function reset() {
+    dev.keys.clear(); dev.lookX = dev.lookY = dev.keyT = dev.padYaw = dev.padPitch = 0;
+    dev.held = {}; dev.latch = {}; dev.pad = {};
+  }
   function sample() {
+    if (!live()) reset();
     let mx = 0, my = 0, orbit = 0, tilt = 0;
     const pad = pollPad();
     for (const k of dev.keys) { const m = MOVEKEYS[k]; if (m) { mx += m[0]; my += m[1]; } }
@@ -129,5 +135,5 @@ export function createInput() {
     return out;
   }
 
-  return { sample };
+  return { sample, reset };
 }
