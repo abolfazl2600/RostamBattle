@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main, "android/**"]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api: [28, 35]
+        api: [28, 34]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -106,33 +106,7 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: |
-            set -e
-            mkdir -p emulator-evidence
-            adb install -r android-apk/app-debug.apk
-            adb logcat -c
-            adb shell am start -W -n io.github.abolfazl.nabardrostam.dev/io.github.abolfazl.nabardrostam.MainActivity
-            sleep 25
-            adb shell pidof io.github.abolfazl.nabardrostam.dev
-            adb shell dumpsys activity activities > emulator-evidence/activity.txt
-            grep 'io.github.abolfazl.nabardrostam' emulator-evidence/activity.txt
-            adb logcat -d -t 4000 > emulator-evidence/logcat.txt
-            adb shell screencap -p /sdcard/rostam-startup.png
-            adb pull /sdcard/rostam-startup.png emulator-evidence/rostam-startup.png
-            if [ "${{ matrix.api }}" = "28" ]; then
-              # Factory Android 9 emulator ships a very old WebView. It must
-              # explain the update requirement, not show a broken game/error.
-              grep -F 'ROSTAM_WEBVIEW_UPGRADE_REQUIRED' emulator-evidence/logcat.txt
-            else
-              # Modern WebView must actually reach the title; Activity launch
-              # alone is insufficient and caused a false positive previously.
-              grep -F 'ROSTAM_WEBVIEW_IMPORTMAP_SUPPORTED' emulator-evidence/logcat.txt
-              grep -F 'ROSTAM_TITLE_VISIBLE' emulator-evidence/logcat.txt
-            fi
-            if grep -E 'Uncaught SyntaxError|ROSTAM_TITLE_TIMEOUT' emulator-evidence/logcat.txt; then
-              echo 'Game module failed to initialize'
-              exit 1
-            fi
+          script: bash scripts/ci/android-emulator-smoke.sh ${{ matrix.api }}
       - name: Preserve emulator screenshot and logs
         if: always()
         uses: actions/upload-artifact@v4
