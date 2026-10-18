@@ -28,6 +28,7 @@ import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
 import { createLifecycle } from './core/lifecycle.js';
 import { showRecovery } from './ui/recovery.js';
+import { GAME_NAME_FA } from './i18n/brand.js';
 import { createSettings } from './ui/settings.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { createPost } from './post/post.js';
@@ -163,7 +164,7 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   game.story.reset({ mode, char, ch });                                                    // C2
   menu.querySelector('.t').innerHTML = `${officerFa(who.id)}<i>${OFFICERS_FA[who.id].seal}</i>`;
   menu.querySelector('.sub').innerHTML = `نبرد متوقف شد · ${difficultyFa(game.diff.id).name}<small>${viewport.touch ? 'برای ادامه دکمهٔ ادامه را لمس کنید' : 'برای ادامه کلید Escape را بزنید'}</small>`;
-  document.title = `${officerFa(who.id)} — وُکسل موسو`;
+  document.title = `${officerFa(who.id)} — ${GAME_NAME_FA}`;
   emit('scenario', { mode, char, ch, map });
 }
 
@@ -181,6 +182,7 @@ on('viewport', () => {
 // ---- flow + pause menu (index.html #menu, battle only): the sim waits while it is open or while a screen is up
 const $ = (id) => document.getElementById(id);
 const menu = $('menu'), hudEl = $('hud');
+menu.querySelector('.en').textContent = GAME_NAME_FA;
 // the bindings mid-battle too (critic: checking aim meant quitting the chapter)
 menu.querySelector('.hint').insertAdjacentHTML('beforebegin', `<table>${controlRows().map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>`);
 function refreshPauseGuide() {

@@ -1,6 +1,6 @@
 {
   "appId": "io.github.abolfazl2600.voxelgame.dev",
-  "appName": "Voxel Musou Dev",
+  "appName": "نبرد رستم",
   "webDir": "dist",
   "server": {
     "hostname": "localhost",

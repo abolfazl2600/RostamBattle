@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400..900&amp;display=swap">
-<title>وُکسل موسو — نبرد سه پادشاهی</title>
+<title>نبرد رستم</title>
 <script type="importmap">
 { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
 </script>
@@ -439,39 +439,6 @@
   .t-ctl td { padding: .8rem 1.6rem .8rem 0; }
   .t-ctl td.pad { color: #c9b995; white-space: nowrap; }
   .t-ctl p { margin: 1.6rem 0 0; max-width: 52rem; font: 500 max(13px, 1.4rem)/1.5 var(--sans); color: #c9b995; }
-  /* records wall (title.js wall): chapters and trials down, officers across — each cell the officer's best rank there
-     over one pip per difficulty cleared (hatched: he is not in that chapter); beside it what is locked and its rule.
-     At ≤ 4:3 the table tightens and unlocks form two columns below it, keeping the whole wall on a 720p screen. */
-  .t-rec h2 em { margin-left: 3rem; font: 700 1.8rem/1 var(--kai); font-style: normal; letter-spacing: .1rem; color: #c9b995; }
-  .t-rec h2 em b { margin-right: .4rem; font: 700 3.6rem/1 var(--brush); color: #ffe3a0; }
-  .t-rbody { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 2rem 3.4rem; }
-  .t-rec table { border-collapse: collapse; }
-  .t-rec tr + tr { border-top: .1rem solid rgba(214,170,90,.18); }
-  .t-rec th { padding: .6rem 2.2rem .6rem 0; text-align: left; white-space: nowrap; font: 700 2.4rem/1 var(--brush); letter-spacing: .15rem; color: var(--paper); }
-  .t-rec th small { margin-left: .8rem; font: 700 1.2rem/1 var(--kai); letter-spacing: .1rem; color: #c9b995; }
-  .t-rec td { width: 7.4rem; padding: .55rem 0; text-align: center; vertical-align: middle; }
-  .t-rec td.na { background: repeating-linear-gradient(135deg, transparent 0 .5rem, rgba(214,170,90,.07) .5rem .62rem); }
-  .t-rec td canvas { display: block; width: 4rem; height: 4rem; margin: 0 auto .5rem; image-rendering: pixelated; background: #1d3a3c;
-    box-shadow: 0 0 0 .12rem rgba(214,170,90,.5); }
-  .t-rec td > b { font: 700 1.7rem/1 var(--kai); color: #f2c14e; }
-  .t-rec td.lock { opacity: .4; }
-  .t-rec td .t-rk { margin: 0; vertical-align: 0; }
-  .t-rec td .t-rk:empty { display: inline-block; --rc: rgba(214,170,90,.2); background: none; }   /* not cleared yet: an empty ring */
-  .t-rec td span, .t-rleg span { display: flex; justify-content: center; gap: .3rem; margin-top: .45rem; }
-  .t-rec u { width: .9rem; height: .45rem; transform: skewX(-24deg); background: rgba(10,7,6,.75); box-shadow: 0 0 0 .08rem #6b4a1c; }
-  .t-rec u.f { background: linear-gradient(#fff2b8, #f2c14e 45%, #b8791c); box-shadow: 0 0 0 .08rem #ffe8a0; }
-  .t-rleg { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0 0; font: 700 1.5rem/1 var(--kai); color: #c9b995; }
-  .t-rleg span { margin: 0; }
-  .t-rleg small { font: 600 max(12px, 1.2rem)/1 var(--sans); letter-spacing: .08em; }
-  .t-rec ul { list-style: none; margin: 0; padding: 0 0 0 3rem; display: grid; gap: 1.5rem; border-left: .1rem solid rgba(214,170,90,.3); }
-  .t-rec li { display: grid; grid-template-columns: auto 1fr; gap: .5rem .9rem; align-items: center; }
-  .t-rec li i { padding: .25rem .3rem; font: 700 1.3rem/1 var(--kai); font-style: normal; color: #cdbb9c; border: .12rem solid; border-radius: .25rem; }
-  .t-rec li.open i { color: #1a120d; background: #f2c14e; border-color: #f2c14e; }
-  .t-rec li b { font: 700 2rem/1 var(--kai); color: var(--paper); white-space: nowrap; }
-  .t-rec li span { grid-column: 2; font: 700 1.4rem/1.25 var(--kai); color: #e58a70; }
-  .t-rec li.open span { color: #c9b995; }
-  .t-rec li small { display: block; font: 600 max(11px, 1.1rem)/1.3 var(--sans); letter-spacing: .06em; color: #a99a7c; }
-
   /* difficulty panel (title.js setDif): in place of the menu once a mode is picked — the four tiers (the menu's diamond +
      swash focus, a size down) and beside them a card with the focused tier's line and 敵勢 / 敵將 / 傷害 pips (select's
      .s-stats bars). A locked 修羅: dimmed with a 鎖 tag, the card shows its unlock rule. */
@@ -547,14 +514,7 @@
       linear-gradient(0deg, rgba(8,5,4,.92) 0, rgba(8,5,4,.55) 9rem, transparent 18rem), linear-gradient(rgba(8,5,4,.55), transparent 11rem); }
     #title .ui-foot { left: 4rem; right: 3rem; gap: 2rem; }
     .t-tag { display: none; }   /* the pair is small beside the band here: the tags would sit on the bodies */
-    .t-rec { right: 4rem; max-width: calc(calc(100 * var(--game-vw)) - 8rem); max-height: calc(calc(100 * var(--game-vh)) - 12rem); padding: 1.8rem 2.4rem 1.4rem; }
-    .t-rbody { gap: 1rem 2rem; }
-    .t-rec th { font-size: 2rem; padding: .2rem 1.4rem .2rem 0; }
-    .t-rec td { width: 6rem; padding: .2rem 0; }
-    .t-rec td canvas { width: 3.2rem; height: 3.2rem; }
-    .t-rec td .t-rk { width: 2.2rem; height: 2.2rem; font-size: 1.7rem; line-height: 2.2rem; }
-    .t-rec ul { width: 100%; box-sizing: border-box; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; padding: 1rem 0 0;
-      border-left: 0; border-top: .1rem solid rgba(214,170,90,.3); }
+
   }
 
   /* ---- select: live officer on the right, roster + info in the ink band */
@@ -1598,6 +1558,7 @@
   .settings-card p { margin: 6px 0 10px; }
   .settings-card [role=status] { color: #ffe09a; }
   .settings-card :focus-visible, .settings-rescue:focus-visible { outline: 3px solid #ffe09a; outline-offset: -3px; }
+  .settings-card button { touch-action: manipulation; }
   .settings-card .settings-pad-help { font-size: 12px; color: #d8bd83; }
   .settings-rescue { position: absolute; z-index: 30; top: max(8px, var(--safe-top)); right: max(12px, var(--safe-right));
     min-height: 48px; min-width: 64px; padding: 8px 12px; color: #fff1ce; border: 1px solid #d8bd83;
@@ -1608,6 +1569,7 @@
   #title:not(.pre) .t-main { max-height: calc(62 * var(--game-vh)); overflow-y: auto; overscroll-behavior: contain; }
   #title .t-main button { min-height: 44px; }
 </style>
+<link rel="stylesheet" href="./src/ui/title.css">
 </head>
 <body class="inkhold">
 <div id="game-shell">
@@ -1615,7 +1577,7 @@
 <div id="hud" hidden></div>
 <div id="menu" hidden>
   <div class="t">ژائو یون<i>سردار</i></div>
-  <div class="en" style="--d:.04s">وُکسل موسو</div>
+  <div class="en" style="--d:.04s">نبرد رستم</div>
   <div class="sub" style="--d:.08s">نبرد متوقف شد<small>توقف بازی</small></div>
   <button id="go" style="--d:.14s">ادامه<small>بازگشت به میدان</small></button>
   <button id="quit" style="--d:.18s">بازگشت به منو<small>خروج از نبرد</small></button>
@@ -1629,7 +1591,7 @@
 <div id="prologue" class="scr" hidden></div>
 <div id="result" class="scr" hidden></div>
 <div id="ink" class="boot"><div class="ink-wait"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" stroke-width="2.6" stroke-dasharray="120 163"/>
-  <circle cx="50" cy="50" r="41" stroke-width="1.2" stroke-dasharray="36 222" stroke-dashoffset="-150" opacity=".6"/></svg><i>موسو</i></div></div>
+  <circle cx="50" cy="50" r="41" stroke-width="1.2" stroke-dasharray="36 222" stroke-dashoffset="-150" opacity=".6"/></svg><i>نبرد رستم</i></div></div>
 </div>
 <script>
   // boot failure (a module that 404s or won't link, e.g. a stale cached copy next to fresh ones): the page opens under the
