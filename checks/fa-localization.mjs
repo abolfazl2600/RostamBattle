@@ -4,6 +4,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { OFFICERS_FA, CHAPTERS_FA, TRIALS_FA, DIFFICULTIES_FA, UNLOCKS_FA,
   officerFa, stageFa, difficultyFa, unlockFa, modeLabelFa } from '../src/i18n/fa.js';
+import { PROLOGUE_FA, EPILOGUE_FA, MAP_LABELS_FA, prologueFa, epilogueFa, mapLabelFa } from '../src/i18n/narrative-fa.js';
+import { BATTLE_NAMES_FA, BATTLE_EVENTS_FA, BATTLE_DIALOGUE_FA, HULAO_DIALOGUE_FA,
+  battleNameFa, battleTextFa } from '../src/i18n/battle-fa.js';
 
 const officers = ['liubei', 'guanyu', 'zhangfei', 'zhaoyun', 'zhugeliang', 'huangzhong', 'lubu'];
 const chapters = ['hulao', 'changban', 'chibi', 'dingjun'];
@@ -43,3 +46,72 @@ for (const id of locks) {
 for (const mode of ['story', 'trial', 'free']) required(modeLabelFa({mode, ch:'hulao'}), `Mode ${mode}`);
 assert.match(readFileSync(new URL('../index.html', import.meta.url), 'utf8'), /<html lang="fa" dir="rtl">/);
 console.log('Persian localization: 7 officers, 4 chapters, 4 trial/free entries, 4 difficulties, 4 unlock rules OK');
+
+
+const heroRoutes = {
+  hulao: ['liubei', 'guanyu', 'zhangfei'],
+  changban: ['zhaoyun', 'zhangfei'],
+  chibi: ['zhugeliang', 'zhaoyun'],
+  dingjun: ['huangzhong', 'zhaoyun'],
+};
+for (const [id, heroes] of Object.entries(heroRoutes)) {
+  assert.equal(PROLOGUE_FA[id]?.length, 5, id + ' should have five prologue cards');
+  for (const hero of heroes) {
+    for (let i = 0; i < 5; i++) {
+      const card = prologueFa(id, i, hero);
+      assert.equal(card?.cols.length, 3, 'Prologue ' + id + '/' + hero + '/' + i + ': needs three columns');
+      card.cols.forEach((x) => required(x, 'Prologue ' + id + '/' + hero + '/' + i));
+      assert.equal(card.en, '', 'Persian cards should not duplicate English subtitles');
+    }
+    const ending = epilogueFa(id, hero);
+    assert.equal(ending?.length, 2, 'Missing ending ' + id + '/' + hero);
+    ending.forEach((x) => required(x, 'Ending ' + id + '/' + hero));
+  }
+}
+for (const id of ['slay', 'hold', 'gauntlet']) {
+  const ending = epilogueFa(id, 'liubei');
+  assert.equal(ending?.length, 1, 'Missing trial ending ' + id);
+  required(ending[0], 'Trial ending ' + id);
+}
+for (const [key, fa] of Object.entries(MAP_LABELS_FA)) {
+  required(fa, 'Map label ' + key);
+  assert.equal(mapLabelFa(key), fa);
+}
+for (const [key, fa] of Object.entries(BATTLE_NAMES_FA)) {
+  required(fa, 'Battle name ' + key);
+  assert.equal(battleNameFa({ en: key }), fa);
+  assert.equal(battleNameFa({ en: key.toUpperCase() }), fa);
+}
+for (const [kind, dictionary] of Object.entries({
+  event: BATTLE_EVENTS_FA, dingjunDialogue: BATTLE_DIALOGUE_FA, hulaoDialogue: HULAO_DIALOGUE_FA,
+})) {
+  for (const [key, fa] of Object.entries(dictionary)) {
+    required(fa, kind + ': ' + key);
+    assert.equal(battleTextFa(key), fa);
+  }
+}
+function englishOnLine(line) {
+  const i = line.indexOf("en: '");
+  if (i < 0) return null;
+  let out = '';
+  for (let j = i + 5; j < line.length; j++) {
+    if (line[j] === '\\' && j + 1 < line.length) { out += line[++j]; continue; }
+    if (line[j] === "'") return out;
+    out += line[j];
+  }
+  return null;
+}
+const eventKeys = new Set();
+for (const id of chapters) {
+  const lines = readFileSync(new URL('../src/story/' + id + '.js', import.meta.url), 'utf8').split('\n');
+  for (const line of lines) {
+    if (!/\b(obj|banner|fail):/.test(line)) continue;
+    const en = englishOnLine(line);
+    if (en) {
+      eventKeys.add(en);
+      required(BATTLE_EVENTS_FA[en], 'Missing script event ' + id + ': ' + en);
+    }
+  }
+}
+assert.ok(eventKeys.size >= 80, 'Unexpectedly low number of campaign events: ' + eventKeys.size);
+console.log('Persian narrative: four prologues, all hero endings, three trials, ' + eventKeys.size + ' scripted events OK');
