@@ -1380,6 +1380,49 @@
   #title.chp .quality-choice { display: none; }
   #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); flex-wrap: wrap; }
   .touch-device #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); }
+
+  /* Officer selection: bounded independent columns; the model keeps its own drag area. */
+  #select { --select-bottom: max(86px, 12rem); }
+  #select .s-info { box-sizing: border-box; min-width: 0; max-width: 100%;
+    bottom: var(--select-bottom); max-height: none; overflow-x: hidden; overflow-y: auto;
+    overscroll-behavior: contain; touch-action: pan-y; padding: 6px 10px 18px; container-type: inline-size; }
+  #select .s-info > * { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+  #select .s-name { flex-wrap: wrap; gap: 6px; direction: rtl; }
+  #select .s-name h1 { flex: 1 1 100%; min-width: 0; max-width: 100%; white-space: normal;
+    overflow-wrap: anywhere; letter-spacing: 0; font-size: clamp(24px, 18cqi, 6rem); line-height: 1.65; }
+  #select .s-name div { flex-wrap: wrap; padding-top: 0; max-width: 100%; }
+  #select .s-court { writing-mode: horizontal-tb; line-height: 1.7; letter-spacing: 0; }
+  #select .s-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #select .s-stats li { min-width: 0; }
+  #select .s-musou .swash { max-width: 100%; }
+  #select .s-rec { box-sizing: border-box; max-height: 7rem; overflow-y: auto; overflow-wrap: anywhere;
+    touch-action: pan-y; overscroll-behavior: contain; }
+  #select .s-roster { bottom: var(--select-bottom); min-height: 0; overflow: hidden; box-sizing: border-box; padding: 4px; }
+  #select .s-fac { flex: none; }
+  #select .s-list { display: flex; flex-direction: column; gap: 6px; min-height: 0; overflow-y: auto; overflow-x: hidden;
+    padding: 4px 10px 10px 4px; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; scrollbar-color: #b8893a transparent; }
+  #select .s-card { flex: none; min-width: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+  #select .s-card.on, #select .s-card:hover:not(.on), #select .s-card:active { transform: none; }
+  #select .s-card b, #select .s-card small { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  #select .s-scroll-hint { flex: none; text-align: center; color: #ffe3a0; font: 500 12px/1.6 var(--sans); }
+  #select .s-scroll-hint[hidden] { display: none; }
+  #select .s-act { z-index: 4; right: max(16px, env(safe-area-inset-right)); bottom: max(32px, calc(env(safe-area-inset-bottom) + 24px));
+    flex-direction: row; gap: 12px; padding: 6px; background: #20160fe8; border-radius: 6px; }
+  #select .s-act button { box-sizing: border-box; min-width: 44px; min-height: 48px; padding: 10px 18px; border: 1px solid #d8bd83; }
+  #select .s-back { color: #fff1d5; background: #493426; box-shadow: none; }
+  #select .s-back:hover { background: #654b32; }
+  #select .s-go { border-color: #ffe3a0; }
+  #select .s-act button:focus-visible, #select .s-card:focus-visible { outline: 3px solid #fff0bc; outline-offset: -3px; }
+  #select .s-act button:active { translate: 0 2px; }
+  #select .s-go[aria-disabled="true"] { border-style: dashed; }
+  .touch-device #select { --select-bottom: max(100px, calc(env(safe-area-inset-bottom) + 90px)); }
+  .touch-device #select .s-roster { bottom: var(--select-bottom); overflow: hidden; }
+  .touch-device #select .s-info { top: 92px; bottom: var(--select-bottom); }
+  .touch-device #select .s-info h1 { font-size: clamp(24px, 17cqi, 38px); }
+  .touch-device #select .s-rec { max-height: 42px; }
+  .touch-device #select .s-stats { grid-template-columns: minmax(0, 1fr); }
+  .touch-device #select .s-act { left: max(16px, env(safe-area-inset-left)); justify-content: flex-end; }
+  .touch-device #select .ui-foot { bottom: max(3px, env(safe-area-inset-bottom)); font-size: 11px; line-height: 1.5; }
 </style>
 </head>
 <body class="inkhold">
