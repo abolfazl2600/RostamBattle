@@ -681,7 +681,7 @@
   .s-act .ui-stamp { right: -1rem; bottom: 5.6rem; font-size: 4.4rem; }
 
   /* focus change: name inks in, stats refill left → right, the intro line slides down */
-  #select.swap .s-name h1 { animation: nameIn .5s cubic-bezier(.3,0,.2,1) backwards; transform-origin: 0 60%; }
+  #select.swap .s-name h1 { animation: nameIn .5s cubic-bezier(.3,0,.2,1) backwards; transform-origin: 50% 60%; }
   #select.swap :is(.s-en, .s-epi, .s-wpn, .s-bio, .s-musou) { animation: swapIn .45s ease .08s backwards; }
   #select.swap .s-stats i.f { animation: segIn .3s cubic-bezier(.3,0,.2,1) calc(var(--i) * .05s) both; }   /* --i: select.js */
   #select.swap .s-line p { animation: lineIn .7s cubic-bezier(.3,0,.2,1) .1s backwards; }
@@ -701,7 +701,7 @@
   }
   /* motion only, the text stays opaque: an animation stalled at its first frame (main-thread hitch after a focus change,
      measured in headless runs) leaves the name and the intro line fully readable, just offset */
-  @keyframes nameIn { from { transform: translateX(-1.5rem) scale(1.06); text-shadow: .3rem .4rem 0 rgba(0,0,0,.55), 0 0 4rem var(--acc); } }
+  @keyframes nameIn { from { transform: scale(.96); text-shadow: .3rem .4rem 0 rgba(0,0,0,.55), 0 0 4rem var(--acc); } }
   @keyframes swapIn { from { opacity: .75; } }
   @keyframes lineIn { from { transform: translateY(-1.6rem); } }
   @keyframes segIn { from { transform: skewX(-24deg) scaleX(0); } }
