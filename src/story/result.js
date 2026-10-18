@@ -11,6 +11,7 @@
 // UNLOCKS entry. Three notices fit above the epilogue and bottom prompts at 720p (16:9 and 4:3).
 // ctx in: { win, stats: { kos, time, hpMax, maxChain, dmg, rank? }, reason?: {zh, en}, mode ('story' | 'trial'), ch,
 // char, art?, diff (core/difficulty.js tier), rec?: { first, prev, fresh, unlocks } }.
+import { viewport } from '../core/viewport.js';
 import { CHARS, paintPortrait } from '../chars/index.js';
 import { CHAPTERS, chapter } from './chapters.js';
 import { inkWipe, afterWipe, createNav } from '../ui/menu.js';
@@ -74,6 +75,7 @@ export function createResult(el, flow) {
       </div>
       <footer class="ui-foot">${win ? '' : '<span><kbd>←</kbd><kbd>→</kbd>انتخاب<small>جابجایی</small></span>'}
         <span><kbd>Enter</kbd>تأیید<small>انتخاب</small></span><span><kbd>Esc</kbd>بازگشت<small>منوی اصلی</small></span></footer>`;
+      if (viewport.touch) el.querySelector('.ui-foot').textContent = 'برای ادامه یا بازگشت، دکمه را لمس کنید.';
       paintPortrait(el.querySelector('canvas'), ch);
       // tallies count up in turn (0.7 s each, 0.35 s apart, after the title lands)
       const tds = [...el.querySelectorAll('.rs-stats td:not(.rs-new)')], t0 = performance.now() + 700;

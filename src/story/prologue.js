@@ -6,6 +6,8 @@
 // ctx in: { mode: 'story', ch, char }. Done → flow.go('battle', ctx). Cards / map / branching: chapters.js header.
 // The paper, grain, filters, vignette and arrow ink are this frame's; the map art and the stamp are rebuilt from the
 // chapter on every enter. Render-side DOM only (wall-clock timers); nothing here touches the sim.
+import { on } from '../core/events.js';
+import { viewport } from '../core/viewport.js';
 import { chapter } from './chapters.js';
 import { stageFa } from '../i18n/fa.js';
 import { prologueFa, mapLabelFa } from '../i18n/narrative-fa.js';
@@ -54,6 +56,7 @@ export function createPrologue(el, flow) {
     <div class="pl-skip"><span><kbd>Enter</kbd><kbd>Click</kbd>صفحهٔ بعد<small>ادامه</small></span>
       <span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>نگه‌دارید تا رد شود<small>پرش از داستان</small></span>
       <span><kbd>Esc</kbd>رد کردن<small>شروع نبرد</small></span></div>`;
+  if (viewport.touch) el.querySelector('.pl-skip').innerHTML = '<span>لمس: ادامه · نگه‌داشتن: پرش از داستان</span><button type="button" class="pl-skip-now">رد کردن داستان</button><svg viewBox="0 0 36 36"><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>';
   const $ = (s) => el.querySelector(s);
   const card = $('.pl-card'), cols = $('.pl-cols'), en = $('.pl-en'), pips = $('.pl-pips'), ring = $('.pl-skip .p');
   let ctx = {}, k = -1, timer = 0, swapT = 0, holdTimer = 0, holdT0 = 0, phase = 'off', stampAt = 0;
@@ -129,8 +132,20 @@ export function createPrologue(el, flow) {
     e.preventDefault();
     if (e.type === 'keydown') { if (!e.repeat) down(); } else up();
   };
-  el.addEventListener('pointerdown', (e) => { if (e.button === 0) down(); });
-  el.addEventListener('pointerup', (e) => { if (e.button === 0) up(); });
+  let pointer = null;
+  const cancelHold = () => {
+    const id = pointer; pointer = null; holdT0 = 0; clearTimeout(holdTimer); ring.classList.remove('on');
+    if (id !== null) try { if (el.hasPointerCapture(id)) el.releasePointerCapture(id); } catch { /* detached */ }
+  };
+  el.addEventListener('pointerdown', (e) => {
+    if (el.hidden || e.button !== 0 || pointer !== null || e.target.closest('button')) return;
+    pointer = e.pointerId; el.setPointerCapture(pointer); down(); e.preventDefault();
+  });
+  el.addEventListener('pointerup', (e) => { if (e.pointerId === pointer) { up(); cancelHold(); } });
+  for (const type of ['pointercancel', 'lostpointercapture']) el.addEventListener(type, (e) => { if (e.pointerId === pointer) cancelHold(); });
+  el.querySelector('.pl-skip-now')?.addEventListener('click', () => { cancelHold(); if (phase === 'cards') stamp(); else if (phase === 'stamp') go(); });
+  addEventListener('blur', cancelHold); addEventListener('pagehide', cancelHold); on('viewport', cancelHold);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelHold(); });
 
   let built = null;                                          // chapter id whose map + stamp are in the DOM
   return {
@@ -155,7 +170,7 @@ export function createPrologue(el, flow) {
       later(() => show(0), 1.1);
     },
     exit() {
-      phase = 'off'; clearTimeout(timer); clearTimeout(swapT); clearTimeout(holdTimer);
+      cancelHold(); phase = 'off'; clearTimeout(timer); clearTimeout(swapT); clearTimeout(holdTimer);
       removeEventListener('keydown', key); removeEventListener('keyup', key);
     },
   };
