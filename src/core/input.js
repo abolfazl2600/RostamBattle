@@ -9,6 +9,7 @@
 //   R / L1 / L2   'target': recenter behind the hero, or onto the nearest officer (camera.js)
 import { on } from './events.js';
 import { viewport } from './viewport.js';
+import { createTouch } from './touch.js';
 
 const ACTIONS = ['attack', 'charge', 'jump', 'dodge', 'musou', 'target'];
 
@@ -35,12 +36,16 @@ export function createInput() {
   // noLock: a click's lock request was refused (sandboxed frame, lock cooldown): clicks attack until the next battle /
   // resume · clickLock: the pending request came from a canvas click
   let battle = false, unlockT = -1e9, noLock = false, clickLock = false;
+  const touch = createTouch(() => live() && viewport.touch);
+  let lastTouch = -Infinity;
+  addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') lastTouch = performance.now(); }, true);
   const locked = () => document.pointerLockElement === canvas;
   const live = () => battle && menu && menu.hidden && !viewport.blocked;                 // battle running, pause menu closed
   // requestPointerLock returns a promise in current browsers (rejects without a user gesture, e.g. the ?go= shortcut)
-  const lock = (click = false) => { clickLock = click; if (live() && !locked() && !noLock) { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) { noLock = true; } } };
+  const lock = (click = false) => { if (!click && viewport.touch) return; clickLock = click; if (live() && !locked() && !noLock) { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) { noLock = true; } } };
 
   on('flow', (e) => {
+    reset();
     battle = e.state === 'battle';
     if (battle) { noLock = false; lock(); }                         // flow.go('battle') usually runs inside a click / key
     else if (locked()) document.exitPointerLock();
@@ -61,6 +66,7 @@ export function createInput() {
   }, true);
 
   addEventListener('keydown', (e) => {
+    if (!live()) return;
     if (e.code === 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
     dev.keys.add(e.code);
     const a = KEYMAP[e.code];
@@ -69,21 +75,27 @@ export function createInput() {
   addEventListener('keyup', (e) => {
     dev.keys.delete(e.code);
     const a = KEYMAP[e.code];
-    if (a) dev.held[a] = false;
+    if (a) dev.held[a] = [...dev.keys].some((k) => KEYMAP[k] === a);
   });
-  addEventListener('blur', () => { dev.keys.clear(); for (const a of ACTIONS) dev.held[a] = false; });
+  addEventListener('blur', reset);
+  addEventListener('pagehide', reset);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
+  on('viewport', reset);
   addEventListener('contextmenu', (e) => e.preventDefault());
   addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || !live() || performance.now() - lastTouch < 800) return;
+    if (e.target !== canvas) return;
     if (e.target.closest && e.target.closest('button,a,input')) return;
     if (live() && !locked() && !noLock) { lock(true); return; }   // this click only takes the mouse
     const a = e.button === 0 ? 'attack' : e.button === 2 ? 'charge' : null;
-    if (a) { dev.held[a] = true; dev.latch[a] = true; }
+    if (a) { dev.mouse[a] = true; dev.latch[a] = true; }
   });
   addEventListener('pointerup', (e) => {
+    if (e.pointerType !== 'mouse') return;
     const a = e.button === 0 ? 'attack' : e.button === 2 ? 'charge' : null;
-    if (a) dev.held[a] = false;
+    if (a) dev.mouse[a] = false;
   });
-  addEventListener('pointermove', (e) => { if (locked()) { dev.lookX += e.movementX; dev.lookY += e.movementY; } });
+  addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && live() && locked()) { dev.lookX += e.movementX; dev.lookY += e.movementY; } });
 
   function pollPad() {
     const p = navigator.getGamepads ? navigator.getGamepads()[0] : null;
@@ -92,17 +104,28 @@ export function createInput() {
       const down = !!(p.buttons[btn] && p.buttons[btn].pressed);
       if (down && !dev.pad[btn]) dev.latch[a] = true;
       dev.pad[btn] = down;
+      if (!down) dev.padBlocked[btn] = false;
     }
     return p;
   }
 
   function reset() {
     dev.keys.clear(); dev.lookX = dev.lookY = dev.keyT = dev.padYaw = dev.padPitch = 0;
-    dev.held = {}; dev.latch = {}; dev.pad = {};
+    dev.held = {}; dev.mouse = {}; dev.latch = {};
+    touch.reset();
+    // Held gamepad buttons must be released after a screen / pause before they can press again.
+    const pad = navigator.getGamepads?.()[0];
+    dev.pad = Object.fromEntries(Object.keys(PADMAP).map((b) => [b, !!pad?.buttons[b]?.pressed]));
+    dev.padBlocked = { ...dev.pad };
   }
   function sample() {
-    if (!live()) reset();
-    let mx = 0, my = 0, orbit = 0, tilt = 0;
+    if (!live()) { reset();
+      out.mx = out.my = out.orbit = out.tilt = 0;
+      for (const a of ACTIONS) out.pressed[a] = out.held[a] = false;
+      return out;
+    }
+    const ts = touch.sample();
+    let { mx, my, orbit, tilt } = ts;
     const pad = pollPad();
     for (const k of dev.keys) { const m = MOVEKEYS[k]; if (m) { mx += m[0]; my += m[1]; } }
     let wantYaw = 0, wantPitch = 0;
@@ -125,8 +148,8 @@ export function createInput() {
     orbit += q * (LOOK.keyRate[0] + (LOOK.keyRate[1] - LOOK.keyRate[0]) * Math.min(1, dev.keyT / LOOK.keyRamp)) / 60;
     orbit -= dev.lookX * LOOK.mouseYaw; tilt += dev.lookY * LOOK.mousePitch; dev.lookX = dev.lookY = 0;
     for (const a of ACTIONS) {
-      out.pressed[a] = !!dev.latch[a];
-      out.held[a] = !!dev.held[a];
+      out.pressed[a] = !!(dev.latch[a] || ts.pressed[a]);
+      out.held[a] = !!(dev.held[a] || dev.mouse[a] || ts.held[a] || Object.entries(PADMAP).some(([b, name]) => name === a && dev.pad[b] && !dev.padBlocked[b]));
       dev.latch[a] = false;
     }
     const len = Math.hypot(mx, my);
@@ -135,5 +158,6 @@ export function createInput() {
     return out;
   }
 
-  return { sample, reset };
+  reset();
+  return { sample, reset, touch };
 }
