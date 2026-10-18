@@ -16,6 +16,7 @@ import { CHAPTERS, chapter } from './chapters.js';
 import { inkWipe, afterWipe, createNav } from '../ui/menu.js';
 import { officerFa, stageFa, difficultyFa, unlockFa } from '../i18n/fa.js';
 import { epilogueFa } from '../i18n/narrative-fa.js';
+import { battleTextFa } from '../i18n/battle-fa.js';
 
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
@@ -45,7 +46,7 @@ export function createResult(el, flow) {
       const notices = [R?.first && after ? `<p class="rs-unlock">${stageFa(after.CH.id).num} «${stageFa(after.CH.id).title}» باز شد<small>مرحلهٔ جدید در دسترس است</small></p>` : '',
         ...(R?.unlocks || []).map((u) => `<p class="rs-unlock">${unlockFa(u.id).name} باز شد<small>محتوای جدید در دسترس است</small></p>`)].join('');
       next = after ? after.CH.id : CH.id;
-      const why = c.reason ? 'شرایط پیروزی مأموریت برآورده نشد.' : `${officerFa(ch.id)} از پا افتاد و پیشروی سپاه متوقف شد.`;
+      const why = c.reason ? battleTextFa(c.reason.en, c.reason.zh) : `${officerFa(ch.id)} از پا افتاد و پیشروی سپاه متوقف شد.`;
       // [zh, en, value, format, the record it beat (fresh) → its old value]
       const rows = [
         ['دشمنان شکست‌خورده', 'تعداد شکست‌ها', s.kos, (v) => v, R?.fresh.kos && was.kos],
