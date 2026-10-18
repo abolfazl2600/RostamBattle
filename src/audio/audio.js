@@ -42,7 +42,7 @@ const BED = [0.16, 0.4], DRUMS = [0.06, 0.7], MUSIC = [0.18, 0.46];
 const SIDE = [0.3, 0.5, 0.45, 0.5], SIDE_MU = [0.25, 0.4, 0.55, 0.4];
 
 export function createAudio(game) {
-  let paused = false;
+  let paused = false, nativeBackground = false;
   let ctx = null, mix, post, ceiling, sfx, vox, bedBus, bedDuck, revIn, bedG, drumG, musicG, live = 0;
   let underBus, sides = [];                   // sfx that yield to impacts (whooshes, body falls) + the sidechain gains
                                               // (under bus, bed, voice, reverb return)
@@ -67,7 +67,7 @@ export function createAudio(game) {
   on('scenario', useVoice);
 
   function start() {
-    if (ctx) { if (!paused && !document.hidden && ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {}); return; }
+    if (ctx) { if (!paused && !nativeBackground && !document.hidden && ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {}); return; }
     const Context = globalThis.AudioContext || globalThis.webkitAudioContext;
     if (!Context) return;
     try { ctx = new Context({ latencyHint: 'interactive' }); } catch { return; }
@@ -107,6 +107,12 @@ export function createAudio(game) {
   on('pause', (e) => { paused = e.paused; if (paused) suspend(); else start(); });
   on('flow', (e) => { if (e.state !== 'battle') { paused = true; suspend(); } else { paused = !document.getElementById('menu').hidden; if (!paused) start(); } });
   addEventListener('pagehide', suspend);
+  for (const type of ['rostam:native-pause', 'rostam:native-stop', 'rostam:native-blur']) {
+    addEventListener(type, () => { nativeBackground = true; suspend(); });
+  }
+  // Android onResume must NOT unpause a battle or play its bed by itself.
+  addEventListener('rostam:native-resume', () => { nativeBackground = false; });
+  addEventListener('rostam:native-focus', () => { nativeBackground = false; });
   document.addEventListener('visibilitychange', () => { if (document.hidden) suspend(); });
   addEventListener('keydown', start);
   // musou part r3: build the context + graph at boot (it stays 'suspended' until the first key/pointer gesture resumes
@@ -114,7 +120,7 @@ export function createAudio(game) {
   // was the first key pressed).
   start();
 
-  const ok = () => !paused && !document.hidden && ctx && ctx.state === 'running';
+  const ok = () => !paused && !nativeBackground && !document.hidden && ctx && ctx.state === 'running';
   /** One-shot buffer → gain → pan → bus (+ reverb send). */
   function play(buf, { gain = 1, rate = 1, pan = 0, delay = 0, send = 0.12, bus = sfx, prio = 0 } = {}) {
     if (!buf || (live > 56 && prio < 1)) return null;

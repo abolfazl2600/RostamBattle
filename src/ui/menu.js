@@ -40,6 +40,12 @@ const SFX = {
 /** Play a UI cue: 'move' | 'ok' | 'back' | 'stamp' | 'swish'. Silent until the first key/click (autoplay policy). */
 export function sfx(kind) { const c = actx(); if (c) for (const v of SFX[kind]) voice(c, v); }
 
+// Pause menu audio when Android backgrounds the WebView. Do not resume until
+// the next explicit user gesture (Web Audio autoplay and interruption rules).
+for (const type of ['pagehide', 'rostam:native-pause', 'rostam:native-stop', 'rostam:native-blur']) {
+  addEventListener(type, () => { if (ac?.state === 'running') ac.suspend().catch(() => {}); });
+}
+
 // ---------------------------------------------------------------- menu input
 const KEYS = { ArrowUp: -1, KeyW: -1, ArrowDown: 1, KeyS: 1, ArrowLeft: -1, KeyA: -1, ArrowRight: 1, KeyD: 1 };
 const OK = new Set(['Enter', 'NumpadEnter', 'Space', 'KeyJ']), BACK = new Set(['Escape', 'Backspace', 'KeyK']);

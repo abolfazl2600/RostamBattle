@@ -320,7 +320,48 @@ addEventListener('keydown', (e) => {
   if (state === 'battle' && !paused && e.code === 'Escape' && !e.defaultPrevented) setPaused(true);
 });
 on('touch:cancel', () => { if (state === 'battle') setPaused(true); });
-createLifecycle(() => { input.reset(); post.resetTiming(); if (state === 'battle') setPaused(true); });
+createLifecycle(
+  () => { input.reset(); post.resetTiming(); if (state === 'battle') setPaused(true); },
+  () => { input.reset(); post.resetTiming(); /* never resume battle just because focus returned */ },
+);
+
+// Android Back/gesture-back: settings > battle pause > confirmed retreat > title.
+// Native Java only finishes the Activity if this synchronous handler returns 'exit'.
+let lastTitleBack = -Infinity, titleBackTimer = 0;
+const exitHint = document.createElement('p');
+exitHint.setAttribute('role', 'status');
+exitHint.className = 'native-exit-hint';
+exitHint.hidden = true;
+exitHint.textContent = 'برای خروج از بازی، دوباره بازگشت را بزنید';
+document.getElementById('game-shell').append(exitHint);
+const hideExitHint = () => { exitHint.hidden = true; clearTimeout(titleBackTimer); lastTitleBack = -Infinity; };
+on('flow', hideExitHint);
+function nativeBack() {
+  input.reset();
+  if (settings.isOpen) { settings.close(); return 'handled'; }
+  if (wiping()) return 'handled';
+  if (state === 'battle') {
+    if (!paused) { setPaused(true); return 'handled'; }
+    if (!quitArm) { mFocus(1); armQuit(true); return 'handled'; }
+    mNav.stop(); inkWipe(() => flow.go('title'));
+    return 'handled';
+  }
+  if (state === 'title') {
+    const now = performance.now();
+    if (now - lastTitleBack <= 2000) { hideExitHint(); return 'exit'; }
+    lastTitleBack = now;
+    exitHint.hidden = false;
+    clearTimeout(titleBackTimer);
+    titleBackTimer = setTimeout(hideExitHint, 2200);
+    return 'handled';
+  }
+  if (state === 'select' || state === 'prologue' || state === 'result') {
+    inkWipe(() => flow.go('title'));
+  }
+  // Native Back never closes the Activity while a battle is on-screen.
+  return 'handled';
+}
+globalThis.__rostamNativeBack = nativeBack;
 canvas.addEventListener('webglcontextlost', (e) => {
   e.preventDefault(); graphicsFailed = true; input.reset();
   if (state === 'battle') setPaused(true);

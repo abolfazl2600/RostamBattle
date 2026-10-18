@@ -79,6 +79,7 @@ export function createInput() {
   });
   addEventListener('blur', reset);
   addEventListener('pagehide', reset);
+  for (const type of ['rostam:native-pause', 'rostam:native-stop', 'rostam:native-blur', 'rostam:native-resume']) addEventListener(type, reset);
   document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
   on('viewport', reset);
   addEventListener('contextmenu', (e) => e.preventDefault());
