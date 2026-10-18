@@ -16,17 +16,11 @@ jobs:
           node-version-file: .nvmrc
       - name: Install pinned tools
         run: |
-          if test -f package-lock.json; then npm ci; else npm install --package-lock-only --ignore-scripts; npm ci; fi
+          npm ci
       - name: Packaging and regression checks
         run: |
           npm run check:build
           npm run check:game
-      - name: Bootstrap lockfile evidence
-        if: always()
-        run: |
-          echo LOCKFILE_BEGIN
-          cat package-lock.json
-          echo LOCKFILE_END
       - uses: actions/upload-artifact@v4
         with:
           name: web-package
