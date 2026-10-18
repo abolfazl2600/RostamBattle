@@ -25,6 +25,8 @@ import { viewport } from './core/viewport.js';
 import { vrng, rng } from './core/rng.js';
 import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
+import { createLifecycle } from './core/lifecycle.js';
+import { showRecovery } from './ui/recovery.js';
 import { QUALITY } from './post/quality.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { createPost } from './post/post.js';
@@ -126,7 +128,10 @@ function render(real) {
   screens[state]?.view?.(scene, camRig.camera, camRig.focus, dt);   // ui lane: a screen may frame the idle field itself
   world.update(dt, camRig.focus, game);
   musouView.update(dt);
-  post.render(scene, camRig.camera, game.frame / 60, camRig.focus, vfx.flash);   // post-fx: DoF focus + screen flash
+  try { post.render(scene, camRig.camera, game.frame / 60, camRig.focus, vfx.flash); } catch (e) {
+    graphicsFailed = true; input.reset(); if (state === 'battle') setPaused(true);
+    showRecovery('رندر بازی متوقف شد. بارگذاری دوباره با کیفیت سبک را امتحان کنید.'); console.error(e);
+  }   // post-fx: DoF focus + screen flash
   hud.update(); touchControls.update();
 }
 
@@ -173,7 +178,7 @@ const menu = $('menu'), hudEl = $('hud');
 // the bindings mid-battle too (critic: checking aim meant quitting the chapter)
 menu.querySelector('.hint').insertAdjacentHTML('beforebegin', `<table>${controlRows().map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>`);
 if (viewport.touch) menu.querySelector('.hint').textContent = 'برای بازگشت، دوباره خروج از نبرد را تأیید کنید.';
-let paused = false, state = null, ctx = {}, hold = false;   // hold: loading, no renders until the new kit is compiled
+let paused = false, state = null, ctx = {}, hold = false, graphicsFailed = false;   // hold: loading, no renders until the new kit is compiled
 // pause menu: title-screen vocabulary (diamond + swash on the focused item), 繼續 focused on open, ↑/↓ / pad move,
 // Enter / A confirm, Esc / B resume. 撤退 asks once (確定撤退？), a second confirm ink-wipes to the title.
 const mBtns = [$('go'), $('quit')], quitEl = $('quit');
@@ -195,9 +200,9 @@ const mOk = () => {
 };
 const mNav = createNav({ move: (d) => { mFocus(mCur + d); sfx('move'); }, ok: mOk, back: () => setPaused(false) });
 const setPaused = (v) => {
-  if (!v && state === 'battle' && viewport.blocked) v = true;
+  if (!v && state === 'battle' && (viewport.blocked || document.hidden || graphicsFailed)) v = true;
   input.reset(); post.resetTiming();
-  paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
+  paused = v; emit('pause', { paused: v }); menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
 const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && !viewport.blocked && state === 'battle' && !paused, pause: () => setPaused(true), musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
@@ -213,7 +218,7 @@ const flow = {
     const set = state === 'loading' || state === 'prologue';   // deploy() already started this battle (its field is on screen)
     state = s; ctx = c;
     if (s === 'title') { world.load(HOME); game.crowd.reset(); }   // menus stand on HOME, the field empty (under the ink)
-    if (s === 'battle') { if (!set) startBattle(c); setPaused(false); replay(hudEl, 'in'); }
+    if (s === 'battle') { if (!set) startBattle(c); setPaused(viewport.blocked || document.hidden); replay(hudEl, 'in'); }
     else { setPaused(false); hudEl.hidden = true; $(s).hidden = false; screens[s].enter(c); }
     emit('flow', { state: s, ctx: c });
     if (s === 'loading') { deploy(c); return nextFrame(); }
@@ -287,13 +292,23 @@ addEventListener('keydown', (e) => {
   // opens; the menu's own nav (registered first) closes it and marks the key handled
   if (state === 'battle' && !paused && e.code === 'Escape' && !e.defaultPrevented) setPaused(true);
 });
-addEventListener('blur', () => { if (state === 'battle') setPaused(true); });
-on('viewport', ({ blocked }) => { if (blocked && state === 'battle') setPaused(true); });
+on('touch:cancel', () => { if (state === 'battle') setPaused(true); });
+createLifecycle(() => { input.reset(); post.resetTiming(); if (state === 'battle') setPaused(true); });
+canvas.addEventListener('webglcontextlost', (e) => {
+  e.preventDefault(); graphicsFailed = true; input.reset();
+  if (state === 'battle') setPaused(true);
+  showRecovery('ارتباط گرافیکی بازی قطع شد. برای ادامه، بازی را دوباره بارگذاری کنید. رکوردهای ثبت‌شده حفظ شده‌اند.');
+});
+// Postprocess/depth/shadow resources are not safe to reuse after a loss. Reload is the explicit recovery path.
+canvas.addEventListener('webglcontextrestored', () => {
+  showRecovery('گرافیک دوباره در دسترس است. برای بازسازی کامل میدان، بارگذاری دوباره را بزنید.');
+});
 
 // ---- loop
 let acc = 0, last = performance.now();
 const frame = (now) => {
   requestAnimationFrame(frame);
+  if (graphicsFailed || document.hidden) { last = now; acc = 0; return; }
   // clamp at 0 too: the first rAF timestamp can precede the performance.now() taken at module init
   const d = Math.min(0.1, Math.max(0, (now - last) / 1000));
   acc += d * (game.timeScale ?? 1); last = now;                                  // story: victory slow-mo

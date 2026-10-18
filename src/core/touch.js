@@ -1,8 +1,9 @@
 // Pointer-owned touch source. UI adapters write here; only the fixed-step input sample consumes edges/look.
+import { emit } from './events.js';
 export const TOUCH_LOOK = { yaw: 0.004, pitch: 0.003, maxDelta: 0.3 };
 export function createTouch(enabled = () => true) {
   const pointers = new Map(), latch = new Set(), resets = new Set();
-  let mx = 0, my = 0, orbit = 0, tilt = 0;
+  let mx = 0, my = 0, orbit = 0, tilt = 0, resetting = false;
   function claim(e, role, action = null) {
     if (e.pointerType !== 'touch' || !enabled() || pointers.has(e.pointerId)) return false;
     if ((role === 'move' || role === 'look') && [...pointers.values()].some((p) => p.role === role)) return false;
@@ -19,13 +20,18 @@ export function createTouch(enabled = () => true) {
     if (p.role === 'move') mx = my = 0;
     if (p.role === 'look' && cancel) orbit = tilt = 0;
     if (cancel && p.action) latch.delete(p.action);
+    if (cancel && !resetting) emit('touch:cancel', {});
     try { if (p.el.hasPointerCapture(id)) p.el.releasePointerCapture(id); } catch { /* detached target */ }
   }
   function reset() {
+    resetting = true;
     for (const id of [...pointers.keys()]) release(id, true);
     latch.clear(); mx = my = orbit = tilt = 0;
     for (const fn of resets) fn();
+    resetting = false;
   }
+  for (const type of ['blur', 'pagehide']) addEventListener(type, reset);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
   return {
     claim, release, reset, pointers,
     onReset(fn) { resets.add(fn); return () => resets.delete(fn); },

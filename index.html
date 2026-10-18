@@ -1234,7 +1234,7 @@
   .touch-device #hud .h-def { top: calc(var(--safe-t) + 65px + var(--map-size)); right: var(--safe-r); width: var(--map-size); white-space: normal; }
   .touch-device #hud .h-def b { font-size: 12px; }
   .touch-device #hud .h-def span { display: none; }
-  .touch-device #hud .h-obj { top: calc(var(--safe-t) + 54px); left: var(--safe-l); max-width: min(55vw, 430px); padding: 3px 6px; white-space: normal; font-size: 14px; line-height: 1.5; }
+  .touch-device #hud .h-obj { top: calc(var(--safe-t) + 54px); left: var(--safe-l); max-width: min(55vw, 430px); max-height: 44px; overflow: hidden; padding: 3px 6px; white-space: normal; font-size: 14px; line-height: 1.5; }
   .touch-device #hud .h-obj small { display: none; }
   .touch-device #hud .h-obj .go, .touch-device #hud .h-obj .tm b { font-size: 12px; }
   .touch-device #hud .h-target { top: calc(var(--safe-t) + 99px); left: var(--safe-l); width: 24vw; }
@@ -1351,6 +1351,20 @@
   .touch-device #title .quality-choice { top: max(68px, env(safe-area-inset-top)); bottom: auto; flex-direction: column; }
   .touch-device #title:is(.chp, .dif, .ctl, .rec) .quality-choice { display: none; }
   .touch-device #menu .quality-choice { position: static; order: 2; align-self: flex-start; margin-top: 8px; }
+  .touch-device #select .s-name { flex-wrap: wrap; gap: 4px; }
+  .touch-device #select .s-name div { padding-top: 0; }
+  .touch-device #select .s-court { font-size: 12px; line-height: 1.6; }
+  .touch-device #select :is(.s-en, .s-epi b, .s-wpn b, .s-musou b) { font-size: 14px; line-height: 1.7; letter-spacing: 0; }
+  .touch-device #select :is(.s-en, .s-epi, .s-wpn, .s-bio, .s-musou) { margin-top: 8px; }
+  .touch-device #select :is(.s-epi small, .s-wpn small, .s-en) { display: block; font-size: 12px; line-height: 1.7; }
+  .touch-device #select .s-bio span { font-size: 13px; line-height: 1.8; }
+  .touch-device #select .s-stats { grid-template-columns: 1fr; gap: 8px; }
+  .touch-device #select .s-stats li { grid-template-columns: 70px 1fr; }
+  .touch-device #select .s-stats b { font-size: 14px; line-height: 1.6; }
+  .touch-device #select .s-stats small { font-size: 11px; }
+  .touch-device #select .s-rec { max-height: 32px; }
+  .touch-device #result .rs-stats th small { display: none; }
+  .touch-device #result .rs-btns button small { display: block; margin: 4px 0 0; font-size: 11px; line-height: 1.5; }
 </style>
 </head>
 <body class="inkhold">
