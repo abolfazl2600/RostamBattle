@@ -284,5 +284,6 @@ These scripts cover simulation and source contracts; they do not verify browser 
 - Code: MIT, see [LICENSE](LICENSE).
 - [three.js](https://threejs.org/): MIT.
 - HUD fallback font `src/ui/brush.woff2` is a subset of Yuji Boku by Kinuta Font Factory, licensed under the SIL Open Font License 1.1.
+- Persian interface font [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saber Rastikerdar, loaded from Google Fonts with an upstream CDN fallback; licensed under SIL Open Font License 1.1.
 
 This is a fan project, not affiliated with or endorsed by KOEI TECMO. "Dynasty Warriors" is a trademark of KOEI TECMO. No game assets from the original games are included.
