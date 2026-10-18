@@ -4,7 +4,7 @@ The repository root remains the GitHub Pages entry point. No bundler, npm runtim
 
 ## Tools and commands
 
-Use Node **22.14.0** (`nvm use`) and Capacitor core/android/CLI **8.0.0**. Commit the npm lockfile; normal installations use `npm ci`. No global Capacitor installation is needed.
+Use Node **22.22.0** (`nvm use`) and Capacitor core/android/CLI **8.5.3**. Commit the npm lockfile; normal installations use `npm ci`. No global Capacitor installation is needed.
 
 ```sh
 nvm use
