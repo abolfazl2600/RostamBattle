@@ -32,8 +32,9 @@ import { ground } from '../world/map.js';
 import { dotTex, scatter, stagePoint, standOfficer, poseOfficer } from './stage.js';
 import { DIFFS, unlocked, difficulty, setDifficulty } from '../core/difficulty.js';
 import { best, records, locked, UNLOCKS } from '../core/progress.js';
-import { CHAPTERS, chapterOpen } from '../story/chapters.js';
+import { CHAPTERS, STORY_CHAPTERS, storyAvailable } from '../story/chapters.js';
 import { TRIALS } from '../story/trials.js';
+import { storyMenuFa } from '../i18n/story-menu-fa.js';
 import { OFFICERS_FA, officerFa, stageFa, difficultyFa, unlockFa, modeFa } from '../i18n/fa.js';
 
 // brush swash drawn under the focused item (revealed left → right) — one tapered stroke, dry tail
@@ -49,7 +50,7 @@ const ITEMS = [
 // the trial panel's last entry: not a trial (no records, no map of its own) — picking it opens the battlefield list
 const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پایان' }, title: { zh: 'نبرد آزاد', en: 'نبرد آزاد' }, seal: '無盡',
   rule: { zh: 'هر شخصیت و میدان نبردی را انتخاب کنید؛ رکوردی ثبت نمی‌شود.', en: 'موج‌های بی‌پایان دشمنان' } } };
-const LISTS = { story: CHAPTERS, trial: [...TRIALS, FREE], free: CHAPTERS };   // what the chapter panel lists per mode
+const LISTS = { story: STORY_CHAPTERS, trial: [...TRIALS, FREE], free: CHAPTERS };   // what the chapter panel lists per mode
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const rk = (r) => (r ? `<i class="t-rk r${r}">${r}</i>` : '');                    // a rank as a ringed brush letter
 export const CONTROLS = [
@@ -105,7 +106,7 @@ const SMOKE = [[-17, 16, 40, 38, 24, 0.2, 0.1, 0.06, 0.9], [-26, 22, 46, 44, 26,
 
 export function createTitle(el, flow) {
   el.innerHTML = `
-    <div class="t-veil"></div><button type="button" class="t-back">بازگشت</button>
+    <div class="t-veil"></div><p class="t-status" role="status" hidden></p><button type="button" class="t-back">بازگشت</button>
     ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
       <div class="t-logo"><i class="t-seal">سه پادشاهی</i><h1 data-t="موسو"><span>موسو</span></h1>
@@ -145,8 +146,7 @@ export function createTitle(el, flow) {
   /** Why entry i of the panel's list can't be picked yet ([zh, en]), or null: a story chapter waits on the one before
    *  it, a trial on the records (progress.js UNLOCKS); battlefields are all open. */
   const lockOf = (i) => {
-    const prev = CHAPTERS[i - 1]?.CH;
-    if (cmode === 'story') return chapterOpen(i) ? null : [`برای بازشدن، «${stageFa(prev.id).title}» را به پایان برسانید.`, 'فصل قفل است'];
+    if (cmode === 'story') return storyAvailable(list[i].CH.id) ? null : ['این فصل هنوز منتشر نشده است', 'به‌زودی'];
     return cmode === 'trial' && locked(list[i].CH.id) ? [unlockFa(list[i].CH.id).rule, 'چالش قفل است'] : null;
   };
   // chapter panel: the card shows the focused chapter (story: era, the prologue's opening, its officers each with his
@@ -156,11 +156,12 @@ export function createTitle(el, flow) {
     if (i === ccur && cbtns[i].classList.contains('on')) return;
     ccur = i; cbtns.forEach((b, k) => b.classList.toggle('on', k === i));
     const { CH, PROLOGUE } = list[i], story = cmode === 'story', trial = cmode === 'trial', lock = lockOf(i);
+    const presentation = story ? storyMenuFa(CH.id) : stageFa(CH.id);
     const p = PROLOGUE?.find((q) => q.cols), field = CHAPTERS.find((m) => m.CH.map === CH.map)?.CH.title;
-    const [zh, en] = lock || [stageFa(CH.id).description, story ? 'داستان سه پادشاهی' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
+    const [zh, en] = lock || [presentation.description, story ? 'نمونهٔ موقت با محتوای دینگ‌جون' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
     $('.t-ccard').classList.toggle('lock', !!lock);
-    $('.t-ccard h3').innerHTML = cmode === 'free' ? 'میدان نبرد<small>انتخاب نقشه</small>' : `${stageFa(CH.id).num}<small>${modeFa(cmode)}</small>`;
-    $('.t-cname b').textContent = stageFa(CH.id).title; $('.t-cname i').textContent = stageFa(CH.id).seal;
+    $('.t-ccard h3').innerHTML = cmode === 'free' ? 'میدان نبرد<small>انتخاب نقشه</small>' : `${presentation.num}<small>${modeFa(cmode)}</small>`;
+    $('.t-cname b').textContent = presentation.title; $('.t-cname i').textContent = stageFa(CH.id).seal;
     $('.t-cera').innerHTML = !trial ? `${stageFa(CH.id).era}<small>زمان نبرد</small>` : field ? `میدان · ${stageFa(CH.map).title}<small>نقشه</small>` : '';
     $('.t-cline b').textContent = zh; $('.t-cline small').textContent = en;
     // foot: a chapter's officers, each with his own best rank; a trial's best record (the stat it is ranked on first)
@@ -177,11 +178,13 @@ export function createTitle(el, flow) {
     if (mode) {
       const story = mode === 'story';
       list = LISTS[mode];
-      $('.t-chs').innerHTML = list.map(({ CH }, i) => `<button data-c="${i}" class="${lockOf(i) ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${stageFa(CH.id).num}</em>` : ''}${stageFa(CH.id).title}<i class="t-lk">قفل</i>${
-        mode === 'free' ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? `${stageFa(CH.id).num} · ` : ''}${stageFa(CH.id).description}</small>${SWASH}</button>`).join('');
+      $('.t-chs').innerHTML = list.map(({ CH }, i) => {
+        const meta = story ? storyMenuFa(CH.id) : stageFa(CH.id), closed = !!lockOf(i);
+        return `<button data-c="${i}" aria-disabled="${closed}" class="${closed ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${meta.num}</em>` : ''}${meta.title}<i class="t-lk">${story ? 'به‌زودی' : 'قفل'}</i>${mode === 'free' || (story && closed) ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? closed ? 'این فصل هنوز منتشر نشده است' : 'نمونهٔ موقت با محتوای دینگ‌جون' : meta.description}</small>${SWASH}</button>`;
+      }).join('');
       cbtns = [...el.querySelectorAll('.t-chs button')];
       let k = list.findIndex((m) => m.CH.id === id);
-      if (k < 0) { k = 0; if (story) while (k < list.length - 1 && chapterOpen(k + 1)) k++; }
+      if (k < 0) k = story ? list.findIndex((m) => storyAvailable(m.CH.id)) : 0;
       cfocus(k, true);
     }
     measure();                                          // the band changed width: the key art glides
@@ -197,7 +200,7 @@ export function createTitle(el, flow) {
       all++; if (r) done++;
       return `<td>${r ? rk(r) : '<i class="t-rk"></i>'}<span>${DIFFS.map((d) => `<u class="${cell?.[d.id] ? 'f' : ''}"></u>`).join('')}</span></td>`;
     }).join('')}</tr>`;
-    const rows = [...CHAPTERS, ...TRIALS].map(row).join('');
+    const rows = [...STORY_CHAPTERS, ...TRIALS].map(row).join('');
     $('.t-rec').innerHTML = `<h2>رکوردها<small>کارنامهٔ مبارزه</small><em><b>${done}</b> / ${all}<small>تکمیل‌شده</small></em></h2>
       <div class="t-rbody"><div><table><tr><th></th>${who.map((id) => `<td class="${locked(id) ? 'lock' : ''}"><canvas width="20" height="20"></canvas><b>${officerFa(id)}</b></td>`).join('')}</tr>${rows}</table>
       <p class="t-rleg"><span>${'<u class="f"></u>'.repeat(DIFFS.length)}</span>${DIFFS.map((d) => difficultyFa(d.id).name).join(' · ')}<small>هر نشان برابر با یک درجهٔ سختی تکمیل‌شده است</small></p></div>
@@ -482,6 +485,8 @@ export function createTitle(el, flow) {
   return {
     view,
     enter(c = {}) {
+      if (c.ch || c.notice) pre = false;
+      $('.t-status').textContent = c.notice || ''; $('.t-status').hidden = !c.notice;
       busy = false; clearStamp(el); dmode = null; el.classList.remove('dif'); setPanel(null);
       setCh(c.ch ? c.mode || 'story' : null, c.ch);                        // after a win: straight to the next chapter / the trial
       el.classList.toggle('pre', pre);

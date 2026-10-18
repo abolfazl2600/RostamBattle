@@ -47,7 +47,7 @@ import { CHARS } from './chars/index.js';
 import { spawnPoint, MAP } from './world/map.js';
 import { HOME } from './world/maps/index.js';
 import { createStory } from './story/index.js';
-import { CHAPTERS, chapter } from './story/chapters.js';
+import { CHAPTERS, chapter, storyContext, storyAvailable, FIRST_STORY } from './story/chapters.js';
 import { createTitle, controlRows } from './ui/title.js';
 import { createSelect } from './ui/select.js';
 import { createLoading } from './ui/loading.js';
@@ -139,6 +139,7 @@ function render(real) {
  *  default HOME) }. Sets the armies, loads the map (no-op if it is up), resets every sim module (deterministic from here: both
  *  RNGs reseeded, frame 0), rebuilds the kit views on a character change, lets the story spawn the field. */
 function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
+  if (mode === 'story' && !storyAvailable(ch)) throw new Error('Story chapter is not released');
   const C = mode === 'free' ? null : chapter(ch);                                         // C2: the chapter / trial
   const who = CHARS[char] || CHARS.zhaoyun, newKit = who.kit !== game.hero.kit;
   char = who.id; ch = C?.CH.id; map = C ? C.CH.map : map || HOME;                          // C2: resolved ids
@@ -213,6 +214,12 @@ mBtns.forEach((b, i) => {
 const flow = {
   /** Enter a flow state: 'title' | 'select' | 'loading' | 'prologue' | 'battle' | 'result' (ctx: see each screen module). */
   go(s, c = {}) {
+    // All entry lanes share this guard, before any screen exit, deployment or record-bearing battle.
+    if (['select', 'loading', 'prologue', 'battle'].includes(s) && c.mode === 'story') {
+      const resolved = storyContext(c);
+      if (!resolved) return this.go('title', { mode: 'story', ch: FIRST_STORY, notice: 'این فصل هنوز منتشر نشده است؛ فصل‌های به‌زودی قابل اجرا نیستند.' });
+      c = resolved;
+    }
     if (s === 'loading' && state === 'select') c.art = arts[c.char] = snapArt();
     if (screens[state]) { screens[state].exit(); $(state).hidden = true; }
     const set = state === 'loading' || state === 'prologue';   // deploy() already started this battle (its field is on screen)
@@ -323,6 +330,6 @@ const frame = (now) => {
 const dev = params.get('go');
 // the page opens under full ink (index.html): the first screen is built and compiled under it, then the ink sweeps off
 const devChar = params.get('char') || 'zhaoyun';
-const devCh = chapter(params.get('ch') || CHAPTERS.find((m) => m.CH.heroes.includes(devChar))?.CH.id).CH.id;
+const devCh = dev === 'story' ? params.get('ch') || FIRST_STORY : chapter(params.get('ch') || CHAPTERS.find((m) => m.CH.heroes.includes(devChar))?.CH.id).CH.id;
 inkBoot(() => dev ? flow.go('battle', { mode: ['story', 'trial'].includes(dev) ? dev : 'free', char: devChar, ch: devCh, map: params.get('map') || undefined }) : flow.go('title'));
 requestAnimationFrame(frame);

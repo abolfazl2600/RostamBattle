@@ -1365,6 +1365,21 @@
   .touch-device #select .s-rec { max-height: 32px; }
   .touch-device #result .rs-stats th small { display: none; }
   .touch-device #result .rs-btns button small { display: block; margin: 4px 0 0; font-size: 11px; line-height: 1.5; }
+  #title .t-chs .t-lk { white-space: nowrap; }
+  #title .t-status { position: absolute; z-index: 6; top: max(8px, env(safe-area-inset-top)); left: 15%; right: 15%;
+    margin: 0; padding: 8px 12px; color: #ffe3a0; background: #27170ef2; border: 1px solid #b8893a;
+    font: 600 14px/1.6 var(--sans); text-align: center; pointer-events: none; }
+  #title .t-status[hidden] { display: none; }
+  #title.chp .t-band { overflow-y: auto; overscroll-behavior: contain; padding-bottom: 12px; }
+  #title .t-chs button.lock b { opacity: .85; }
+  #title .t-chs .t-lk { font-size: max(12px, 1.3rem); color: #ffe3a0; border: 1px solid #b8893a; padding: 2px 5px; }
+  #title.chp .t-logo { display: none; }
+  #title.chp .t-chs b { font-size: clamp(16px, 2rem, 24px); line-height: 1.5; }
+  #title.chp .t-chs b em { display: block; margin: 0 0 3px; font-size: 12px; line-height: 1.4; }
+  #title.chp .t-chs small { max-width: 100%; font-size: 12px; line-height: 1.5; margin-top: 4px; }
+  #title.chp .quality-choice { display: none; }
+  #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); flex-wrap: wrap; }
+  .touch-device #title.chp .ui-foot { right: max(16px, env(safe-area-inset-right)); }
 </style>
 </head>
 <body class="inkhold">

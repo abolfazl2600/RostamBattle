@@ -130,11 +130,11 @@ export const EPILOGUE_FA = {
 
 // A missing translation is explicit; it must not silently be presented as Persian.
 export function prologueFa(chapterId, cardIndex, heroId) {
-  const card = PROLOGUE_FA[chapterId]?.[cardIndex];
+  const card = PROLOGUE_FA[chapterId === 'ashkabus' ? 'dingjun' : chapterId]?.[cardIndex];
   const value = card?.[heroId] || (card?.cols ? card : null);
   return value ? { cols: value.cols, en: '' } : null;
 }
 export function epilogueFa(chapterId, heroId) {
-  const byHero = EPILOGUE_FA[chapterId];
+  const byHero = EPILOGUE_FA[chapterId === 'ashkabus' ? 'dingjun' : chapterId];
   return byHero?.[heroId] || byHero?.any || null;
 }
