@@ -43,7 +43,7 @@ export function createSelect(el, flow) {
     <header class="s-head"><h2>انتخاب شخصیت</h2><small>جنگجوی خود را انتخاب کنید</small><span class="s-mode"><b></b><small></small></span></header>
     <aside class="s-roster"><div class="s-fac"><i></i><small></small></div>
       ${ALL.map((id) => { const c = CHARS[id]; return `<button class="s-card" data-id="${id}" style="--acc:${c.accent}" title="${officerFa(id)} — برای شروع، دوبار کلیک کنید">
-        <canvas width="20" height="20"></canvas><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small><i>${c.seal}</i><em class="t-rk"></em></button>`; }).join('')}
+        <canvas width="20" height="20"></canvas><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small><i>${OFFICERS_FA[id].seal}</i><em class="t-rk"></em></button>`; }).join('')}
     </aside>
     <article class="s-info">
       <div class="s-name"><h1></h1><div><i class="s-seal"></i><p class="s-court"></p></div></div>
@@ -76,7 +76,7 @@ export function createSelect(el, flow) {
     el.style.setProperty('--acc', c.accent);
     $('.s-fac i').textContent = side === SHU ? 'شو' : (side.en === 'Warlords' ? 'جنگ‌سالاران' : 'شو'); $('.s-fac small').textContent = OFFICERS_FA[id].side;
     $('.s-name h1').textContent = officerFa(id);
-    $('.s-seal').textContent = c.seal;
+    $('.s-seal').textContent = OFFICERS_FA[id].seal;
     $('.s-court').textContent = `نام ادبی: ${OFFICERS_FA[id].courtesy}`;
     $('.s-en').textContent = `${OFFICERS_FA[id].title} · ${OFFICERS_FA[id].motto}`;
     $('.s-epi b').textContent = OFFICERS_FA[id].title; $('.s-epi small').textContent = 'لقب جنگجو';
