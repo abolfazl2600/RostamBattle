@@ -17,6 +17,43 @@ export async function buildWeb() {
   html = html.replace(/<link\b[^>]*href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^"]*"[^>]*>\s*/g, '');
   const csp = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'";
   html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta http-equiv="Content-Security-Policy" content="' + csp + '">');
+  // Android-only capability check. API level does not guarantee a sufficiently
+  // recent System WebView: import maps are needed for Three.js bare specifiers,
+  // and older WebViews cannot parse optional chaining in the game's modules.
+  // Keep the normal browser entry untouched.
+  const originalEntry = '<script type="module" src="./src/main.js"></script>';
+  if (!html.includes(originalEntry)) throw new Error('Missing Android module bootstrap anchor');
+  const nativeEntry = `<script>
+(function() {
+  var supported = !!(window.HTMLScriptElement && HTMLScriptElement.supports &&
+    HTMLScriptElement.supports('importmap'));
+  if (!supported) {
+    document.body.setAttribute('data-native-webview', 'unsupported');
+    console.warn('ROSTAM_WEBVIEW_UPGRADE_REQUIRED');
+    var wait = document.querySelector('#ink.boot .ink-wait');
+    if (wait) wait.innerHTML = '<p>نسخه WebView دستگاه قدیمی است<small>برای اجرای نبرد رستم، Android System WebView یا Chrome را به‌روزرسانی کنید.</small></p>';
+    return;
+  }
+  document.body.setAttribute('data-native-webview', 'supported');
+  console.log('ROSTAM_WEBVIEW_IMPORTMAP_SUPPORTED');
+  var startedAt = Date.now();
+  var check = setInterval(function() {
+    var title = document.getElementById('title');
+    if (title && !title.hidden) {
+      console.log('ROSTAM_TITLE_VISIBLE');
+      clearInterval(check);
+    } else if (Date.now() - startedAt > 40000) {
+      console.error('ROSTAM_TITLE_TIMEOUT');
+      clearInterval(check);
+    }
+  }, 300);
+  var script = document.createElement('script');
+  script.type = 'module';
+  script.src = './src/main.js';
+  document.body.appendChild(script);
+})();
+</script>`;
+  html = html.replace(originalEntry, nativeEntry);
   await writeFile(join(out, 'index.html'), html);
   const manifest = {};
   async function walk(dir) {
