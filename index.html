@@ -1216,6 +1216,58 @@
   .touch-actions button.held { background: #ac7c24; box-shadow: 0 0 12px #f2c14e88; }
   .touch-actions button[aria-disabled="true"] { color: #b8b0a0; border-style: dashed; }
   .touch-actions button.ready { border-color: #ffe09a; box-shadow: 0 0 12px #f2c14eaa; }
+  .touch-pause { position: absolute; top: max(8px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right));
+    min-width: 64px; min-height: 48px; pointer-events: auto; touch-action: manipulation; padding: 6px 10px;
+    border: 1px solid #d8bd7e; border-radius: 10px; background: #1a120dcc; color: #fff1ce; font: 600 14px var(--sans); }
+  /* Battle touch layout reserves the entire bottom corners for controls. */
+  .touch-device:not(.portrait-blocked) #hud { --safe-l: max(10px, env(safe-area-inset-left)); --safe-r: max(12px, env(safe-area-inset-right));
+    --safe-t: max(8px, env(safe-area-inset-top)); --map-size: clamp(72px, 20dvh, 138px); }
+  .touch-device #hud .h-player { left: var(--safe-l); top: var(--safe-t); bottom: auto; right: auto; width: clamp(170px, 27vw, 300px); height: 48px; }
+  .touch-device #hud .h-player .badge { display: none; }
+  .touch-device #hud .h-player .name { top: 0; left: 0; bottom: auto; font-size: 14px; }
+  .touch-device #hud .h-player .hp { left: 0; right: 0; top: 23px; bottom: auto; height: 9px; }
+  .touch-device #hud .h-player .mu { left: 2px; top: 38px; bottom: auto; height: 7px; width: 75%; }
+  .touch-device #hud .mu span { font-size: 12px; top: -3px; }
+  .touch-device #hud .h-map { top: calc(var(--safe-t) + 60px); right: var(--safe-r); width: var(--map-size); }
+  .touch-device #hud .h-map canvas { width: var(--map-size); height: var(--map-size); }
+  .touch-device #hud .h-map .seal { font-size: 10px; }
+  .touch-device #hud .h-def { top: calc(var(--safe-t) + 65px + var(--map-size)); right: var(--safe-r); width: var(--map-size); white-space: normal; }
+  .touch-device #hud .h-def b { font-size: 12px; }
+  .touch-device #hud .h-def span { display: none; }
+  .touch-device #hud .h-obj { top: calc(var(--safe-t) + 54px); left: var(--safe-l); max-width: min(55vw, 430px); padding: 3px 6px; white-space: normal; font-size: 14px; line-height: 1.5; }
+  .touch-device #hud .h-obj small { display: none; }
+  .touch-device #hud .h-obj .go, .touch-device #hud .h-obj .tm b { font-size: 12px; }
+  .touch-device #hud .h-target { top: calc(var(--safe-t) + 99px); left: var(--safe-l); width: 24vw; }
+  .touch-device #hud .h-target b { font-size: 13px; }
+  .touch-device #hud .h-target span { display: none; }
+  .touch-device #hud .h-boss { top: var(--safe-t); left: 35%; right: auto; width: 33%; }
+  .touch-device #hud .h-boss b { font-size: 15px; letter-spacing: 0; }
+  .touch-device #hud .h-boss span { display: none; }
+  .touch-device #hud .h-boss .bhp { height: 8px; }
+  .touch-device #hud .h-dlg { left: 29%; top: auto; bottom: max(14px, env(safe-area-inset-bottom)); width: 33%; max-height: 28dvh;
+    box-sizing: border-box; overflow: hidden; padding: 6px; gap: 5px; background: #160f0cbb; }
+  .touch-device #hud .h-dlg canvas, .touch-device #hud .h-dlg .dseal { width: 28px; height: 28px; flex: none; font-size: 20px; line-height: 28px; }
+  .touch-device #hud .h-dlg b { font-size: 12px; }
+  .touch-device #hud .h-dlg p { white-space: normal; font-size: 13px; line-height: 1.55; margin: 2px 0; }
+  .touch-device #hud .h-dlg small, .touch-device #hud .h-dlg b span { display: none; }
+  .touch-device #hud .h-band, .touch-device #hud .h-band.lo { left: 25%; right: 30%; top: 40%; max-height: 24dvh; overflow: hidden; padding: 5px; }
+  .touch-device #hud .h-band p, .touch-device #hud .h-band.big p { font-size: clamp(14px, 3dvh, 24px); letter-spacing: 0; }
+  .touch-device #hud .h-band small { display: none; }
+  .touch-device #hud .h-ko { right: calc(var(--safe-r) + var(--map-size) + 15px); bottom: auto; top: calc(var(--safe-t) + 58px); }
+  .touch-device #hud .num b, .touch-device #hud .num u { font-size: 30px; }
+  .touch-device #hud small { font-size: 10px; letter-spacing: 0; }
+  .touch-device #hud .h-chain { top: 46%; left: var(--safe-l); }
+  .touch-device #hud .h-mile { top: 30%; right: 32%; }
+  .touch-device #hud .h-mile b { font-size: 40px; }
+  .touch-device #hud .h-intro { top: 24%; left: 30%; max-width: 35%; padding: 8px; }
+  .touch-device #hud .h-intro .zh { font-size: 22px; letter-spacing: 0; }
+  .touch-device #hud .h-intro .sub { font-size: 13px; }
+  .touch-device #hud .h-intro .keys, .touch-device #hud .h-intro .en { display: none; }
+  .touch-device #hud .h-copy { top: 35%; right: 23%; font-size: 20px; }
+  @media (max-height: 420px) and (min-aspect-ratio: 3/2) {
+    .touch-device #hud .h-def span, .touch-device #hud .h-player .name { font-size: 12px; }
+    .touch-device #hud .h-intro .sub { display: none; }
+  }
 </style>
 </head>
 <body class="inkhold">
