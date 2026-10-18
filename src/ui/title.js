@@ -33,34 +33,35 @@ import { DIFFS, unlocked, difficulty, setDifficulty } from '../core/difficulty.j
 import { best, records, locked, UNLOCKS } from '../core/progress.js';
 import { CHAPTERS, chapterOpen } from '../story/chapters.js';
 import { TRIALS } from '../story/trials.js';
+import { OFFICERS_FA, officerFa, stageFa, difficultyFa, unlockFa, modeFa } from '../i18n/fa.js';
 
 // brush swash drawn under the focused item (revealed left → right) — one tapered stroke, dry tail
 export const SWASH = `<svg class="swash" viewBox="0 0 400 26" preserveAspectRatio="none" aria-hidden="true"><path d="M3 15C40 7 118 4 214 8
   S352 11 397 5L395 9C368 15 330 17 280 18C226 19 170 17 128 19C84 21 38 22 3 15ZM300 20C330 19 360 17 384 14L382 16C356 20 326 22 300 20Z"/></svg>`;
 
 const ITEMS = [
-  { go: 'story', zh: '劇情模式', en: 'Story · the Shu campaign' },
-  { go: 'trial', zh: '演武試煉', en: 'Trials · free battle' },
-  { go: 'rec', zh: '戰績', en: 'Records' },
-  { go: 'ctl', zh: '操作說明', en: 'Controls' },
+  { go: 'story', zh: 'داستان', en: 'نبردهای سه پادشاهی' },
+  { go: 'trial', zh: 'چالش‌ها', en: 'آزمون‌ها و نبرد آزاد' },
+  { go: 'rec', zh: 'رکوردها', en: 'افتخارات شما' },
+  { go: 'ctl', zh: 'راهنمای بازی', en: 'کلیدها و کنترل‌ها' },
 ];
 // the trial panel's last entry: not a trial (no records, no map of its own) — picking it opens the battlefield list
-const FREE = { CH: { id: 'free', num: { zh: '無盡', en: 'ENDLESS' }, title: { zh: '自由演武', en: 'Free Battle' }, seal: '無盡',
-  rule: { zh: '任選武將與戰場，無盡鏖戰，不計戰績', en: 'Any officer, any field, endless waves. No records kept.' } } };
+const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پایان' }, title: { zh: 'نبرد آزاد', en: 'نبرد آزاد' }, seal: '無盡',
+  rule: { zh: 'هر شخصیت و میدان نبردی را انتخاب کنید؛ رکوردی ثبت نمی‌شود.', en: 'موج‌های بی‌پایان دشمنان' } } };
 const LISTS = { story: CHAPTERS, trial: [...TRIALS, FREE], free: CHAPTERS };   // what the chapter panel lists per mode
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const rk = (r) => (r ? `<i class="t-rk r${r}">${r}</i>` : '');                    // a rank as a ringed brush letter
-export const CONTROLS = [   // also the pause menu's table (main.js)
-  ['移動', 'Move', '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / arrows', 'left stick'],
-  ['攻擊', 'Attack', '<kbd>J</kbd> / left click — tap for the full combo', '<kbd>X</kbd> □'],
-  ['蓄力', 'Charge', '<kbd>K</kbd> / right click — mid-combo for charge attacks', '<kbd>Y</kbd> △'],
-  ['跳躍', 'Jump', '<kbd>Space</kbd>', '<kbd>A</kbd> ×'],
-  ['閃避', 'Dodge', '<kbd>L</kbd> / <kbd>Shift</kbd>', '<kbd>R1</kbd> <kbd>R2</kbd>'],
-  ['無雙', 'Musou', '<kbd>I</kbd> — when the gold gauge is full', '<kbd>B</kbd> ○'],
-  ['視角', 'Camera', 'mouse (click the field to lock it) / <kbd>Q</kbd><kbd>E</kbd>', 'right stick'],
-  ['鎖定', 'Recenter', '<kbd>R</kbd> — behind you, or onto the nearest officer', '<kbd>L1</kbd> <kbd>L2</kbd>'],
-  ['瞄準', 'Aim (黃忠)', 'hold <kbd>K</kbd> / right click (standing or running) — mouse or stick aims, release to loose', 'hold <kbd>Y</kbd> △'],
-  ['暫停', 'Pause', '<kbd>Esc</kbd> (also frees the mouse)', ''],
+export const CONTROLS = [
+  ['حرکت', 'راه رفتن', '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / کلیدهای جهت‌دار', 'آنالوگ چپ'],
+  ['حمله', 'ضربهٔ معمولی', '<kbd>J</kbd> / کلیک چپ — چند بار برای زنجیرهٔ ضربات', '<kbd>X</kbd> □'],
+  ['حملهٔ قدرتی', 'ضربهٔ پایانی', '<kbd>K</kbd> / کلیک راست — پس از ضربات معمولی', '<kbd>Y</kbd> △'],
+  ['پرش', 'پریدن', '<kbd>Space</kbd>', '<kbd>A</kbd> ×'],
+  ['جاخالی', 'دفاع با حرکت', '<kbd>L</kbd> / <kbd>Shift</kbd>', '<kbd>R1</kbd> <kbd>R2</kbd>'],
+  ['موسو', 'قدرت ویژه', '<kbd>I</kbd> — پس از پر شدن نوار طلایی', '<kbd>B</kbd> ○'],
+  ['دوربین', 'تغییر زاویهٔ دید', 'حرکت موس (پس از کلیک روی میدان) / <kbd>Q</kbd><kbd>E</kbd>', 'آنالوگ راست'],
+  ['تنظیم دوربین', 'تمرکز روی فرمانده', '<kbd>R</kbd> — رو به نزدیک‌ترین فرمانده', '<kbd>L1</kbd> <kbd>L2</kbd>'],
+  ['نشانه‌گیری', 'ویژهٔ هوانگ ژونگ', 'نگه‌داشتن <kbd>K</kbd> / کلیک راست، رهاکردن برای شلیک', 'نگه‌داشتن <kbd>Y</kbd> △'],
+  ['توقف', 'مکث در نبرد', '<kbd>Esc</kbd> (رهاسازی نشانگر موس)', ''],
 ];
 
 // ---- key-art stage. Frame: origin at the HOME map's def.stage.title point (定軍山: up its pass road, north of the idle
@@ -101,22 +102,22 @@ const SMOKE = [[-17, 16, 40, 38, 24, 0.2, 0.1, 0.06, 0.9], [-26, 22, 46, 44, 26,
 export function createTitle(el, flow) {
   el.innerHTML = `
     <div class="t-veil"></div>
-    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${c.seal}</i><b>${c.name.zh}</b><small>${c.name.en}</small></div>`; }).join('')}
+    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${c.seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
-      <div class="t-logo"><i class="t-seal">三國</i><h1 data-t="無雙"><span>無雙</span></h1>
-        <p class="t-en"><span>VOXEL MUSOU</span></p></div>
-      <div class="t-press"><b>按任意鍵開始</b><small><kbd>Enter</kbd> Press any key</small></div>
+      <div class="t-logo"><i class="t-seal">سه پادشاهی</i><h1 data-t="موسو"><span>موسو</span></h1>
+        <p class="t-en"><span>وُکسل موسو</span></p></div>
+      <div class="t-press"><b>برای شروع یک کلید فشار دهید</b><small><kbd>Enter</kbd> ورود به بازی</small></div>
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>
         <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p><p class="t-cline"><b></b><small></small></p>
           <p class="t-cfoot"></p></div></div>
-      <div class="t-dpanel"><nav class="t-menu t-dif">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${d.zh}<i class="t-lk">鎖</i><i class="t-rk"></i></b><small>${d.en}</small>${SWASH}</button>`).join('')}</nav>
-        <div class="t-dcard"><h3>難度<small>Difficulty</small></h3><p class="t-dline"><b></b><small></small></p>
-          <ul class="s-stats t-dbars">${[['敵勢', 'Pressure'], ['敵將', 'Officers'], ['傷害', 'Damage']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
+      <div class="t-dpanel"><nav class="t-menu t-dif">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${difficultyFa(d.id).name}<i class="t-lk">قفل</i><i class="t-rk"></i></b><small>درجهٔ سختی</small>${SWASH}</button>`).join('')}</nav>
+        <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
+          <ul class="s-stats t-dbars">${[['فشار دشمن', 'تعداد مهاجمان'], ['فرماندهان', 'قدرت افسران'], ['آسیب', 'شدت ضربات']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
     </div>
-    <section class="t-ctl"><h2>操作說明<small>Controls</small></h2>
+    <section class="t-ctl"><h2>راهنمای کنترل‌ها<small>کلیدهای صفحه‌کلید و دسته</small></h2>
       <table>${CONTROLS.map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>
-      <p>Tap attack for the combo, press charge mid-combo for a finisher. Fill the gold gauge and unleash 無雙.</p></section>
+      <p>با تکرار حمله، ضربات پی‌درپی بزنید و میان زنجیره از حملهٔ قدرتی استفاده کنید. پس از پر شدن نوار طلایی، موسو را فعال کنید.</p></section>
     <section class="t-rec"></section>
     <footer class="ui-foot"></footer>`;
   const $ = (s) => el.querySelector(s), btns = [...el.querySelectorAll('.t-main button')], dbtns = [...el.querySelectorAll('.t-dif button')];
@@ -131,17 +132,17 @@ export function createTitle(el, flow) {
     if (!quiet) sfx('move');
   };
   const foot = () => {
-    const what = dmode ? '難度' : cmode === 'story' ? '章節' : cmode === 'trial' ? '試煉' : cmode ? '戰場' : '';
-    $('.ui-foot').innerHTML = panel ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>返回<small>Back</small></span>`
-      : `<span><kbd>↑</kbd><kbd>↓</kbd>選擇${what}<small>Select</small></span><span><kbd>Enter</kbd><kbd class="pad">A</kbd>決定<small>Confirm</small></span>`
-        + (what ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>返回<small>Back</small></span>` : '');
+    const what = dmode ? 'سختی' : cmode === 'story' ? 'فصل' : cmode === 'trial' ? 'چالش' : cmode ? 'میدان نبرد' : '';
+    $('.ui-foot').innerHTML = panel ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>`
+      : `<span><kbd>↑</kbd><kbd>↓</kbd>انتخاب ${what}<small>جابجایی</small></span><span><kbd>Enter</kbd><kbd class="pad">A</kbd>تأیید<small>انتخاب</small></span>`
+        + (what ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>` : '');
   };
   /** Why entry i of the panel's list can't be picked yet ([zh, en]), or null: a story chapter waits on the one before
    *  it, a trial on the records (progress.js UNLOCKS); battlefields are all open. */
   const lockOf = (i) => {
     const prev = CHAPTERS[i - 1]?.CH;
-    if (cmode === 'story') return chapterOpen(i) ? null : [`攻克${prev.num.zh}「${prev.title.zh}」後開啟`, `Clear ${prev.title.en} to unlock`];
-    return cmode === 'trial' ? locked(list[i].CH.id)?.rule ?? null : null;
+    if (cmode === 'story') return chapterOpen(i) ? null : [`برای بازشدن، «${stageFa(prev.id).title}» را به پایان برسانید.`, 'فصل قفل است'];
+    return cmode === 'trial' && locked(list[i].CH.id) ? [unlockFa(list[i].CH.id).rule, 'چالش قفل است'] : null;
   };
   // chapter panel: the card shows the focused chapter (story: era, the prologue's opening, its officers each with his
   // best rank), trial (its field, rule and best record) or battlefield (free); a locked one: what opens it
@@ -151,16 +152,16 @@ export function createTitle(el, flow) {
     ccur = i; cbtns.forEach((b, k) => b.classList.toggle('on', k === i));
     const { CH, PROLOGUE } = list[i], story = cmode === 'story', trial = cmode === 'trial', lock = lockOf(i);
     const p = PROLOGUE?.find((q) => q.cols), field = CHAPTERS.find((m) => m.CH.map === CH.map)?.CH.title;
-    const [zh, en] = lock || (story ? [p.cols.join('，'), p.en] : trial ? [CH.rule.zh, CH.rule.en] : ['任選武將，於此鏖戰', 'Any officer, endless waves on this field']);
+    const [zh, en] = lock || [stageFa(CH.id).description, story ? 'داستان سه پادشاهی' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
     $('.t-ccard').classList.toggle('lock', !!lock);
-    $('.t-ccard h3').innerHTML = cmode === 'free' ? '戰場<small>Battlefield</small>' : `${CH.num.zh}<small>${CH.num.en}</small>`;
-    $('.t-cname b').textContent = CH.title.zh; $('.t-cname i').textContent = CH.seal;
-    $('.t-cera').innerHTML = !trial ? `${CH.era.zh}<small>${CH.era.en}</small>` : field ? `戰場・${field.zh}<small>${field.en}</small>` : '';
+    $('.t-ccard h3').innerHTML = cmode === 'free' ? 'میدان نبرد<small>انتخاب نقشه</small>' : `${stageFa(CH.id).num}<small>${modeFa(cmode)}</small>`;
+    $('.t-cname b').textContent = stageFa(CH.id).title; $('.t-cname i').textContent = CH.seal;
+    $('.t-cera').innerHTML = !trial ? `${stageFa(CH.id).era}<small>زمان نبرد</small>` : field ? `میدان · ${stageFa(CH.map).title}<small>نقشه</small>` : '';
     $('.t-cline b').textContent = zh; $('.t-cline small').textContent = en;
     // foot: a chapter's officers, each with his own best rank; a trial's best record (the stat it is ranked on first)
     const who = story ? CH.heroes.filter((id) => CHARS[id]) : [], b = trial && best(CH.id);
-    $('.t-cfoot').innerHTML = who.length ? `<span>出陣<small>Officers</small></span>${who.map((id) => `<em><canvas width="20" height="20"></canvas>${CHARS[id].name.zh}${rk(best(CH.id, id)?.rank)}</em>`).join('')}`
-      : b ? `<span>最佳<small>Best</small></span>${(CH.best === 'kos' ? [`${b.kos} 擊破`, mmss(b.time)] : [mmss(b.time), `${b.kos} 擊破`]).map((t) => `<em>${t}</em>`).join('')}<strong class="r${b.rank}"><b>${b.rank}</b></strong>` : '';
+    $('.t-cfoot').innerHTML = who.length ? `<span>شخصیت‌ها<small>قابل بازی</small></span>${who.map((id) => `<em><canvas width="20" height="20"></canvas>${officerFa(id)}${rk(best(CH.id, id)?.rank)}</em>`).join('')}`
+      : b ? `<span>بهترین<small>رکورد ثبت‌شده</small></span>${(CH.best === 'kos' ? [`${b.kos} شکست`, mmss(b.time)] : [mmss(b.time), `${b.kos} شکست`]).map((t) => `<em>${t}</em>`).join('')}<strong class="r${b.rank}"><b>${b.rank}</b></strong>` : '';
     el.querySelectorAll('.t-cfoot canvas').forEach((cv, k) => paintPortrait(cv, CHARS[who[k]]));
     if (!quiet) sfx('move');
   };
@@ -171,8 +172,8 @@ export function createTitle(el, flow) {
     if (mode) {
       const story = mode === 'story';
       list = LISTS[mode];
-      $('.t-chs').innerHTML = list.map(({ CH }, i) => `<button data-c="${i}" class="${lockOf(i) ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${CH.num.zh}</em>` : ''}${CH.title.zh}<i class="t-lk">鎖</i>${
-        mode === 'free' ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? `${CH.num.en} · ` : ''}${CH.title.en}</small>${SWASH}</button>`).join('');
+      $('.t-chs').innerHTML = list.map(({ CH }, i) => `<button data-c="${i}" class="${lockOf(i) ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${stageFa(CH.id).num}</em>` : ''}${stageFa(CH.id).title}<i class="t-lk">قفل</i>${
+        mode === 'free' ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? `${stageFa(CH.id).num} · ` : ''}${stageFa(CH.id).description}</small>${SWASH}</button>`).join('');
       cbtns = [...el.querySelectorAll('.t-chs button')];
       let k = list.findIndex((m) => m.CH.id === id);
       if (k < 0) { k = 0; if (story) while (k < list.length - 1 && chapterOpen(k + 1)) k++; }
@@ -185,17 +186,17 @@ export function createTitle(el, flow) {
   function wall() {
     const R = records(), who = CHAR_ORDER;
     let done = 0, all = 0;
-    const row = ({ CH }) => `<tr><th>${CH.title.zh}<small>${CH.num.zh}</small></th>${who.map((id) => {
+    const row = ({ CH }) => `<tr><th>${stageFa(CH.id).title}<small>${stageFa(CH.id).num}</small></th>${who.map((id) => {
       if (CH.heroes && !CH.heroes.includes(id)) return '<td class="na"></td>';
       const cell = R[CH.id]?.[id], r = best(CH.id, id)?.rank;
       all++; if (r) done++;
       return `<td>${r ? rk(r) : '<i class="t-rk"></i>'}<span>${DIFFS.map((d) => `<u class="${cell?.[d.id] ? 'f' : ''}"></u>`).join('')}</span></td>`;
     }).join('')}</tr>`;
     const rows = [...CHAPTERS, ...TRIALS].map(row).join('');
-    $('.t-rec').innerHTML = `<h2>戰績<small>Records</small><em><b>${done}</b> / ${all}<small>cleared</small></em></h2>
-      <div class="t-rbody"><div><table><tr><th></th>${who.map((id) => `<td class="${locked(id) ? 'lock' : ''}"><canvas width="20" height="20"></canvas><b>${CHARS[id].name.zh}</b></td>`).join('')}</tr>${rows}</table>
-      <p class="t-rleg"><span>${'<u class="f"></u>'.repeat(DIFFS.length)}</span>${DIFFS.map((d) => d.zh).join(' · ')}<small>one pip per difficulty cleared</small></p></div>
-      <ul>${UNLOCKS.map((u) => { const lk = locked(u.id); return `<li class="${lk ? '' : 'open'}"><i>${lk ? '鎖' : '開'}</i><b>${u.zh}</b><span>${lk ? u.rule[0] : '已解鎖'}<small>${lk ? u.rule[1] : `${u.en} · unlocked`}</small></span></li>`; }).join('')}</ul></div>`;
+    $('.t-rec').innerHTML = `<h2>رکوردها<small>کارنامهٔ مبارزه</small><em><b>${done}</b> / ${all}<small>تکمیل‌شده</small></em></h2>
+      <div class="t-rbody"><div><table><tr><th></th>${who.map((id) => `<td class="${locked(id) ? 'lock' : ''}"><canvas width="20" height="20"></canvas><b>${officerFa(id)}</b></td>`).join('')}</tr>${rows}</table>
+      <p class="t-rleg"><span>${'<u class="f"></u>'.repeat(DIFFS.length)}</span>${DIFFS.map((d) => difficultyFa(d.id).name).join(' · ')}<small>هر نشان برابر با یک درجهٔ سختی تکمیل‌شده است</small></p></div>
+      <ul>${UNLOCKS.map((u) => { const lk = locked(u.id); return `<li class="${lk ? '' : 'open'}"><i>${lk ? 'قفل' : 'باز'}</i><b>${unlockFa(u.id).name}</b><span>${lk ? unlockFa(u.id).rule : 'باز شده است'}<small>${lk ? 'شرط بازشدن' : 'در دسترس'}</small></span></li>`; }).join('')}</ul></div>`;
     el.querySelectorAll('.t-rec canvas').forEach((cv, k) => paintPortrait(cv, CHARS[who[k]]));
   }
   /** The overlay beside the menu: 'ctl' controls, 'rec' the records wall, null = none. */
@@ -208,7 +209,7 @@ export function createTitle(el, flow) {
     i = (i + dbtns.length) % dbtns.length;
     if (i === dcur && dbtns[i].classList.contains('on')) return;
     dcur = i; dbtns.forEach((b, k) => b.classList.toggle('on', k === i));
-    const d = DIFFS[i], open = unlocked(d), [zh, en] = open ? d.line : locked(d.id).rule;
+    const d = DIFFS[i], open = unlocked(d), [zh, en] = open ? [difficultyFa(d.id).line, 'ویژگی‌های سطح'] : [unlockFa(d.id).rule, 'قفل است'];
     $('.t-dcard').classList.toggle('lock', !open);
     $('.t-dline b').textContent = zh; $('.t-dline small').textContent = en;
     el.querySelectorAll('.t-dbars li').forEach((li, k) => li.querySelectorAll('i').forEach((q, j) => q.classList.toggle('f', j < d.bars[k])));
@@ -234,7 +235,7 @@ export function createTitle(el, flow) {
       const d = DIFFS[dcur], mode = dmode, { CH } = list[cpick];
       if (!unlocked(d)) return sfx('back');
       setDifficulty(d); busy = true;
-      stamp(dbtns[dcur], '決');
+      stamp(dbtns[dcur], '✓');
       return setTimeout(() => inkWipe(() => flow.go('select', { mode, ch: CH.id, map: CH.map })), 380);
     }
     if (cmode) {
