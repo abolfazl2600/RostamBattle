@@ -35,6 +35,13 @@ export const MAP_LABELS_FA = {
 export const mapLabelFa = (source) => MAP_LABELS_FA[source] || source;
 
 export const PROLOGUE_FA = {
+  ashkabus: [
+    { cols: ['رستم دستان، پهلوان نامدار ایران', 'برای نبردی تازه به میدان می‌رود', 'این بخش هنوز یک پیش‌نمایش است.'] },
+    { cols: ['سپاه دشمن در گذرگاه کوهستان', 'بر راه پیشروی ایستاده است', 'نبرد در میدان موقت دینگ‌جون انجام می‌شود.'] },
+    { cols: ['رستم باید از رود بگذرد', 'دروازهٔ اردوگاه را بگشاید', 'و به سوی جایگاه فرمانده پیشروی کند.'] },
+    { rostam: { cols: ['رستم دستان', 'برای پاسداری از ایران', 'رویاروی دشمن می‌ایستد.'] } },
+    { cols: ['آغاز نبرد پیشِ روست', 'این نسخه بازآفرینی کامل شاهنامه نیست', 'داستان و دشمنان در مراحل بعد بازطراحی می‌شوند.'] },
+  ],
   hulao: [
     { cols: ['سال ۱۹۰ میلادی', 'دونگ ژو امپراتور خردسال را گروگان گرفت', 'پایتخت را با وحشت اداره کرد.'] },
     { cols: ['سائو سائو فرمان قیام داد', 'فرمانروایان شرق گرد آمدند', 'یوان شائو را رهبر اتحاد برگزیدند.'] },
@@ -79,6 +86,12 @@ export const PROLOGUE_FA = {
 };
 
 export const EPILOGUE_FA = {
+  ashkabus: {
+    rostam: [
+      'رستم دستان فرمانده دشمن را شکست داد و راه پیشروی را گشود.',
+      'این مرحله پیش‌نمایشی است؛ روایت کامل جنگ رستم و اشکبوس در نسخه‌های بعد ساخته می‌شود.',
+    ],
+  },
   hulao: {
     liubei: [
       'لو بو از دروازه عقب نشست. دونگ ژو از ترس سپاه متحد، لوئویانگ را به آتش کشید و امپراتور را به چانگ‌آن برد.',
@@ -130,11 +143,11 @@ export const EPILOGUE_FA = {
 
 // A missing translation is explicit; it must not silently be presented as Persian.
 export function prologueFa(chapterId, cardIndex, heroId) {
-  const card = PROLOGUE_FA[chapterId === 'ashkabus' ? 'dingjun' : chapterId]?.[cardIndex];
+  const card = PROLOGUE_FA[chapterId]?.[cardIndex];
   const value = card?.[heroId] || (card?.cols ? card : null);
   return value ? { cols: value.cols, en: '' } : null;
 }
 export function epilogueFa(chapterId, heroId) {
-  const byHero = EPILOGUE_FA[chapterId === 'ashkabus' ? 'dingjun' : chapterId];
+  const byHero = EPILOGUE_FA[chapterId];
   return byHero?.[heroId] || byHero?.any || null;
 }
