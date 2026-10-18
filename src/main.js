@@ -28,7 +28,7 @@ import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
 import { createLifecycle } from './core/lifecycle.js';
 import { showRecovery } from './ui/recovery.js';
-import { QUALITY } from './post/quality.js';
+import { createSettings } from './ui/settings.js';
 import { createTouchControls } from './ui/touch-controls.js';
 import { createPost } from './post/post.js';
 import { createWorld } from './world/world.js';
@@ -167,8 +167,11 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   emit('scenario', { mode, char, ch, map });
 }
 
+let lastTouchUI = viewport.touch;
 on('viewport', () => {
   input.reset();
+  if (lastTouchUI !== viewport.touch) { post.refreshQuality(); lastTouchUI = viewport.touch; }
+  refreshPauseGuide();
   vw = viewport.width; vh = viewport.height;
   post.setSize(vw, vh);
   camRig.resize(vw, vh);
@@ -180,11 +183,15 @@ const $ = (id) => document.getElementById(id);
 const menu = $('menu'), hudEl = $('hud');
 // the bindings mid-battle too (critic: checking aim meant quitting the chapter)
 menu.querySelector('.hint').insertAdjacentHTML('beforebegin', `<table>${controlRows().map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>`);
-if (viewport.touch) menu.querySelector('.hint').textContent = 'برای بازگشت، دوباره خروج از نبرد را تأیید کنید.';
+function refreshPauseGuide() {
+  menu.querySelector('table').innerHTML = controlRows().map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('');
+  menu.querySelector('.hint').textContent = viewport.touch ? 'برای بازگشت، دوباره خروج از نبرد را تأیید کنید.' : '↑ ↓ انتخاب · Enter تأیید · Escape ادامه';
+  if (state === 'battle') menu.querySelector('.sub small').textContent = viewport.touch ? 'برای ادامه دکمهٔ ادامه را لمس کنید' : 'برای ادامه کلید Escape را بزنید';
+}
 let paused = false, state = null, ctx = {}, hold = false, graphicsFailed = false;   // hold: loading, no renders until the new kit is compiled
 // pause menu: title-screen vocabulary (diamond + swash on the focused item), 繼續 focused on open, ↑/↓ / pad move,
 // Enter / A confirm, Esc / B resume. 撤退 asks once (確定撤退？), a second confirm ink-wipes to the title.
-const mBtns = [$('go'), $('quit')], quitEl = $('quit');
+const mBtns = [$('go'), $('quit'), $('pause-settings')], quitEl = $('quit');
 let mCur = 0, quitArm = false;
 const armQuit = (v) => {
   quitArm = v; quitEl.classList.toggle('arm', v);
@@ -197,6 +204,7 @@ const mFocus = (i) => {
 };
 const mOk = () => {
   if (mCur === 0) return setPaused(false);
+  if (mCur === 2) return flow.openSettings($('pause-settings'));
   if (!quitArm) { sfx('ok'); return armQuit(true); }
   sfx('back'); mNav.stop();
   inkWipe(() => flow.go('title'));
@@ -206,14 +214,33 @@ const setPaused = (v) => {
   if (!v && state === 'battle' && (document.hidden || graphicsFailed)) v = true;
   input.reset(); post.resetTiming();
   paused = v; emit('pause', { paused: v }); menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
-  if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
+  if (v && document.pointerLockElement === canvas) document.exitPointerLock?.();
+  if (v) { if (!settings.isOpen) { mFocus(0); armQuit(false); mNav.start(); } } else mNav.stop();
 };
 const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && state === 'battle' && !paused, pause: () => setPaused(true), musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
 mBtns.forEach((b, i) => {
   b.addEventListener('pointerenter', () => { if (mCur !== i) { mFocus(i); sfx('move'); } });
   b.addEventListener('click', () => { mFocus(i); mOk(); });
 });
+const settings = createSettings({ post, resetInput() {
+  input.reset(); post.resetTiming(); game.cam.manualT = 0; game.cam.turn = null;
+} });
+// A touch-accessible escape route survives Desktop mode on a touch-only phone.
+const rescue = document.createElement('button'); rescue.type = 'button'; rescue.className = 'settings-rescue'; rescue.hidden = true;
+rescue.textContent = 'توقف / تنظیمات'; document.getElementById('game-shell').append(rescue);
+rescue.addEventListener('click', () => flow.openSettings(rescue));
+function refreshRescue() { rescue.hidden = !(viewport.touchCapable && !viewport.touch && state === 'battle' && !paused); }
+on('viewport', refreshRescue); on('pause', refreshRescue); on('flow', refreshRescue);
 const flow = {
+  openSettings(from, onClose) {
+    if (settings.isOpen || wiping()) return;
+    if (state === 'battle') {
+      if (!paused) setPaused(true);
+      if (from === rescue) { from = $('pause-settings'); mFocus(2); }
+      mNav.stop();
+    }
+    settings.open(from, () => { if (state === 'battle' && paused) mNav.start(); onClose?.(); });
+  },
   /** Enter a flow state: 'title' | 'select' | 'loading' | 'prologue' | 'battle' | 'result' (ctx: see each screen module). */
   go(s, c = {}) {
     // All entry lanes share this guard, before any screen exit, deployment or record-bearing battle.
@@ -280,17 +307,6 @@ const screens = {
   title: createTitle($('title'), flow), select: createSelect($('select'), flow), loading: createLoading($('loading')),
   prologue: createPrologue($('prologue'), flow), result: createResult($('result'), flow),
 };
-// Quality is purely render-side; both menus share the same persistent selection.
-for (const parent of [$('title'), menu]) {
-  const label = document.createElement('label'); label.className = 'quality-choice';
-  label.innerHTML = `کیفیت گرافیک <select aria-label="کیفیت گرافیک"><option value="auto">خودکار</option>${Object.entries(QUALITY).map(([id, q]) => `<option value="${id}">${q.label}</option>`).join('')}</select>`;
-  parent.append(label);
-  label.querySelector('select').value = post.quality.choice;
-  label.querySelector('select').addEventListener('change', (e) => {
-    input.reset(); post.setQuality(e.target.value);
-    for (const select of document.querySelectorAll('.quality-choice select')) select.value = post.quality.choice;
-  });
-}
 // a win goes into the records (rec: what it beat and what it opened — the result screen shows both); reason: a fail
 // beat's defeat line
 on('story:end', (e) => {

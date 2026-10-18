@@ -9,14 +9,14 @@
 //                     chromatic fringe, split-tone grade (scene-linear), hue-preserving S-curve + per-channel soft
 //                     shoulder (fire stays orange/yellow, white armour keeps its shading), bottom darkening,
 //                     vignette, grain, 2 px ordered dither + palette quantisation (retro).
-// Quality tier: a sustained frame time over budget drops the scene MSAA 4× → 2× → off (?hq pins it).
+// Auto adapts resolution after sustained frame-time pressure; manual tiers keep fixed effects and scale.
 // Per-map look: setLook(def.post) overrides any P key (the rest fall back to P) — uniforms only, no recompile.
 // Render-only: reads camera/focus, never touches sim state.
 import * as THREE from 'three';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { viewport } from '../core/viewport.js';
-import { QUALITY, defaultQuality, createAdaptiveScale } from './quality.js';
+import { QUALITY, normalizeQuality, qualityOverride, resolveQuality, createAdaptiveScale } from './quality.js';
 import { showRecovery } from '../ui/recovery.js';
 import { SUN_DIR } from '../world/sky.js';
 
@@ -216,7 +216,9 @@ export function createPost({ canvas, width, height }) {
   const query = new URLSearchParams(location.search);
   let choice = 'auto';
   try { choice = localStorage.getItem('voxel-quality') || 'auto'; } catch { /* storage disabled */ }
-  choice = query.has('hq') ? 'high' : query.get('quality') || choice;
+  choice = normalizeQuality(choice);
+  const override = qualityOverride(query);
+  let adaptiveEnabled = false;
   let profile, qualityId, renderScale, adaptive;
   const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1); black.needsUpdate = true;
   renderer.shadowMap.enabled = true;
@@ -293,8 +295,9 @@ export function createPost({ canvas, width, height }) {
     } catch (e) { showRecovery('حافظه یا امکانات گرافیکی کافی نیست. بارگذاری دوباره با کیفیت سبک را امتحان کنید.'); throw e; }
   }
   function setQuality(value, persist = true) {
-    choice = value === 'auto' || QUALITY[value] ? value : 'auto';
-    qualityId = choice === 'auto' ? defaultQuality({ touch: viewport.touch, cores: navigator.hardwareConcurrency, memory: navigator.deviceMemory }) : choice;
+    choice = normalizeQuality(value);
+    const resolved = resolveQuality(choice, { touch: viewport.touch, cores: navigator.hardwareConcurrency, memory: navigator.deviceMemory }, override);
+    qualityId = resolved.id; adaptiveEnabled = resolved.adaptive;
     profile = QUALITY[qualityId]; renderScale = profile.scale;
     renderer.shadowMap.enabled = profile.shadows;
     sceneRT.samples = Math.min(profile.samples, renderer.capabilities.maxSamples); sceneRT.dispose();
@@ -322,12 +325,13 @@ export function createPost({ canvas, width, height }) {
       return p.catch((e) => { showRecovery('آماده‌سازی گرافیک ناموفق بود. بازی را دوباره بارگذاری کنید.'); throw e; });
     },
     setSize, setQuality,
+    refreshQuality() { if (adaptiveEnabled) setQuality(choice, false); },
     setLook(o) { setLook(o); if (!profile.dof) { fin.material.uniforms.uNearBlur.value = 0; fin.material.uniforms.uFarBlur.value = 0; } },
-    get quality() { return { choice, id: qualityId, scale: renderScale }; },
+    get quality() { return { choice, id: qualityId, scale: renderScale, override, adaptive: adaptiveEnabled }; },
     resetTiming() { adaptive.reset(); },
     /** focus: world point the camera frames (hero) → DoF focus plane; flash: white screen flash (0..1). */
     render(scene, camera, time, focus, flash) {
-      if (!query.has('hq')) adaptive.frame(performance.now());
+      if (adaptiveEnabled) adaptive.frame(performance.now());
       renderer.setRenderTarget(sceneRT);
       renderer.render(scene, camera);
 
