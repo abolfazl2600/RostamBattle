@@ -311,7 +311,67 @@ export const CHANGBAN_DIALOGUE_FA = {
   "Ha! There goes the bridge. Let's see you cross now!": "هاها! پل از میان رفت. ببینم حالا چطور می‌خواهید عبور کنید!"
 };
 
+
+export const CHIBI_DIALOGUE_FA = {
+  "Wait, General! The wind has not risen yet — the altar must not fall!": "سردار، صبر کنید! باد هنوز نوزیده؛ نگذارید محراب سقوط کند!",
+  "Don't press on alone! Join Huang Gai at the landing first.": "تنها پیش نروید! ابتدا کنار ساحل به هوانگ گای ملحق شوید.",
+  "The water camp gate is barred! Cut down Mao Jie and Yu Jin who hold it!": "دروازهٔ اردوگاه دریایی بسته است! مائو جیه و یو جین را شکست دهید!",
+  "Cao Ren and Xu Huang still hold Wulin. Don't push on yet!": "سائو رن و شو هوانگ هنوز وو‌لین را در اختیار دارند. فعلاً پیش نروید!",
+  "The third watch is near, and still the wind blows from the north-west... Master Kongming, can you truly borrow the wind?": "نیمه‌های شب نزدیک است و باد هنوز از شمال‌غرب می‌وزد… استاد کونگ‌مینگ، واقعاً می‌توانید باد را تغییر دهید؟",
+  "Rest easy, Zijing. At the third watch tonight, the south-east wind will rise.": "آرام باش زی‌جینگ. امشب در پاس سوم، باد از جنوب‌شرق خواهد وزید.",
+  "The Strategist works his rite above. While Zilong stands here, no one comes one step nearer!": "مشاور در بالای محراب به کار خود مشغول است؛ تا زی‌لونگ اینجاست کسی نزدیک نخواهد شد!",
+  "Call the wind, Strategist. Leave the foot of the altar to me!": "مشاور، باد را فرا بخوانید؛ دفاع از پای محراب را به من بسپارید!",
+  "Zilong, Cao Cao's spies know of this altar. Hold it — let no one set foot on it.": "زی‌لونگ، جاسوسان سائو سائو از محراب خبر دارند؛ نگذار حتی یک نفر به آن برسد.",
+  "There's a witch's altar on the hill! Burn it!": "روی تپه محرابی برپاست! به آتشش بکشید!",
+  "By the Chancellor's secret order — tear down this witch's altar!": "به فرمان محرمانهٔ صدراعظم، این محراب را ویران کنید!",
+  "Cai He? Zhou Yu saw through your false surrender long ago.": "تسای هه؟ ژو یو مدت‌ها پیش فریب تسلیم ساختگی تو را فهمیده بود.",
+  "You want the altar? Get past me first!": "محراب را می‌خواهی؟ اول باید از من بگذری!",
+  "Well fought! The altar holds. But the wind...": "خوب جنگیدید! محراب هنوز پابرجاست؛ اما باد…",
+  "The wind... the wind has turned! It truly blows from the south-east!": "باد… جهتش عوض شد! واقعاً از جنوب‌شرق می‌وزد!",
+  "The gusts favor our course. Send Huang Gai the signal and put the plan in motion.": "باد به سود ماست. به هوانگ گای علامت بدهید تا نقشه را آغاز کند.",
+  "The Strategist commands heaven itself!": "مشاور ما حتی آسمان را هم فرمان می‌دهد!",
+  "This man bends heaven and earth to his will... Leave him alive and he will ruin Wu. Ding Feng, Xu Sheng — to the altar!": "این مرد گویی بر آسمان و زمین فرمان می‌راند… زنده ماندنش برای وو خطرناک است. دینگ فنگ، شو شنگ، به سوی محراب!",
+  "Strategist, Zhou Yu's men are coming up the hill! My boat waits at the river — quickly!": "مشاور! نیروهای ژو یو به تپه نزدیک می‌شوند. قایق من کنار رودخانه منتظر است؛ زود باشید!",
+  "Zilong, Zhou Yu will not suffer me to live. The boat is at the river — let us go.": "زی‌لونگ، ژو یو قصد جانم را کرده است. قایق کنار رودخانه است؛ برویم.",
+  "By the Commander's order — Zhuge Liang's head!": "به فرمان فرمانده، ژوگه لیانگ را شکست دهید!",
+  "So Zhou Yu sends for me after all. A pity — I shan't be staying.": "پس ژو یو سرانجام به سراغم آمد؛ افسوس که قصد ماندن ندارم!",
+  "Harm the Strategist? Ask my spear first!": "می‌خواهی به مشاور آسیب بزنی؟ اول پاسخ نیزهٔ مرا بده!",
+  "Don't let him get away!": "نگذارید فرار کند!",
+  "Too strong... General Xu, fall back!": "بیش از اندازه قوی است… سردار شو، عقب‌نشینی کنیم!",
+  "Zhuge Liang was ready for us... Report to the Commander!": "ژوگه لیانگ از پیش آماده بود… به فرمانده گزارش دهید!",
+  "Strategist, old General Huang's boats are at the landing!": "مشاور! کشتی‌های سردار هوانگ به محل پهلوگیری رسیدند!",
+  "To the riverbank, Zilong. Huang Gongfu's fire ships wait only for this wind.": "زی‌لونگ، به ساحل برویم. کشتی‌های آتشین هوانگ گونگ‌فو منتظر همین بادند.",
+  "Cao's picket boats have spotted us! Clear the bank so the fire ships can put out!": "کشتی‌های دیده‌بانی سائو ما را دیدند! ساحل را پاک‌سازی کنید تا کشتی‌های آتشین حرکت کنند!",
+  "Not one step nearer the water camp, Wu dogs!": "سربازان وو، حتی یک قدم به اردوگاه دریایی نزدیک نشوید!",
+  "The south-east wind is strong! Huang Gongfu — loose the ships!": "باد جنوب‌شرقی شدت گرفته! هوانگ گونگ‌فو، کشتی‌ها را رها کن!",
+  "At your command! All fire ships — into Cao's chained fleet!": "اطاعت! همهٔ کشتی‌های آتشین، به قلب ناوگان زنجیرشدهٔ سائو حمله کنید!",
+  "Ships chained together: set one alight, and a hundred burn.": "کشتی‌ها با زنجیر به هم بسته شده‌اند؛ یکی که آتش بگیرد، صد کشتی می‌سوزد.",
+  "Look! The fire ships run before the wind like arrows!": "نگاه کنید! کشتی‌های آتشین همچون تیر در مسیر باد می‌تازند!",
+  "The ships... the ships are burning! They're chained — we can't cut them loose!": "کشتی‌ها… آتش گرفته‌اند! زنجیرها بسته‌اند؛ نمی‌توانیم جدایشان کنیم!",
+  "Hold your nerve! Hold the gate — let no one through!": "وحشت نکنید! از دروازه دفاع کنید و نگذارید کسی عبور کند!",
+  "Yu Jin stands here. This camp will not fall easily!": "یو جین اینجاست؛ این اردوگاه به‌آسانی سقوط نمی‌کند!",
+  "Mao Jie!... Curse it, the fire is at the stockade!": "مائو جیه! لعنت، آتش به حصار اردوگاه رسیده است!",
+  "Ha! Cao, you traitor — how do you like the old man's false surrender now?": "هاها! سائو، چطور فریب تسلیم ساختگی این پیرمرد را خوردی؟",
+  "Strategist, the fire has spread ashore — Cao's army is in chaos!": "مشاور، آتش به ساحل رسیده و سپاه سائو آشفته شده است!",
+  "Zilong, straight on to Wulin! That is where Cao Cao will run.": "زی‌لونگ، مستقیم به وو‌لین برو! سائو سائو از آنجا می‌گریزد.",
+  "Hold Wulin to the death! No enemy sets foot in the Chancellor's camp!": "تا پای جان از وو‌لین دفاع کنید! نگذارید دشمن وارد اردوگاه صدراعظم شود!",
+  "The woods are burning... hold your ranks!": "جنگل آتش گرفته… صف‌های خود را حفظ کنید!",
+  "General Cao Ren!... I'm coming!": "سردار سائو رن! دارم می‌آیم!",
+  "Ha ha ha... They call Zhou Yu and Zhuge Liang masters of strategy. Fools! Had they set one ambush here, we would all be taken.": "هاها… ژو یو و ژوگه لیانگ را نابغهٔ تدبیر می‌نامند؛ نادان‌اند! اگر اینجا کمین می‌گذاشتند، همگی اسیر می‌شدیم.",
+  "You laugh too soon, Chancellor. I have been waiting for you.": "صدراعظم، زود خندیدی. مدت‌هاست چشم‌به‌راهت هستم.",
+  "Zhao Zilong, by the Strategist's order — I have been waiting for you!": "من ژائو زی‌لونگ، به فرمان مشاور، اینجا منتظرت بودم!",
+  "Wenyuan, hold the rear! We take the Huarong road!": "ون‌یوان، عقب سپاه را حفظ کن! از راه هوآرونگ می‌رویم!",
+  "Go, my lord! While Zhang Liao holds this road, no one passes!": "سرورم، بروید! تا ژانگ لیائو اینجاست، کسی عبور نمی‌کند!",
+  "Zhang Wenyuan — loyal and brave. What a pity about the master you serve.": "ژانگ ون‌یوان، وفادار و شجاعی؛ افسوس که به ارباب نادرستی خدمت می‌کنی.",
+  "Out of my way, Zhang Liao!": "ژانگ لیائو، از سر راهم کنار برو!",
+  "Is the Chancellor clear yet?... A little longer!": "صدراعظم دور شده است؟ کمی دیگر باید دوام بیاورم!",
+  "Strategist, leave their reinforcements to me — you take Zhang Liao!": "مشاور، نیروهای کمکی را به من بسپارید؛ شما با ژانگ لیائو بجنگید!",
+  "Zilong, don't tarry. Drive Zhang Liao off — Cao Cao runs straight into Yunchang's hands.": "زی‌لونگ، معطل نکن. ژانگ لیائو را بران؛ سائو سائو به دام یون‌چانگ می‌افتد.",
+  "Eight hundred thousand, gone to ash in a night. So begins the land's division in three.": "هشتصد هزار سپاهی در یک شب خاکستر شدند؛ این آغاز تقسیم سرزمین به سه پادشاهی است.",
+  "Cao Cao flees down the Huarong road! The day is ours!": "سائو سائو از راه هوآرونگ می‌گریزد؛ پیروزی از آن ماست!"
+};
+
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
-  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || en;
+  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || CHIBI_DIALOGUE_FA[en] || en;
 };
