@@ -51,7 +51,7 @@ import { createPrologue } from './story/prologue.js';
 import { createResult } from './story/result.js';
 import { difficulty } from './core/difficulty.js';
 import { record } from './core/progress.js';
-import { officerFa, difficultyFa } from './i18n/fa.js';
+import { officerFa, difficultyFa, OFFICERS_FA } from './i18n/fa.js';
 
 const params = new URLSearchParams(location.search);
 const ENEMIES = Math.max(0, Math.min(2000, params.get('enemies') ? Number(params.get('enemies')) | 0 : 300));
@@ -150,7 +150,7 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   heroView.reset();
   game.actors.reset(); game.pickups.reset();                                              // C5
   game.story.reset({ mode, char, ch });                                                    // C2
-  menu.querySelector('.t').innerHTML = `${officerFa(who.id)}<i>${who.seal}</i>`;
+  menu.querySelector('.t').innerHTML = `${officerFa(who.id)}<i>${OFFICERS_FA[who.id].seal}</i>`;
   menu.querySelector('.sub').innerHTML = `نبرد متوقف شد · ${difficultyFa(game.diff.id).name}<small>برای ادامه کلید Escape را بزنید</small>`;
   document.title = `${officerFa(who.id)} — وُکسل موسو`;
   emit('scenario', { mode, char, ch, map });
