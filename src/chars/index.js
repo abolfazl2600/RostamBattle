@@ -185,9 +185,9 @@ export const CHARS = {
     weapon: { zh: 'نیزهٔ مارشکل بلند', en: 'Long Serpent Spear' },
     bio: {
       zh: ['رستم، فرزند زال و رودابه و پهلوان نامدار سیستان است.',
-        'این پیش‌نمایش نیزه و حرکات ژانگ فی را حفظ می‌کند؛ سلاح‌های شاهنامه‌ای هنوز پیاده نشده‌اند.'],
+        'در این پیش‌نمایش با نیزهٔ مارشکل بلند می‌جنگد؛ دیگر جنگ‌افزارهای او هنوز ساخته نشده‌اند.'],
       en: ['Rostam, son of Zal and Rudabeh, is the famed champion of Sistan.',
-        'This preview keeps Zhang Fei’s original serpent spear and moves; Rostam’s legendary weapons are not yet implemented.'],
+        'In this preview he fights with a long serpent spear; his other weapons are not yet implemented.'],
     },
     stats: { atk: 5, def: 4, speed: 2, range: 4 }, musou: { zh: 'غرش تهمتن', en: 'Tahamtan’s Roar' }, accent: '#d4552a',
     lines: {
