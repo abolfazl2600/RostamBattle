@@ -1340,12 +1340,6 @@
     .touch-device #title:not(.pre) .t-logo { display: none; }
     .touch-device #title .t-band { width: calc(80 * var(--game-vw)); }
   }
-  .quality-choice { position: absolute; right: max(16px, var(--safe-right)); bottom: max(12px, var(--safe-bottom));
-    z-index: 5; display: flex; align-items: center; gap: 8px; color: #ffe3a0; font: 600 13px var(--sans); }
-  .quality-choice select { min-height: 44px; background: #1a120d; color: #fff1ce; border: 1px solid #b8893a; font: inherit; padding: 6px; }
-  .touch-device #title .quality-choice { top: max(68px, var(--safe-top)); bottom: auto; flex-direction: column; }
-  .touch-device #title:is(.chp, .dif, .ctl, .rec) .quality-choice { display: none; }
-  .touch-device #menu .quality-choice { position: static; order: 2; align-self: flex-start; margin-top: 8px; }
   .touch-device #select .s-name { flex-wrap: wrap; gap: 4px; }
   .touch-device #select .s-name div { padding-top: 0; }
   .touch-device #select .s-court { font-size: 12px; line-height: 1.6; }
@@ -1372,7 +1366,6 @@
   #title.chp .t-chs b { font-size: clamp(16px, 2rem, 24px); line-height: 1.5; }
   #title.chp .t-chs b em { display: block; margin: 0 0 3px; font-size: 12px; line-height: 1.4; }
   #title.chp .t-chs small { max-width: 100%; font-size: 12px; line-height: 1.5; margin-top: 4px; }
-  #title.chp .quality-choice { display: none; }
   #title.chp .ui-foot { right: max(16px, var(--safe-right)); flex-wrap: wrap; }
   .touch-device #title.chp .ui-foot { right: max(16px, var(--safe-right)); }
 
@@ -1591,6 +1584,29 @@
   }
   /* The menu drag adapter maps physical touch movement into the rotated surface's axes. */
   .rotated-landscape .scr, .rotated-landscape #menu { touch-action: pinch-zoom; }
+
+  #settings { position: absolute; inset: 0; z-index: 90; display: grid; place-items: center; box-sizing: border-box;
+    padding: max(8px, var(--safe-top)) max(12px, var(--safe-right)) max(8px, var(--safe-bottom)) max(12px, var(--safe-left));
+    background: #100b08ed; color: #fff1ce; font: 500 14px/1.7 var(--sans); }
+  #settings[hidden], .settings-rescue[hidden] { display: none; }
+  .settings-card { box-sizing: border-box; width: min(100%, 620px); max-height: 100%; overflow: auto;
+    overscroll-behavior: contain; touch-action: pan-y; padding: 16px 20px; border: 1px solid #b8893a; background: #21170f; }
+  .settings-card h2 { font: 700 24px/1.4 var(--sans); margin: 0 0 12px; }
+  .settings-card label { display: block; font-weight: 700; margin-top: 12px; }
+  .settings-card select, .settings-card button { box-sizing: border-box; width: 100%; min-height: 48px; padding: 8px 12px;
+    border: 1px solid #b8893a; border-radius: 4px; background: #302115; color: #fff1ce; font: inherit; cursor: pointer; }
+  .settings-card p { margin: 6px 0 10px; }
+  .settings-card [role=status] { color: #ffe09a; }
+  .settings-card :focus-visible, .settings-rescue:focus-visible { outline: 3px solid #ffe09a; outline-offset: -3px; }
+  .settings-card .settings-pad-help { font-size: 12px; color: #d8bd83; }
+  .settings-rescue { position: absolute; z-index: 30; top: max(8px, var(--safe-top)); right: max(12px, var(--safe-right));
+    min-height: 48px; min-width: 64px; padding: 8px 12px; color: #fff1ce; border: 1px solid #d8bd83;
+    border-radius: 6px; background: #21170fee; font: 600 14px var(--sans); touch-action: manipulation; }
+  /* Menus remain reachable with touch when a phone is explicitly set to Desktop. */
+  #menu { overflow-y: auto; }
+  #menu #pause-settings { min-height: 48px; }
+  #title:not(.pre) .t-main { max-height: calc(62 * var(--game-vh)); overflow-y: auto; overscroll-behavior: contain; }
+  #title .t-main button { min-height: 44px; }
 </style>
 </head>
 <body class="inkhold">
@@ -1603,6 +1619,7 @@
   <div class="sub" style="--d:.08s">نبرد متوقف شد<small>توقف بازی</small></div>
   <button id="go" style="--d:.14s">ادامه<small>بازگشت به میدان</small></button>
   <button id="quit" style="--d:.18s">بازگشت به منو<small>خروج از نبرد</small></button>
+  <button id="pause-settings" type="button">تنظیمات<small>نمایش، کنترل و گرافیک</small></button>
   <div class="hint" style="--d:.22s"><kbd>↑</kbd><kbd>↓</kbd> انتخاب · <kbd>Enter</kbd><kbd class="pad">A</kbd> تأیید · <kbd>Esc</kbd><kbd class="pad">B</kbd> ادامه</div>
 </div>
 <!-- flow screens (main.js). ui lane: #title #select · story lane: #prologue #result -->

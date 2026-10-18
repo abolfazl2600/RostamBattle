@@ -25,3 +25,15 @@ export function createAdaptiveScale(max, budget, change) {
     },
   };
 }
+
+// Query overrides win for the whole debugging session; UI changes still save the next-launch preference.
+export const normalizeQuality = value => value === 'auto' || Object.hasOwn(QUALITY, value) ? value : 'auto';
+export function qualityOverride(query) {
+  if (query.has('hq')) return 'high';
+  const value = query.get('quality');
+  return value === 'auto' || Object.hasOwn(QUALITY, value) ? value : null;
+}
+export function resolveQuality(choice, capability, override = null) {
+  const effective = override ?? normalizeQuality(choice);
+  return { id: effective === 'auto' ? defaultQuality(capability) : effective, adaptive: effective === 'auto' };
+}

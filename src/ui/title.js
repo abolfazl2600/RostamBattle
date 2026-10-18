@@ -47,6 +47,7 @@ const ITEMS = [
   { go: 'trial', zh: 'چالش‌ها', en: 'آزمون‌ها و نبرد آزاد' },
   { go: 'rec', zh: 'رکوردها', en: 'افتخارات شما' },
   { go: 'ctl', zh: 'راهنمای بازی', en: 'کلیدها و کنترل‌ها' },
+  { go: 'settings', zh: 'تنظیمات', en: 'نمایش، کنترل و گرافیک' },
 ];
 // the trial panel's last entry: not a trial (no records, no map of its own) — picking it opens the battlefield list
 const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پایان' }, title: { zh: 'نبرد آزاد', en: 'نبرد آزاد' }, seal: '無盡',
@@ -258,6 +259,7 @@ export function createTitle(el, flow) {
     }
     const it = ITEMS[cur];
     sfx('ok');
+    if (it.go === 'settings') { nav.stop(); flow.openSettings(btns[cur], () => nav.start()); return; }
     if (it.go === 'ctl' || it.go === 'rec') setPanel(it.go); else setCh(it.go);
   };
   const back = () => {
@@ -305,7 +307,13 @@ export function createTitle(el, flow) {
     menuR = Math.max(...[...el.querySelectorAll('.t-menu b, .t-menu small, .t-dcard, .t-ccard')].map((e) => gameRect(e).right)) + viewport.height / 72 * 1.2;
     tags.forEach((e, i) => { tagW[i] = e.offsetWidth; });
   };
-  on('viewport', measure); document.fonts?.ready.then(measure);
+  on('viewport', () => {
+    $('.t-ctl table').innerHTML = controlRows().map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('');
+    $('.t-ctl h2 small').textContent = viewport.touch ? 'کنترل لمسی در حالت افقی' : 'کلیدهای صفحه‌کلید و دسته';
+    $('.t-press b').textContent = viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید';
+    $('.t-press small').innerHTML = viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی';
+    foot(); measure();
+  }); document.fonts?.ready.then(measure);
 
   function bannerTex(glyph) {
     const cv = document.createElement('canvas'); cv.width = 128; cv.height = 320;

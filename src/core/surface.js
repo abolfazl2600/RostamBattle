@@ -1,5 +1,5 @@
 // Shared logical dimensions and pure coordinate transforms; safe for headless kit checks.
-export const viewport = { touch: false, rotated: false, mode: 'native-landscape', width: 1, height: 1,
+export const viewport = { touch: false, touchCapable: false, deviceMode: 'auto', rotated: false, mode: 'native-landscape', width: 1, height: 1,
   physicalWidth: 1, physicalHeight: 1, offsetX: 0, offsetY: 0 };
 export function gamePoint(clientX, clientY) {
   const x = clientX - viewport.offsetX, y = clientY - viewport.offsetY;

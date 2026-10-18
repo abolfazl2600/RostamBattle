@@ -76,6 +76,7 @@ export function createNav(cb) {
   addEventListener('keydown', key);
   return {
     start() {
+      if (on) return; // repeated lifecycle interruptions must not create a second polling loop
       on = true; rep = 0; held = {};
       const p = navigator.getGamepads ? navigator.getGamepads()[0] : null;
       if (p) p.buttons.forEach((q, i) => { held[i] = q.pressed ? true : false; });   // true = wait for release
