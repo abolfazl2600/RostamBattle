@@ -1,316 +1,188 @@
 <h1 align="center">Voxel Musou | وکسل موسو</h1>
 
-<p align="center"><b>یک جنگجو در برابر هزار دشمن | One warrior. A thousand foes.</b></p>
-
 <p align="center">
-  بازی اکشن وکسلی الهام‌گرفته از Dynasty Warriors، قابل اجرا مستقیم در مرورگر.<br>
-  <b>۷ شخصیت · ۱ فصل موقت فعال و ۴ فصل به‌زودی · ۳ چالش · ۴ درجهٔ سختی</b><br>
-  بخش‌های اصلی رابط کاربری و متن‌های داستان بازی به فارسی ترجمه شده‌اند.
+  <strong>یک پهلوان در برابر سپاهی از دشمنان</strong><br>
+  بازی اکشن وکسلی مرورگری؛ در مسیر تبدیل‌شدن به تجربه‌ای فارسی با الهام از شاهنامه و نبردهای رستم.
 </p>
 
 <p align="center">
-  <a href="https://abolfazl2600.github.io/voxel-game/"><img src="media/promo.gif" alt="پیش‌نمایش بازی Voxel Musou / Voxel Musou gameplay" width="100%"></a>
+  <a href="https://abolfazl2600.github.io/voxel-game/">
+    <img src="media/promo.gif" alt="نمایی از مبارزات بازی وکسل موسو" width="100%">
+  </a>
 </p>
 
 <p align="center">
-  <b><a href="https://abolfazl2600.github.io/voxel-game/">▶ اجرای آنلاین بازی — GitHub Pages | Play the game</a></b>
-  &nbsp; · &nbsp;
-  <a href="https://voxel-musou.vercel.app/">نسخهٔ جایگزین در Vercel</a>
-</p>
-<p align="center">
-  <a href="media/promo.mp4">تماشای تریلر با صدا</a>
-  &nbsp; · &nbsp;
-  <a href="#run">اجرای محلی</a>
-  &nbsp; · &nbsp;
-  <a href="#controls">کنترل‌ها</a>
+  <strong><a href="https://abolfazl2600.github.io/voxel-game/">اجرای آنلاین بازی (GitHub Pages)</a></strong>
+  &nbsp; | &nbsp;
+  <a href="https://voxel-musou.vercel.app/">نسخهٔ جایگزین (Vercel)</a>
+  &nbsp; | &nbsp;
+  <a href="media/promo.mp4">ویدئوی بازی</a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/abolfazl2600/voxel-game/issues">پیگیری توسعه در GitHub</a>
 </p>
 
-<p align="center">
-  <a href="#راهنمای-سریع-فارسی">راهنمای فارسی</a> &nbsp; · &nbsp;
-  <a href="#officers">شخصیت‌ها</a> &nbsp; · &nbsp;
-  <a href="#story-campaign">داستان</a> &nbsp; · &nbsp;
-  <a href="#trials-and-free-battle">چالش‌ها</a> &nbsp; · &nbsp;
-  <a href="#difficulty-records-and-saves">ذخیره‌ها</a> &nbsp; · &nbsp;
-  <a href="#development">توسعه</a>
-</p>
+> **وضعیت پروژه — ۱۸ اکتبر ۲۰۲۶:** نسخهٔ **وب قابل بازی** است و زیرساخت کنترل لمسی، چیدمان Landscape و فارسی‌سازی پایه دارد؛ اما اقتباس نهایی شاهنامه **هنوز ساخته نشده** است. فصل «جنگ ایران و اشکبوس» فعلاً یک پیش‌نمایش موقت با دارایی‌های داستان قبلی است. تست نهایی موبایل روی دستگاه واقعی و انتشار APK / Google Play نیز تکمیل نشده‌اند.
 
-## راهنمای سریع فارسی
+## چشم‌انداز پروژه
 
-**[اجرای بازی در GitHub Pages](https://abolfazl2600.github.io/voxel-game/)** — بدون نیاز به نصب یا دانلود. اگر صفحهٔ اصلی دردسترس نبود، [لینک Vercel](https://voxel-musou.vercel.app/) را امتحان کنید.
+هدف، ساخت یک بازی اکشن **Hack & Slash / Musou** با ظاهر وکسلی، میدان‌های نبرد پرجمعیت، ترکیب‌ ضربات، پهلوانان و روایت فارسی است؛ به‌تدریج هویت داستانی و بصری آن از فضای اولیهٔ `Dynasty Warriors` به **شاهنامهٔ فردوسی و داستان‌های رستم** تغییر می‌کند.
 
-- **بخش داستانی:** فصل اول «جنگ ایران و اشکبوس» فعال است؛ چهار کارت بعدی «به‌زودی» هستند و با بردن فصل اول یا رکوردهای قدیمی باز نمی‌شوند. فصل اول فعلاً نمونه‌ای با نقشه، کماندار، باس و مأموریت‌های دینگ‌جون است؛ مدل رستم و روایت نهایی شاهنامه هنوز اضافه نشده‌اند.
-- **چالش‌ها و نبرد آزاد:** سه چالش امتیازی و نبرد آزاد با موج‌های دشمن در دسترس‌اند؛ بعضی چالش‌ها با پیشروی در داستان باز می‌شوند.
-- **کنترل‌ها:** `WASD` حرکت، `J` حمله، `K` حملهٔ قدرتی، `Space` پرش، `L` جاخالی، `I` موسو و `Esc` توقف بازی.
-- **ذخیرهٔ پیشرفت:** رکوردها و موارد آزادشده در حافظهٔ مرورگر (`localStorage`) نگهداری می‌شوند؛ نشانی‌های مختلف سایت و اجرای محلی ذخیرهٔ مشترک ندارند.
-- **پیش‌نیاز:** مرورگر دارای WebGL2 و امکانات گرافیکی کافی؛ کنترل صفحه‌کلید/ماوس و دسته حفظ شده است. کنترل لمسی Landscape پیاده‌سازی شده، ولی تأیید نهایی Android و iPhone هنوز در انتظار تست روی دستگاه واقعی است.
+مسیر محصول:
+- **داستان:** فصل‌های الهام‌گرفته از شاهنامه با رستم و دیگر شخصیت‌های ایرانی، روایت، نقشه، دشمن و باس اختصاصی؛ شروع با «جنگ ایران و اشکبوس».
+- **زبان و دسترس‌پذیری:** رابط راست‌به‌چپ، دیالوگ‌ها و مأموریت‌های فارسی، فونت خوانا و چیدمان مناسب اندازه‌های متفاوت.
+- **پلتفرم‌ها:** بازی در مرورگر دسکتاپ و مرورگر گوشی/تبلت؛ طراحی بازی روی نمایشگر لمسی **همیشه افقی (Landscape)** است، حتی اگر دستگاه عمودی نگه داشته شود.
+- **انتشار:** حفظ نسخهٔ وب و سپس ساخت **APK مستقل** برای نصب مستقیم و **AAB** مخصوص Google Play؛ زمان انتشار هنوز تعیین نشده است.
 
-> فارسی‌سازی بر متن‌های اصلی رابط، داستان و نبرد تمرکز دارد؛ ممکن است بعضی نوشته‌های تزئینی یا قسمت‌های فرعی هنوز به زبان اصلی باشند.
+نام **Voxel Musou** نام فعلی پروژه است؛ نام نهایی نسخهٔ شاهنامه‌ای و هویت فروشگاه هنوز تصویب نشده‌اند.
 
-### راهنمای موبایل و تبلت — در حال تأیید
+## همین حالا چه چیزهایی قابل بازی است؟
 
-بازی روی گوشی و تبلت لمسی همیشه چیدمان **افقی** دارد. اگر دستگاه عمودی باشد، تمام بازی و کنترل‌ها خودکار ۹۰ درجه می‌چرخند و صفحه را پُر می‌کنند؛ نیازی به تغییر جهت دستگاه نیست. برای ورود به بازی صفحه را لمس کنید؛ انتخاب‌ها و فهرست‌ها با لمس و پیمایش قابل استفاده‌اند.
+| بخش | وضعیت فعلی |
+| --- | --- |
+| **نبرد وکسلی** | مبارزه با گروه‌های پرجمعیت دشمن، حملهٔ معمولی/قدرتی، کمبو، پرش، جاخالی و Musou |
+| **شخصیت‌ها** | ۷ شخصیتِ ساختار قدیمی بازی، با سلاح و سبک مبارزهٔ متفاوت؛ مدل نهایی رستم هنوز موجود نیست |
+| **داستان عمومی** | ۵ کارت داستان؛ فقط «جنگ ایران و اشکبوس» فعال و **موقت** است |
+| **چالش‌ها** | ۳ چالش امتیازی با قوانین و شرایط آزادشدن فعلی |
+| **نبرد آزاد** | چهار میدان قدیمی: Hulao، Changban، Red Cliffs و Dingjun |
+| **درجهٔ سختی** | آسان، معمولی، سخت و آشوب (Chaos) |
+| **ذخیره** | رکوردها، موارد آزادشده و تنظیمات در `localStorage` همان مرورگر و همان دامنه |
+| **کنترل** | صفحه‌کلید/ماوس، دسته، و کنترل لمسی با پشتیبانی از چند لمس هم‌زمان |
 
-| کنترل لمسی | کارکرد |
-|---|---|
-| جوی‌استیک پایین چپ | حرکت؛ انحراف کمتر، سرعت کمتر |
-| کشیدن انگشت روی فضای خالی میدان | چرخاندن و بالا/پایین بردن دوربین |
-| حمله / قدرتی | زنجیرهٔ ضربات و حملهٔ قدرتی |
-| پرش / جاخالی | پرش، حملهٔ هوایی و گریز |
-| موسو | فعال‌سازی پس از آماده‌شدن نوار و روشن‌شدن دکمه |
-| هدف | تنظیم مجدد دوربین و تمرکز روی فرمانده |
-| نگه‌داشتن قدرتی با هوانگ ژونگ | ورود به نشانه‌گیری؛ کشیدن روی میدان برای هدف، رهاکردن برای شلیک |
-| توقف بالای صفحه | توقف، ادامه یا خروج با تأیید |
+### داستان فعلی و فصل‌های برنامه‌ریزی‌شده
 
-- **چند لمس:** حرکت، دوربین و حمله می‌توانند هم‌زمان استفاده شوند. فهرست فصل‌ها، انتخاب شخصیت و پنل‌های بلند قابل اسکرول‌اند.
-- **صدا:** اولین لمس مجاز، صدا را راه می‌اندازد. پس از رفتن به پس‌زمینه، تماس، ابتدا بازی را با «ادامه» از سر بگیرید. حالت بی‌صدا و صدای رسانهٔ دستگاه را هم بررسی کنید.
-- **کیفیت:** در عنوان یا منوی توقف، «خودکار»، «موبایل سبک»، «موبایل متعادل» یا «کیفیت بالا» را انتخاب کنید. برای دستگاه قدیمی یا داغ‌شدن، از سبک شروع کنید؛ این تنظیم تعداد دشمنان و هدف‌های داستان را کم نمی‌کند.
-- **برگشت از وقفه:** پس از بازگشت از پس‌زمینه یا وقفهٔ سیستم، بازی خودکار ادامه پیدا نمی‌کند. انگشت‌ها را بردارید و دکمهٔ ادامه را لمس کنید.
-- **تغییر جهت:** چرخاندن دستگاه به‌تنهایی نبرد را متوقف نمی‌کند؛ لمس‌های قبلی پاک می‌شوند و می‌توانید دوباره کنترل‌ها را لمس کنید.
-- **مشکل گرافیک:** اگر پنل بازیابی ظاهر شد، «بارگذاری دوباره» یا «تلاش با کیفیت سبک» را انتخاب کنید. رکوردهای ذخیره‌شده حفظ می‌شوند، ولی نبرد ناتمام پس از Reload از ابتدا شروع می‌شود.
-- **وضعیت پشتیبانی:** بررسی مرورگری با شبیه‌سازی لمس انجام شده است. نتیجهٔ واقعی گوشی Android و iPhone، صدا، گرما و FPS هنوز تأیید نشده‌اند؛ این راهنما به معنی تأیید نهایی همهٔ دستگاه‌ها نیست.
-
-[چک‌لیست و جدول نتیجهٔ تست موبایل](docs/MOBILE_QA.md) · [جزئیات پیاده‌سازی](docs/MOBILE_IMPLEMENTATION.md)
-
-English documentation, controls and developer reference continue below.
----
-
-## Features
-
-Built with **Three.js r186** and a **fixed 60 Hz simulation**. Plain ES modules, with no package installation or build step needed to play locally.
-
-- Officer-specific voxel models, N1–N6 normal strings, C1–C6 charge attacks, air attacks, dodges and scripted Musou sequences.
-- Story objectives include duels, rescues, defence points, pursuit and battlefield set pieces, with officer-specific dialogue and endings.
-- Hundreds of instanced soldiers, allied troops, army-specific colours and banners, voxel debris, hit-stop and impact effects.
-- Enemy officers and allied hero NPCs with name and HP tags; Cao Cao, Zhang Liao and Xiahou Yuan have dedicated boss models and telegraphed attacks.
-- Four fields: daylight Hulao Gate, dusk at Changban, the Red Cliffs night fleet and the golden-hour Mount Dingjun valley, switching within the same page.
-- Atmospheric haze, depth of field, bloom, a retro pixel look and render quality profiles and adaptive resolution under sustained load.
-- Procedural WebAudio sound, a Persian-localized presentation layer, brush-inspired calligraphy, ink-map prologues and ink-wipe transitions.
-
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="media/title.jpg" alt="Voxel Musou title screen" width="100%"><br>
-      <b>Voxel Musou</b><br><sub>Brush calligraphy, voxel officers and a living battlefield</sub>
-    </td>
-    <td width="50%" align="center">
-      <img src="media/select.jpg" alt="Seven officers on the character select screen" width="100%"><br>
-      <b>Choose your officer</b><br><sub>Distinct weapons, fighting styles and personal records</sub>
-    </td>
-  </tr>
-</table>
-
-## Officers
-
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="media/guanyu.jpg" alt="Guan Yu's Musou at Mount Dingjun" width="100%"><br>
-      <b>關羽 · Guan Yu</b><br><sub>青龍偃月・天斬</sub>
-    </td>
-    <td width="50%" align="center">
-      <img src="media/zhaoyun.jpg" alt="Zhao Yun's Musou at Changban" width="100%"><br>
-      <b>趙雲 · Zhao Yun</b><br><sub>蒼龍破陣</sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" align="center">
-      <img src="media/zhugeliang.jpg" alt="Zhuge Liang's Musou at the Red Cliffs" width="100%"><br>
-      <b>諸葛亮 · Zhuge Liang</b><br><sub>東風・八陣</sub>
-    </td>
-    <td width="50%" align="center">
-      <img src="media/lubu.jpg" alt="Lü Bu's Musou at Hulao Gate" width="100%"><br>
-      <b>呂布 · Lü Bu</b><br><sub>天下無雙・神鬼亂舞</sub>
-    </td>
-  </tr>
-</table>
-
-| Officer | Weapon and fighting style | Musou |
+| فصل در منو | وضعیت | توضیح |
 | --- | --- | --- |
-| **Liu Bei** (劉備) | Twin swords | 昭烈・雙龍斬 |
-| **Guan Yu** (關羽) | Green Dragon Crescent Blade | 青龍偃月・天斬 |
-| **Zhang Fei** (張飛) | Serpent spear | 燕人咆哮 |
-| **Zhao Yun** (趙雲) | Spear strings and sweeping charges | 蒼龍破陣 — a dragon tears through the crowd |
-| **Zhuge Liang** (諸葛亮) | Feather fan, wind blades and formation sigils | 東風・八陣 |
-| **Huang Zhong** (黃忠) | Bow slashes, point-blank shots, fan shots, barrages, arrow rain, fire arrows and manual aim | 百步穿楊 — flaming volley and a giant arrow |
-| **Lü Bu** (呂布) | Crescent halberd and crescent waves; also the Hulao Gate boss | 天下無雙・神鬼亂舞 |
+| **۱. جنگ ایران و اشکبوس** | پیش‌نمایش قابل بازی | فعلاً از هوانگ ژونگ، میدان دینگ‌جون و شیا‌هو یوان استفاده می‌کند؛ **رستم، اشکبوس و روایت نهایی در بازی نیستند** |
+| ۲. جنگ رستم و کاموس کشانی | به‌زودی | فقط عنوان در منو |
+| ۳. نبرد رستم و سهراب | به‌زودی | فقط عنوان در منو |
+| ۴. جنگ رستم و تورانیان | به‌زودی | فقط عنوان در منو |
+| ۵. نبرد رستم و اسفندیار | به‌زودی | فقط عنوان در منو |
 
-Six officers are available initially; Lü Bu unlocks after clearing Chapter I. Story chapters use the roster below; trials and free battle offer every unlocked officer.
+چهار فصل تاریخی قدیمی فعلاً در کد و میدان‌های نبرد آزاد حفظ شده‌اند؛ نمایش نام فصل‌های آینده به معنی طراحی یا انتشار محتوای آن‌ها نیست. جزئیات: [پیش‌نمایش فصل اول](docs/ASHKABUS_PREVIEW.md) و [بررسی اقتباس نهایی](docs/ASHKABUS_DESIGN_REVIEW.md).
 
-## Story campaign
+## نقشهٔ راه توسعه (Roadmap)
 
-Choose **Story / حالت داستانی** on the title screen, then a chapter and difficulty. The public story menu currently has five cards: **Iran and Ashkabus** (`ashkabus`) is the only released entry; the remaining four cards are marked **Coming soon** regardless of old saves or a new victory. The active entry is explicitly a **temporary Dingjun preview**, played as Huang Zhong against the existing forces and Xiahou Yuan. It is not the finished Shahnameh adaptation.
+این چک‌لیست **بر اساس وضعیت کد و Pull Requestهای ادغام‌شده در `main` در ۱۸ اکتبر ۲۰۲۶** است. `[x]` به معنی تکمیل **همان کار مشخص** است؛ نه تکمیل کل فاز یا تأیید آماده‌بودن محصول برای انتشار. برای کارهای نیمه‌تمام، صرفاً بخش واقعاً انجام‌شده تیک دارد.
 
-The four original scenario/map modules below remain intact as historical content. Free Battle still lists their four distinct fields under their original names, and existing records/unlocks remain saved. The new preview writes only its own `ashkabus` record; its results return to the story menu or retry the same chapter. Upcoming story IDs cannot be launched through query links.
+### فاز ۱ — پایهٔ بازی و فارسی‌سازی
 
-<p align="center">
-  <img src="media/story.jpg" alt="Chapter I Hulao Gate ink-map prologue" width="100%"><br>
-  <sub>虎牢關 · Chapter I opens with an animated ink-map prologue</sub>
-</p>
+- [x] پیاده‌سازی هستهٔ نبرد وکسلی، شخصیت‌های اولیه، چهار میدان تاریخی، چالش‌ها، رکوردها و ذخیرهٔ محلی.
+- [x] پیاده‌سازی لایهٔ فارسی و RTL برای بخش‌های اصلی منو، HUD، نتایج، شخصیت‌ها و متن‌های داستانی موجود ([PR #1](https://github.com/abolfazl2600/voxel-game/pull/1)).
+- [x] افزودن فونت فارسی «وزیرمتن» و بهبود خوانایی متن‌ها در رابط فعلی.
+- [x] انتشار نسخهٔ وب و درج لینک اجرای آنلاین بازی.
+- [ ] بازبینی نهایی متن‌های باقی‌مانده، شکست خطوط و چیدمان فارسی در همهٔ صفحه‌ها؛ **فارسی‌سازی صددرصدی هنوز تأیید نشده است**.
 
-| Chapter | Playable officers | Battle |
+[جزئیات پیگیری فارسی‌سازی](PERSIAN_LOCALIZATION_TASK.md)
+
+### فاز ۲ — تجربهٔ لمسی موبایل و تبلت (وب)
+
+- [x] تشخیص دستگاه لمسی و یکپارچه‌سازی ورودی Touch با ماوس/صفحه‌کلید/دسته ([#2](https://github.com/abolfazl2600/voxel-game/issues/2)، [#3](https://github.com/abolfazl2600/voxel-game/issues/3)).
+- [x] جوی‌استیک مجازی با حرکت آنالوگ و چندلمسی ([#4](https://github.com/abolfazl2600/voxel-game/issues/4)).
+- [x] دکمه‌های حمله، حملهٔ قدرتی، پرش، جاخالی، Musou و هدف‌گیری؛ لمس نگه‌داشته‌شده و ترکیب ضربات ([#5](https://github.com/abolfazl2600/voxel-game/issues/5)).
+- [x] کنترل مستقل دوربین با کشیدن انگشت و نشانه‌گیری کمان ([#6](https://github.com/abolfazl2600/voxel-game/issues/6)).
+- [x] HUD سازگار با Landscape، ناحیه‌های امن و توقف بازی ([#7](https://github.com/abolfazl2600/voxel-game/issues/7)).
+- [x] ناوبری لمسی منوها، انتخاب شخصیت و نمایش نتیجه؛ بهبود پیمایش منوهای فشرده ([#8](https://github.com/abolfazl2600/voxel-game/issues/8)، [PR #30](https://github.com/abolfazl2600/voxel-game/pull/30)، [PR #38](https://github.com/abolfazl2600/voxel-game/pull/38)).
+- [x] پروفایل‌های کیفیت گرافیکی موبایل، رزولوشن تطبیقی و بازیابی گرافیک/صدا پس از وقفه ([#9](https://github.com/abolfazl2600/voxel-game/issues/9)، [#10](https://github.com/abolfazl2600/voxel-game/issues/10)).
+- [x] نمایش خودکار سطح بازی به صورت تمام‌صفحهٔ افقی با چرخش نرم‌افزاری ۹۰ درجه هنگام عمودی‌بودن دستگاه؛ بدون نیاز به پیام «گوشی را بچرخانید» ([#31](https://github.com/abolfazl2600/voxel-game/issues/31)).
+- [x] نگارش راهنمای فارسی و چک‌لیست آزمایش موبایل ([PR #24](https://github.com/abolfazl2600/voxel-game/pull/24)).
+- [ ] **تأیید واقعی روی Android Chrome و iPhone Safari:** یک نبرد کامل، چندلمسی، صدا، FPS، گرما، Safe Area، چرخش و وقفه‌ها ([#11](https://github.com/abolfazl2600/voxel-game/issues/11)).
+
+[راهنمای پیاده‌سازی لمسی](docs/MOBILE_IMPLEMENTATION.md) · [ماتریس تست دستگاه واقعی](docs/MOBILE_QA.md)
+
+### فاز ۳ — تبدیل روایت بازی به شاهنامه
+
+- [x] افزودن پنج عنوان جدید به منوی داستان و تعیین وضعیت «به‌زودی» برای چهار فصل ([#14](https://github.com/abolfazl2600/voxel-game/issues/14)).
+- [x] ایجاد فصل قابل بازیِ **موقت** «جنگ ایران و اشکبوس» با شناسه و رکورد مستقل، بدون حذف محتوا و ذخیره‌های قبلی ([PR #23](https://github.com/abolfazl2600/voxel-game/pull/23)).
+- [x] بررسی متن شاهنامه و تدوین گزینه‌های طراحیِ رستم، اشکبوس، اسب، سپاه، میدان و روایت ([PR #25](https://github.com/abolfazl2600/voxel-game/pull/25))؛ **این سند هنوز تصویب نهایی طراحی نیست**.
+- [ ] تأیید دامنهٔ نسخهٔ اول داستان، شخصیت‌ها، شیوهٔ مبارزه و نسبت اقتباس با شاهنامه.
+- [ ] ساخت مدل، ظاهر، پرتره، سلاح و حرکات اختصاصی **رستم**.
+- [ ] ساخت **اشکبوس** به‌عنوان باس مستقل و تعریف الگوی حملات و رویارویی نهایی.
+- [ ] ساخت سپاه و میدان ایرانی، مقدمه، دیالوگ‌ها، هدف‌های مأموریت و پایان فارسی مستقل.
+- [ ] جایگزین‌کردن پیش‌نمایش موقت با فصل واقعی «جنگ ایران و اشکبوس»، همراه با حفظ سازگاری رکوردها و کنترل‌های لمسی ([#12](https://github.com/abolfazl2600/voxel-game/issues/12)).
+- [ ] طراحی و ساخت چهار فصل بعدی شاهنامه؛ تا زمان انتشار، کارت‌های آن‌ها بسته بمانند.
+
+[سند بررسی طراحی فصل اول](docs/ASHKABUS_DESIGN_REVIEW.md) · [Issue اصلی داستان #12](https://github.com/abolfazl2600/voxel-game/issues/12)
+
+### فاز ۴ — نسخهٔ Android، APK و Google Play
+
+- [x] تدوین **پیش‌نویس** جدول تصمیم‌های انتشار و پیش‌نیازهای Android ([PR #51](https://github.com/abolfazl2600/voxel-game/pull/51))؛ تأیید تصمیم‌ها هنوز انجام نشده است.
+- [ ] تعیین نام و ناشر نهایی، `applicationId`، بازار، حساب Play و مدل انتشار ([#32](https://github.com/abolfazl2600/voxel-game/issues/32)).
+- [ ] بسته‌بندی نسخهٔ وب با Capacitor و آماده‌سازی پروژهٔ Android، محتوای آفلاین، Landscape، چرخهٔ عمر و ذخیره‌ها ([#33](https://github.com/abolfazl2600/voxel-game/issues/33) تا [#39](https://github.com/abolfazl2600/voxel-game/issues/39)).
+- [ ] بررسی سازگاری دستگاه واقعی، WebGL2، امنیت، مجوزها و هویت بصری ([#40](https://github.com/abolfazl2600/voxel-game/issues/40) تا [#42](https://github.com/abolfazl2600/voxel-game/issues/42)).
+- [ ] تعیین راهبرد امضا و ساخت **APK قابل نصب مستقیم** و **AAB ویژهٔ Play**؛ افزودن خروجی‌های مجزا به GitHub Actions ([#43](https://github.com/abolfazl2600/voxel-game/issues/43) تا [#46](https://github.com/abolfazl2600/voxel-game/issues/46)).
+- [ ] ممیزی داده‌ها و مجوز محتوا، Privacy Policy، سیاست‌های Google Play و آماده‌سازی صفحهٔ فروشگاه ([#47](https://github.com/abolfazl2600/voxel-game/issues/47) تا [#52](https://github.com/abolfazl2600/voxel-game/issues/52)).
+- [ ] تست داخلی/بسته، عبور از معیار پذیرش و انتشار مرحله‌ای APK و Google Play ([#53](https://github.com/abolfazl2600/voxel-game/issues/53) تا [#55](https://github.com/abolfazl2600/voxel-game/issues/55)).
+
+**مرجع دقیق ترتیب ۲۲ کار اندروید:** [نقشهٔ راه Android — Issue #56](https://github.com/abolfazl2600/voxel-game/issues/56) · [تصمیم‌های باز](docs/android/RELEASE_DECISIONS.md). ساخت فایل تصمیم‌ها به معنی وجود پروژهٔ Android یا انتشار نسخهٔ نهایی نیست.
+
+## راهنمای کنترل
+
+| عملکرد | صفحه‌کلید / ماوس | موبایل و تبلت لمسی |
 | --- | --- | --- |
-| **I · Hulao Gate** (虎牢關, 190) | Liu Bei, Guan Yu, Zhang Fei | Guan Yu's timed Hua Xiong duel and the three brothers against Lü Bu |
-| **II · Changban** (長坂坡, 208) | Zhao Yun, Zhang Fei | Rescue A Dou and return as Zhao Yun; hold and break the bridge as Zhang Fei |
-| **III · Red Cliffs** (赤壁, 208) | Zhuge Liang, Zhao Yun | Defend the altar, summon the east wind, burn the chained ships and pursue Cao Cao to Huarong Road |
-| **IV · Mount Dingjun** (定軍山, 219) | Huang Zhong, Zhao Yun | Fight uphill against Xiahou Yuan |
+| حرکت | `WASD` یا کلیدهای جهت | جوی‌استیک پایینِ چپ |
+| حملهٔ عادی | `J` یا کلیک چپ | حمله |
+| ضربهٔ قدرتی / پایان کمبو | `K` یا کلیک راست | قدرتی |
+| پرش | `Space` | پرش |
+| جاخالی | `L` یا `Shift` | جاخالی |
+| Musou | `I` پس از پرشدن نوار | موسو |
+| دوربین | ماوس / `Q` و `E` | کشیدن روی بخش آزاد میدان |
+| تنظیم جهت / هدف | `R` | هدف |
+| کمان هوانگ ژونگ | نگه‌داشتن `K`، سپس رهاکردن | نگه‌داشتن قدرتی، نشانه‌گیری با کشیدن و رهاکردن |
+| توقف | `Esc` | دکمهٔ توقف بالای صفحه |
 
-Follow the objective panel, its direction marker and the minimap. Story battles can end in defeat if the hero falls or an objective fails; meat buns restore HP. Results show rank, KOs, clear time, damage taken, the officer's ending and newly earned records or unlocks. Retry from the result screen to attempt the battle again.
+دستهٔ بازی نیز پشتیبانی می‌شود. برای کمبو، چند حملهٔ متوالی بزنید و سپس قدرتی را اجرا کنید؛ برای مثال `J → J → K`. در گوشی، می‌توانید هم‌زمان حرکت کنید، دوربین را بچرخانید و حمله کنید. اگر گوشی عمودی نگه داشته شود، **خود محیط بازی می‌چرخد** و به‌صورت افقی نمایش داده می‌شود. نتیجهٔ آزمایش روی دستگاه واقعی هنوز در [#11](https://github.com/abolfazl2600/voxel-game/issues/11) باز است.
 
-## Trials and free battle
+## اجرا روی رایانه
 
-Choose **Trials / چالش‌ها** on the title screen for ranked challenges or **Free battle / نبرد آزاد** at the end of that list.
-
-| Trial | Goal | Unlock |
-| --- | --- | --- |
-| **Thousand Slain** (千人斬) | Defeat 1,000 soldiers within 3 minutes; faster clears improve rank | Available from the start |
-| **Hold the Bridge** (死守) | Defend Changban Bridge for 4 minutes against escalating assaults; more KOs improve rank | Clear Chapter II |
-| **The Gauntlet** (過關斬將) | Defeat Xiahou Yuan, Zhang Liao, Cao Cao and Lü Bu in sequence; faster clears improve rank | Clear Chapter IV |
-
-Trials can end in defeat, and damage taken also affects rank. Free battle offers endless waves on any of the four fields from the start: the hero cannot die, and no clear records or unlocks are earned there.
-
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="media/trials.jpg" alt="Trials selection screen" width="100%"><br>
-      <b>演武試煉 · Trials</b><br><sub>Score attacks, bridge defence and four consecutive duels</sub>
-    </td>
-    <td width="50%" align="center">
-      <img src="media/records.jpg" alt="Records wall with ranks and unlock requirements" width="100%"><br>
-      <b>戰績 · Records</b><br><sub>Chase better ranks and unlock your next challenge</sub>
-    </td>
-  </tr>
-</table>
-
-## Difficulty, records and saves
-
-Pick the difficulty after selecting a chapter, trial or free-battle field. Higher tiers increase enemy pressure, officer toughness and incoming damage; Chaos also gives officers resistance to stagger from non-heavy hits.
-
-| Difficulty | Availability | Highest rank |
-| --- | --- | --- |
-| **Easy** (初級) | From the start | A |
-| **Normal** (普通) | From the start | S |
-| **Hard** (上級) | From the start | S |
-| **Chaos** (修羅) | Clear any story chapter or trial on Hard | S |
-
-Victories save the **best rank, fastest clear and most KOs independently**, for each chapter / trial × officer × difficulty. These appear on the title cards, officer select, the **Records (戰績)** wall and the result screen. Ranks run from C to S and account for KOs, time and cumulative damage taken; trials add stricter S-rank requirements.
-
-Records and the selected difficulty are saved automatically in browser `localStorage`. Unlocks are derived from clear records. Progress is specific to the browser and site origin, so localhost and the hosted game have separate saves; clearing site data resets progress. Battles themselves are not saved for later resumption.
-
-## Run
-
-ES modules don't load from `file://`, so serve the folder with any static server:
+پروژه از ماژول‌های ES و Three.js استفاده می‌کند و برای اجرای محلی نسخهٔ وب به نصب پکیج یا مرحلهٔ Build نیاز ندارد. در پوشهٔ مخزن اجرا کنید:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Then open [localhost:8000](http://localhost:8000). Requires a WebGL2 browser; a desktop GPU is recommended. Sound starts on the first key press or click.
+سپس [http://localhost:8000](http://localhost:8000) را باز کنید. مرورگر باید از **WebGL2** پشتیبانی کند. صدا پس از اولین تعامل کاربر فعال می‌شود. داده‌های ذخیره‌شده در `localhost` با GitHub Pages یا Vercel مشترک نیستند.
 
-## Controls
+### ساختار فنی
 
-Keyboard and mouse, or a gamepad.
+```text
+index.html       نقطهٔ ورود و استایل رابط
+src/main.js      چرخهٔ بازی و جریان صفحه‌ها
+src/core/        ورودی، Touch، سختی، رکورد و پیشرفت
+src/chars/       شخصیت‌ها، کیت‌های مبارزه و مدل‌ها
+src/combat/      آسیب، برخورد و پرتابه‌ها
+src/crowd/       سپاه و دشمنان پرتعداد
+src/story/       فصل‌ها، مأموریت‌ها، مقدمه و نتیجه
+src/world/       نقشه‌ها و اجزای میدان
+src/ui/          منوها، HUD و کنترل‌های لمسی
+src/i18n/        متن‌ها و واژه‌نامه‌های فارسی
+src/audio/       صداهای بازی
+vendor/three/    کتابخانهٔ Three.js
+checks/          بررسی‌های موجود پروژه
+docs/            طراحی داستان، راهنمای موبایل و Android
+media/           تصویر و ویدئوی معرفی
+```
 
-| Action | Keys | Gamepad |
-| --- | --- | --- |
-| Move (camera-relative) | WASD / arrow keys | left stick |
-| Attack | J / left click | X □ |
-| Charge / combo finisher | K / right click | Y △ |
-| Jump | Space | A × |
-| Dodge | L / Shift | R1 R2 |
-| Musou (gauge full) | I | B ○ |
-| Camera | mouse (click the field to lock it) / Q E | right stick |
-| Recenter / face nearest officer | R | L1 L2 |
-| Aim (Huang Zhong) | hold K / right click, release to loose | — |
-| Toggle HUD control hints | H | |
-| Pause / controls | Esc | |
+شبیه‌سازی مبارزه بر پایهٔ گام ثابت **۶۰ هرتز** است. فایل‌های سناریو و داده‌های مراحل از منطق مشترک مبارزه جدا نگه داشته می‌شوند تا افزودن روایت شاهنامه‌ای بدون تخریب محتوا و رکوردهای موجود ممکن باشد.
 
-Tap attack repeatedly for N1–N6. Charge from neutral gives C1; charge after N1–N5 branches into C2–C6 (for example, **J → J → K** gives C3). Huang Zhong can hold K / right click from neutral to aim, then release to shoot; manual aim currently requires keyboard / mouse. Attack or charge while airborne performs an air attack.
+> **سیاست بررسی فعلی:** از بررسی‌ها و اسکریپت‌های موجود پروژه استفاده می‌شود؛ در این بازنویسی README هیچ تست رگرسیون جدیدی اضافه نشده است. تأیید نهایی تجربهٔ موبایل به گزارش آزمون روی سخت‌افزار واقعی وابسته است.
 
-Menus support WASD / arrow keys to move, Enter / Space / J to confirm and Esc / Backspace / K to go back; on a gamepad, use the d-pad / left stick, A / × to confirm and B / ○ to go back. Click the field to capture the mouse for camera control; that first capture click does not attack. Losing pointer lock or switching away from the window pauses the battle. The pause menu offers resume, controls and a confirmed return to the title.
+## اسناد و مشارکت
+
+- [Issueهای پروژه و پیگیری کارها](https://github.com/abolfazl2600/voxel-game/issues)
+- [بررسی سناریوی شاهنامه و فصل اشکبوس](docs/ASHKABUS_DESIGN_REVIEW.md)
+- [راهنمای پیاده‌سازی کنترل لمسی](docs/MOBILE_IMPLEMENTATION.md)
+- [چک‌لیست تأیید موبایل](docs/MOBILE_QA.md)
+- [نقشهٔ راه انتشار Android](https://github.com/abolfazl2600/voxel-game/issues/56)
+- [تاریخچهٔ تغییرات و Pull Requestها](https://github.com/abolfazl2600/voxel-game/pulls?q=is%3Apr)
+
+برای مشارکت، تغییرات را با یک Issue مرتبط و در یک Pull Request جداگانه پیشنهاد کنید. قبل از بستن هر Issue، معیار پذیرش همان Issue را بررسی کنید؛ تیک‌های این README خودکار به وضعیت Issueها متصل نیستند.
+
+## مجوز و اعتبارها
+
+کد پروژه تحت مجوز [MIT](LICENSE) است. [Three.js](https://threejs.org/) نیز با مجوز MIT استفاده می‌شود. فونت فارسی [Vazirmatn](https://github.com/rastikerdar/vazirmatn) اثر صابر راستی‌کردار تحت **SIL Open Font License 1.1** از منابع آنلاین بارگذاری می‌شود؛ فونت فعلی `src/ui/brush.woff2` زیرمجموعه‌ای از Yuji Boku با مجوز OFL 1.1 است. محلی‌سازی دارایی‌ها برای نسخهٔ آفلاین Android هنوز در نقشهٔ راه قرار دارد.
+
+این پروژه در ابتدا از سبک مبارزات `Dynasty Warriors` الهام گرفته و **هیچ وابستگی یا تأییدیه‌ای از KOEI TECMO ندارد**. `Dynasty Warriors` علامت تجاری آن شرکت است و بنا بر اطلاعات مخزن، دارایی مستقیم آن بازی‌ها استفاده نشده است. برای انتشار تجاری/فروشگاهی، بررسی نهایی حقوق محتوا، فونت‌ها و برند در [#50](https://github.com/abolfazl2600/voxel-game/issues/50) انجام خواهد شد.
 
 ---
 
-## Development
-
-<details>
-<summary><b>Battle shortcuts and URL options</b></summary>
-
-Add these parameters to the local URL:
-
-| URL parameter | Description |
-| --- | --- |
-| `?enemies=N` | Enemy grunt slot capacity, 0–2000 (default 300); waves reuse slots, officer and ally slots are separate |
-| `?go=free\|story\|trial` | Start directly in a battle, skipping menu selection and the story prologue |
-| `&char=ID` | Officer: `liubei`, `guanyu`, `zhangfei`, `zhaoyun`, `zhugeliang`, `huangzhong`, `lubu` (default `zhaoyun`) |
-| `&ch=ID` | Released story: `ashkabus`; trial: `slay`, `hold`, `gauntlet`. Original story IDs are coming soon and blocked in story mode. |
-| `&map=ID` | Free-battle field: `hulao`, `changban`, `chibi`, `dingjun` |
-| `?hq` | Pin full render quality (no automatic MSAA downgrade) |
-
-Examples:
-
-- [Zhao Yun at Changban](http://localhost:8000/?go=story&char=zhaoyun&ch=changban)
-- [Huang Zhong in Thousand Slain](http://localhost:8000/?go=trial&char=huangzhong&ch=slay)
-- [Lü Bu free battle at Hulao Gate](http://localhost:8000/?go=free&char=lubu&map=hulao&enemies=300)
-
-These shortcuts bypass menu unlock and roster restrictions and use the saved difficulty. For trial shortcuts, always specify a trial ID with `ch`.
-
-</details>
-
-<details>
-<summary><b>Project layout and architecture</b></summary>
-
-```text
-index.html       Entry point, importmap and screen CSS
-src/main.js      Boot, screen flow, battle reset and fixed-step loop
-src/core/        Input, events, RNG, difficulty, records and unlocks
-src/chars/       Officer registry, playable kits, models and NPC boss kits
-src/hero/        Shared rig, locomotion, animation and combo state machine
-src/combat/      Hit detection, damage and projectiles
-src/crowd/       Soldier simulation, armies and instanced rendering
-src/actors/      Boss / allied hero NPCs and healing pickups
-src/musou/       Shared Musou simulation, scripted sequences and presentation
-src/story/       Chapter / trial data, objective director, prologue and results
-src/world/       Four maps, terrain, set pieces, sky and scenery
-src/ui/          Title, officer select, loading, HUD and menu navigation
-src/i18n/        Persian interface, story and battlefield text dictionaries
-src/camera/      Camera control and occlusion handling
-src/vfx/         Combat effects and arrow rendering
-src/post/        Post-processing and adaptive MSAA
-src/audio/       Procedural battle audio and sound bank
-vendor/three/    Vendored Three.js r186
-checks/          Node regression scripts and simulation probes
-media/           README screenshots and trailer (GIF, MP4)
-```
-
-Simulation and presentation are separated: gameplay advances in fixed 60 Hz steps, while render modules read simulation state. Officers share the hero / combat infrastructure through kits; story chapters and trials share a data-driven objective director.
-
-</details>
-
-<details>
-<summary><b>Manual checks and simulation probes</b></summary>
-
-The repository includes optional checks that can be run explicitly with **Node 22.15+**; they do not require a browser or package installation:
-
-| Command | Scope |
-| --- | --- |
-| `node checks/campaign.mjs` | Chapter scripting, progression, difficulty and records regressions |
-| `node checks/campaign-walk.mjs [chapter] [hero]` | Campaign routes through the real simulation, with invulnerability and boosted damage for traversal |
-| `node checks/trials.mjs` | Trial scripting, victory / defeat conditions and S-rank gates |
-| `node checks/trials-bot.mjs [trial] [hero] [difficulty] [seed]` | Trial balance probe using input-only bots; supports `--dodge` and `--air` |
-| `node checks/shared-originality.mjs` | Shared model geometry, render commands and scripted Musou timing |
-| `node src/chars/check.mjs` | Playable / NPC kit contracts, portraits, moves, animation clips and Musou |
-| `node src/world/changban.check.mjs` | Changban bridge set pieces and terrain / walk-height consistency |
-| `node checks/fa-localization.mjs` | Persian dictionary and narrative translation coverage |
-
-These scripts cover simulation and source contracts; they do not verify browser rendering or replace playing the battles.
-
-</details>
-
-## Credits & License
-
-- Code: MIT, see [LICENSE](LICENSE).
-- [three.js](https://threejs.org/): MIT.
-- HUD fallback font `src/ui/brush.woff2` is a subset of Yuji Boku by Kinuta Font Factory, licensed under the SIL Open Font License 1.1.
-- Persian interface font [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saber Rastikerdar, loaded from Google Fonts with an upstream CDN fallback; licensed under SIL Open Font License 1.1.
-
-This is a fan project, not affiliated with or endorsed by KOEI TECMO. "Dynasty Warriors" is a trademark of KOEI TECMO. No game assets from the original games are included.
+<sub><strong>English summary:</strong> Voxel Musou is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>
