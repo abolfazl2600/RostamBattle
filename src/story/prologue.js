@@ -8,7 +8,7 @@
 // chapter on every enter. Render-side DOM only (wall-clock timers); nothing here touches the sim.
 import { chapter } from './chapters.js';
 import { stageFa } from '../i18n/fa.js';
-import { prologueFa } from '../i18n/narrative-fa.js';
+import { prologueFa, mapLabelFa } from '../i18n/narrative-fa.js';
 
 const NUM = ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
 const HOLD = 0.8;                                  // s held to skip (index.html: the ring's .on transition)
@@ -140,6 +140,7 @@ export function createPrologue(el, flow) {
       if (built !== CH.id) {
         built = CH.id;
         map.outerHTML = MAP(C.PL_MAP); map = $('.pl-map');
+        for (const node of map.querySelectorAll('.pl-labels text')) node.textContent = mapLabelFa(node.textContent.trim());
         $('.pl-stamp').innerHTML = `<small>${stageFa(CH.id).num}</small><b>${stageFa(CH.id).title}</b><i>${stageFa(CH.id).seal}</i><em>${stageFa(CH.id).era}</em>`;
       }
       // this hero's cards: his branch, else the card's own text; a card with neither is skipped
