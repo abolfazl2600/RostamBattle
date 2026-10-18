@@ -1,5 +1,6 @@
 import { viewport, gamePoint, gameRect } from '../core/viewport.js';
 import { on } from '../core/events.js';
+import { TOUCH_ACTIONS } from './touch-layout.js';
 
 export function joystickVector(dx, dy, radius, dead = 0.12) {
   const distance = Math.hypot(dx, dy), length = Math.min(1, distance / radius);
@@ -11,8 +12,7 @@ export function joystickVector(dx, dy, radius, dead = 0.12) {
 export function createTouchControls(touch, { isActive, pause, musouReady = () => false }) {
   const root = document.createElement('div'); root.id = 'touch-controls'; root.hidden = true;
   root.innerHTML = '<div class="touch-stick" role="group" aria-label="جوی‌استیک حرکت"><i></i><span>حرکت</span></div>';
-  const actions = [['attack', 'حمله'], ['charge', 'قدرتی'], ['jump', 'پرش'], ['dodge', 'جاخالی'], ['musou', 'موسو'], ['target', 'هدف']];
-  root.insertAdjacentHTML('beforeend', `<div class="touch-actions">${actions.map(([a, label]) => `<button type="button" data-action="${a}" aria-label="${label}" aria-pressed="false">${label}</button>`).join('')}</div>`);
+  root.insertAdjacentHTML('beforeend', `<div class="touch-actions">${TOUCH_ACTIONS.map(({ id, label, column, row }) => `<button type="button" data-action="${id}" style="grid-column:${column};grid-row:${row}" aria-label="${label}" aria-pressed="false">${label}</button>`).join('')}</div>`);
   root.insertAdjacentHTML('beforeend', '<button class="touch-pause" type="button" aria-label="توقف بازی">توقف Ⅱ</button>');
   root.querySelector('.touch-pause').addEventListener('pointerdown', (e) => { e.stopPropagation(); });
   root.querySelector('.touch-pause').addEventListener('click', (e) => { e.stopPropagation(); touch.reset(); pause(); });
@@ -74,6 +74,7 @@ export function createTouchControls(touch, { isActive, pause, musouReady = () =>
     root.hidden = !active;
     const ready = musouReady(), musou = buttons.find((b) => b.dataset.action === 'musou');
     musou.classList.toggle('ready', ready); musou.setAttribute('aria-disabled', String(!ready));
+    musou.title = ready ? 'موسو آماده است' : 'موسو: پرشدن نوار طلایی و قرارگرفتن روی زمین لازم است';
   }
   on('viewport', update);
   return { update, root };

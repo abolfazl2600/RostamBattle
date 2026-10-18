@@ -12,7 +12,7 @@ assert.equal(await readFile(join(root, 'index.html'), 'utf8'), original, 'Web en
 const html = await readFile(join(root, 'dist/index.html'), 'utf8');
 assert(!/https:\/\/fonts\.(googleapis|gstatic)\.com/.test(html));
 assert(html.includes("connect-src 'self'"));
-for (const path of ['index.html', 'src/main.js', 'vendor/three/three.module.js', 'src/ui/brush.woff2', 'LICENSE']) assert(second[path], 'Missing ' + path);
+for (const path of ['index.html', 'src/main.js', 'src/ui/title.css', 'vendor/three/three.module.js', 'src/ui/brush.woff2', 'LICENSE']) assert(second[path], 'Missing ' + path);
 for (const path of Object.keys(second)) assert(!/(^|\/)(?:node_modules|\.git|\.env)|\.(?:jks|keystore)$/.test(path), 'Private file packaged: ' + path);
 assert(!second['stale-secret.txt']);
 

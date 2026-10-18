@@ -120,3 +120,47 @@ for (const id of chapters) {
 }
 assert.ok(eventKeys.size >= 80, 'Unexpectedly low number of campaign events: ' + eventKeys.size);
 console.log('Persian narrative: four prologues, all hero endings, three trials, ' + eventKeys.size + ' scripted events OK');
+
+// Focused menu contracts: preserve record eligibility/counts and keep brand/bidi/contrast consistent.
+const { recordsModel, renderRecords } = await import('../src/ui/records-view.js');
+const { GAME_NAME_FA } = await import('../src/i18n/brand.js');
+const { TOUCH_ACTIONS } = await import('../src/ui/touch-layout.js');
+const { renderControlGuide } = await import('../src/ui/control-guide.js');
+const { escapeHtml } = await import('../src/ui/text.js');
+const groups = [{ id: 'story', label: 'داستان', stages: [{ CH: { id: 'hulao', heroes: ['liubei', 'guanyu'] }, available: false }] },
+  { id: 'trials', label: 'چالش', stages: [{ CH: { id: 'slay' } }] }];
+const diffs = levels.map(id => ({ id })), heroIds = ['liubei', 'guanyu'];
+for (const variant of ['empty', 'partial', 'full']) {
+  const tree = {};
+  if (variant !== 'empty') tree.hulao = { liubei: { normal: { rank: 'A' } } };
+  if (variant === 'full') for (const stage of ['hulao', 'slay']) for (const hero of heroIds)
+    (tree[stage] ??= {})[hero] = Object.fromEntries(levels.map(id => [id, { rank: 'S' }]));
+  const before = JSON.stringify(tree);
+  const bestRead = (stage, hero) => {
+    const ranks = Object.entries(tree).flatMap(([s, heroes]) => stage && s !== stage ? [] : Object.entries(heroes).flatMap(([h, values]) => hero && h !== hero ? [] : Object.values(values).map(v => v.rank)));
+    return ranks.length ? { rank: ranks.includes('S') ? 'S' : 'A' } : null;
+  };
+  const model = recordsModel({ groups, heroes: heroIds, diffs, records: () => tree, best: bestRead, locked: () => variant === 'empty', unlocks: [{ id: 'lubu' }] });
+  // The old wall counted one eligible hero/stage pair, regardless of completed difficulty count.
+  const legacy = groups.flatMap(g => g.stages).flatMap(({ CH }) => heroIds.filter(id => !CH.heroes || CH.heroes.includes(id)).map(id => bestRead(CH.id, id)));
+  assert.equal(model.total, legacy.length); assert.equal(model.done, legacy.filter(Boolean).length);
+  const html = renderRecords(model);
+  assert.equal((html.match(/data-record-hero=/g) || []).length, legacy.length);
+  assert.equal((html.match(/class="cleared"/g) || []).length, variant === 'full' ? 16 : variant === 'partial' ? 1 : 0);
+  assert(html.includes('قفل است') || html.includes('باز شده است'));
+  assert(html.includes('به‌زودی')); assert.equal(JSON.stringify(tree), before, 'Rendering must never mutate saved data');
+}
+assert.equal(escapeHtml('<b>&'), '&lt;b&gt;&amp;');
+const touchGuide = renderControlGuide(true, []);
+for (const { id, label } of TOUCH_ACTIONS) assert(touchGuide.includes(`data-guide-action="${id}"`) && touchGuide.includes(label));
+assert(renderControlGuide(false, [['حرکت', 'راه رفتن', '<kbd>W</kbd>', 'آنالوگ چپ']]).includes('<kbd>W</kbd>'));
+const entry = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+assert(entry.includes(`<title>${GAME_NAME_FA}</title>`)); assert(entry.includes(`<i>${GAME_NAME_FA}</i>`));
+const css = readFileSync(new URL('../src/ui/title.css', import.meta.url), 'utf8');
+const color = key => css.match(new RegExp(`--menu-${key}: (#[0-9a-f]{6})`))[1];
+const luminance = hex => hex.slice(1).match(/../g).map(v => parseInt(v,16)/255).map(v => v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4).reduce((sum,v,i) => sum+v*[.2126,.7152,.0722][i],0);
+for (const foreground of ['text','secondary','gold']) for (const background of ['panel','card']) {
+  const ratio = (luminance(color(foreground))+.05)/(luminance(color(background))+.05);
+  assert(ratio >= 4.5, `${foreground}/${background}: ${ratio}`);
+}
+console.log('PASS record cards preserve old counts/tier marks/data; touch labels, official brand and opaque-panel text contrast');

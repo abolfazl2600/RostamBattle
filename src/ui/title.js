@@ -6,7 +6,7 @@
 // (+ a little mouse parallax). The lens is fitted every frame to the pair's posed bounds, so both stay whole in the
 // column right of the logo/menu band at any window shape (16:9, ultrawide, 4:3).
 // Render-only: view(scene, camera, focus, dt) runs after the gameplay camera rig while this screen is up (main.js header).
-// 2D: ink scrim band on the left carrying the logo (三國 seal + gold-leaf 無雙 + VOXEL MUSOU) and the menu, brush name
+// 2D: ink scrim band on the left carrying the approved Persian text logo and the menu, officer name
 // tags projected beside each officer's head (hidden at ≤ 4:3), key/pad prompts along the bottom. First boot shows a
 // "press any key" card (also unlocks audio); returns go straight to the menu.
 // Menu: 劇情模式 → the chapter panel in place of the menu (the four chapters in campaign order, story/chapters.js: a
@@ -22,6 +22,10 @@
 // Mouse: hover highlights an item, click activates it.
 // Screen contract: createTitle(el, flow) → { enter(ctx), exit(), view } (src/main.js header). ctx.ch (result 繼續 after
 // a win, with ctx.mode): open straight on that mode's panel, focused on that chapter / trial.
+import { GAME_NAME_FA } from '../i18n/brand.js';
+import { renderControlGuide } from './control-guide.js';
+import { recordsModel, renderRecords } from './records-view.js';
+import { ltr, numberFa } from './text.js';
 import * as THREE from 'three';
 import { on } from '../core/events.js';
 import { viewport, gamePoint, gameRect } from '../core/viewport.js';
@@ -54,7 +58,7 @@ const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پ�
   rule: { zh: 'هر شخصیت و میدان نبردی را انتخاب کنید؛ رکوردی ثبت نمی‌شود.', en: 'موج‌های بی‌پایان دشمنان' } } };
 const LISTS = { story: STORY_CHAPTERS, trial: [...TRIALS, FREE], free: CHAPTERS };   // what the chapter panel lists per mode
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-const rk = (r) => (r ? `<i class="t-rk r${r}">${r}</i>` : '');                    // a rank as a ringed brush letter
+const rk = (r) => (r ? `<i class="t-rk r${r}">${ltr(r)}</i>` : '');                    // a rank as a ringed brush letter
 export const CONTROLS = [
   ['حرکت', 'راه رفتن', '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / کلیدهای جهت‌دار', 'آنالوگ چپ'],
   ['حمله', 'ضربهٔ معمولی', '<kbd>J</kbd> / کلیک چپ — چند بار برای زنجیرهٔ ضربات', '<kbd>X</kbd> □'],
@@ -107,12 +111,12 @@ const SMOKE = [[-17, 16, 40, 38, 24, 0.2, 0.1, 0.06, 0.9], [-26, 22, 46, 44, 26,
   [-29, 25, 52, 42, 26, 0.22, 0.11, 0.07, 0.85]];
 
 export function createTitle(el, flow) {
+  el.classList.add('menu-refined');
   el.innerHTML = `
     <div class="t-veil"></div><p class="t-status" role="status" hidden></p><button type="button" class="t-back">بازگشت</button>
-    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
+    ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" style="visibility:hidden" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
-      <div class="t-logo"><i class="t-seal">سه پادشاهی</i><h1 data-t="موسو"><span>موسو</span></h1>
-        <p class="t-en"><span>وُکسل موسو</span></p></div>
+      <div class="t-logo"><p class="brand-kicker">بازی اکشن وکسل</p><h1 data-t="${GAME_NAME_FA}"><span>${GAME_NAME_FA}</span></h1></div>
       <div class="t-press"><b>${viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید'}</b><small>${viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی'}</small></div>
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>
@@ -123,10 +127,8 @@ export function createTitle(el, flow) {
         <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
           <ul class="s-stats t-dbars">${[['فشار دشمن', 'تعداد مهاجمان'], ['فرماندهان', 'قدرت افسران'], ['آسیب', 'شدت ضربات']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
     </div>
-    <section class="t-ctl"><h2>راهنمای کنترل‌ها<small>${viewport.touch ? 'کنترل لمسی در حالت افقی' : 'کلیدهای صفحه‌کلید و دسته'}</small></h2>
-      <table>${controlRows().map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>
-      <p>با تکرار حمله، ضربات پی‌درپی بزنید و میان زنجیره از حملهٔ قدرتی استفاده کنید. پس از پر شدن نوار طلایی، موسو را فعال کنید.</p></section>
-    <section class="t-rec"></section>
+    <section class="t-ctl title-panel" role="region" aria-labelledby="controls-heading" tabindex="0" hidden></section>
+    <section class="t-rec title-panel" role="region" aria-labelledby="records-heading" tabindex="0" hidden></section>
     <footer class="ui-foot"></footer>`;
   const $ = (s) => el.querySelector(s), btns = [...el.querySelectorAll('.t-main button')], dbtns = [...el.querySelectorAll('.t-dif button')];
   const tags = [...el.querySelectorAll('.t-tag')];
@@ -137,14 +139,18 @@ export function createTitle(el, flow) {
     i = (i + btns.length) % btns.length;
     if (i === cur && btns[i].classList.contains('on')) return;
     btns[cur].classList.remove('on'); cur = i; btns[cur].classList.add('on');
+    const list = $('.t-main'), listBox = gameRect(list), buttonBox = gameRect(btns[cur]);
+    if (buttonBox.top < listBox.top) list.scrollTop -= listBox.top - buttonBox.top;
+    else if (buttonBox.bottom > listBox.bottom) list.scrollTop += buttonBox.bottom - listBox.bottom;
     if (!quiet) sfx('move');
   };
   const foot = () => {
-    if (viewport.touch) { $('.ui-foot').textContent = 'برای انتخاب، گزینه را لمس کنید؛ فهرست‌ها قابل پیمایش‌اند.'; return; }
-    const what = dmode ? 'سختی' : cmode === 'story' ? 'فصل' : cmode === 'trial' ? 'چالش' : cmode ? 'میدان نبرد' : '';
-    $('.ui-foot').innerHTML = panel ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>`
-      : `<span><kbd>↑</kbd><kbd>↓</kbd>انتخاب ${what}<small>جابجایی</small></span><span><kbd>Enter</kbd><kbd class="pad">A</kbd>تأیید<small>انتخاب</small></span>`
-        + (what ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>` : '');
+    if (panel) { $('.ui-foot').innerHTML = viewport.touch
+      ? 'برای دیدن همهٔ موارد، داخل پنل پیمایش کنید؛ «بازگشت» بالای صفحه است.'
+      : '<span><kbd>↑</kbd><kbd>↓</kbd> پیمایش</span><span><kbd>Esc</kbd> / <bdi dir="ltr">B</bdi> بازگشت</span>'; return; }
+    if (viewport.touch) { $('.ui-foot').textContent = 'گزینه را لمس کنید؛ فهرست‌ها قابل پیمایش‌اند.'; return; }
+    $('.ui-foot').innerHTML = '<span><kbd>↑</kbd><kbd>↓</kbd> انتخاب</span><span><kbd>Enter</kbd> / <bdi dir="ltr">A</bdi> تأیید</span>'
+      + (cmode || dmode ? '<span><kbd>Esc</kbd> بازگشت</span>' : '');
   };
   /** Why entry i of the panel's list can't be picked yet ([zh, en]), or null: a story chapter waits on the one before
    *  it, a trial on the records (progress.js UNLOCKS); battlefields are all open. */
@@ -170,7 +176,7 @@ export function createTitle(el, flow) {
     // foot: a chapter's officers, each with his own best rank; a trial's best record (the stat it is ranked on first)
     const who = story ? CH.heroes.filter((id) => CHARS[id]) : [], b = trial && best(CH.id);
     $('.t-cfoot').innerHTML = who.length ? `<span>شخصیت‌ها<small>قابل بازی</small></span>${who.map((id) => `<em><canvas width="20" height="20"></canvas>${officerFa(id)}${rk(best(CH.id, id)?.rank)}</em>`).join('')}`
-      : b ? `<span>بهترین<small>رکورد ثبت‌شده</small></span>${(CH.best === 'kos' ? [`${b.kos} شکست`, mmss(b.time)] : [mmss(b.time), `${b.kos} شکست`]).map((t) => `<em>${t}</em>`).join('')}<strong class="r${b.rank}"><b>${b.rank}</b></strong>` : '';
+      : b ? `<span>بهترین<small>رکورد ثبت‌شده</small></span>${(CH.best === 'kos' ? [`${numberFa(b.kos)} شکست`, ltr(mmss(b.time))] : [ltr(mmss(b.time)), `${numberFa(b.kos)} شکست`]).map((t) => `<em>${t}</em>`).join('')}<strong class="r${b.rank}"><b>${b.rank}</b></strong>` : '';
     el.querySelectorAll('.t-cfoot canvas').forEach((cv, k) => paintPortrait(cv, CHARS[who[k]]));
     $('.t-cdetail').scrollTop = 0; // A newly focused chapter starts with its own description visible.
     if (viewport.touch && !quiet) cbtns[i].scrollIntoView({ block: 'nearest' });
@@ -194,28 +200,30 @@ export function createTitle(el, flow) {
     }
     measure();                                          // the band changed width: the key art glides
   };
-  /** The records wall: a row per chapter and trial, a column per officer — his best rank there over a pip per tier
-   *  cleared (a chapter he is not in: blank) — then the count cleared and every unlock with its rule or 已解鎖. */
+  // The same readers and eligible stage/hero pairs as the historical table; no writes/migration.
   function wall() {
-    const R = records(), who = CHAR_ORDER;
-    let done = 0, all = 0;
-    const row = ({ CH }) => `<tr><th>${stageFa(CH.id).title}<small>${stageFa(CH.id).num}</small></th>${who.map((id) => {
-      if (CH.heroes && !CH.heroes.includes(id)) return '<td class="na"></td>';
-      const cell = R[CH.id]?.[id], r = best(CH.id, id)?.rank;
-      all++; if (r) done++;
-      return `<td>${r ? rk(r) : '<i class="t-rk"></i>'}<span>${DIFFS.map((d) => `<u class="${cell?.[d.id] ? 'f' : ''}"></u>`).join('')}</span></td>`;
-    }).join('')}</tr>`;
-    const rows = [...STORY_CHAPTERS, ...TRIALS].map(row).join('');
-    $('.t-rec').innerHTML = `<h2>رکوردها<small>کارنامهٔ مبارزه</small><em><b>${done}</b> / ${all}<small>تکمیل‌شده</small></em></h2>
-      <div class="t-rbody"><div><table><tr><th></th>${who.map((id) => `<td class="${locked(id) ? 'lock' : ''}"><canvas width="20" height="20"></canvas><b>${officerFa(id)}</b></td>`).join('')}</tr>${rows}</table>
-      <p class="t-rleg"><span>${'<u class="f"></u>'.repeat(DIFFS.length)}</span>${DIFFS.map((d) => difficultyFa(d.id).name).join(' · ')}<small>هر نشان برابر با یک درجهٔ سختی تکمیل‌شده است</small></p></div>
-      <ul>${UNLOCKS.map((u) => { const lk = locked(u.id); return `<li class="${lk ? '' : 'open'}"><i>${lk ? 'قفل' : 'باز'}</i><b>${unlockFa(u.id).name}</b><span>${lk ? unlockFa(u.id).rule : 'باز شده است'}<small>${lk ? 'شرط بازشدن' : 'در دسترس'}</small></span></li>`; }).join('')}</ul></div>`;
-    el.querySelectorAll('.t-rec canvas').forEach((cv, k) => paintPortrait(cv, CHARS[who[k]]));
+    const model = recordsModel({
+      groups: [{ id: 'story', label: 'فصل‌های داستانی', stages: STORY_CHAPTERS.map(m => ({ ...m, available: storyAvailable(m.CH.id) })) },
+        { id: 'trials', label: 'چالش‌ها', stages: TRIALS }],
+      heroes: CHAR_ORDER, diffs: DIFFS, records, best, locked, unlocks: UNLOCKS,
+    });
+    $('.t-rec').innerHTML = renderRecords(model);
+    el.querySelectorAll('.t-rec [data-portrait]').forEach(cv => paintPortrait(cv, CHARS[cv.dataset.portrait]));
   }
-  /** The overlay beside the menu: 'ctl' controls, 'rec' the records wall, null = none. */
-  const setPanel = (v) => {
-    panel = v; el.classList.toggle('ctl', v === 'ctl'); el.classList.toggle('rec', v === 'rec'); foot();
+  const guide = () => { $('.t-ctl').innerHTML = renderControlGuide(viewport.touch, CONTROLS); };
+  guide();
+  const setPanel = v => {
+    panel = v; el.classList.toggle('ctl', v === 'ctl'); el.classList.toggle('rec', v === 'rec');
+    $('.t-band').inert = !!v;
+    $('.t-ctl').hidden = v !== 'ctl'; $('.t-rec').hidden = v !== 'rec';
+    foot();
     if (v === 'rec') wall();
+    if (v) { const region = v === 'ctl' ? $('.t-ctl') : $('.t-rec'); region.scrollTop = 0; region.focus({ preventScroll: true }); }
+    else if (active) btns[cur].focus({ preventScroll: true });
+  };
+  const scrollPanel = d => {
+    const region = panel === 'ctl' ? $('.t-ctl') : $('.t-rec');
+    region.scrollBy({ top: d * Math.max(48, region.clientHeight * .35), behavior: 'instant' });
   };
   // difficulty panel: the card shows the focused tier (a locked 修羅: its unlock rule instead of the line)
   const dfocus = (i, quiet) => {
@@ -243,7 +251,7 @@ export function createTitle(el, flow) {
     if (busy) return;
     if (wiping()) return afterWipe(ok);
     if (pre) return wake();
-    if (panel) return back();
+    if (panel) return;
     if (dmode) {
       const d = DIFFS[dcur], mode = dmode, { CH } = list[cpick];
       if (!unlocked(d)) return sfx('back');
@@ -274,7 +282,7 @@ export function createTitle(el, flow) {
   let active = false;
   addEventListener('keydown', (e) => { if (active && pre && !e.metaKey && !e.ctrlKey) { e.stopImmediatePropagation(); e.preventDefault(); wake(); } }, true);
   const pick = (d) => (dmode ? dfocus(dcur + d) : cmode ? cfocus(ccur + d) : focus(cur + d));
-  const nav = createNav({ move: (d) => { if (pre) wake(); else if (!panel && !busy) pick(d); }, ok, back });
+  const nav = createNav({ move: (d) => { if (pre) wake(); else if (panel) scrollPanel(d); else if (!busy) pick(d); }, ok, back });
   const point = (b, quiet) => (b.dataset.d ? dfocus(+b.dataset.d, quiet) : b.dataset.c ? cfocus(+b.dataset.c, quiet) : focus(+b.dataset.i, quiet));
 
   el.addEventListener('pointerover', (e) => {
@@ -284,10 +292,22 @@ export function createTitle(el, flow) {
   });
   el.addEventListener('click', (e) => {
     if (pre) return wake();
+    const jump = e.target.closest('[data-record-section]');
+    if (jump) { $('.t-rec').querySelector(`[data-record-group="${jump.dataset.recordSection}"]`)?.scrollIntoView({ block: 'start' }); return; }
     if (e.target.closest('.t-back')) return back();
     const b = e.target.closest('.t-menu button');
     if (b) { if (panel) back(); else { point(b, true); ok(); } }
     else if (panel && !e.target.closest('.t-ctl, .t-rec')) back();
+  });
+  el.addEventListener('keydown', e => {
+    if (!panel) return;
+    if (e.target.closest('[data-record-section]') && ['Enter', 'Space'].includes(e.code)) { e.stopPropagation(); return; }
+    if (['PageDown', 'PageUp', 'Home', 'End'].includes(e.code)) {
+      e.preventDefault(); e.stopPropagation();
+      const region = panel === 'ctl' ? $('.t-ctl') : $('.t-rec');
+      if (e.code === 'Home' || e.code === 'End') region.scrollTop = e.code === 'Home' ? 0 : region.scrollHeight;
+      else scrollPanel(e.code === 'PageDown' ? 2 : -2);
+    }
   });
   // mouse parallax target (-1..1), eased in view()
   const ptr = { x: 0, y: 0, ex: 0, ey: 0 };
@@ -301,15 +321,15 @@ export function createTitle(el, flow) {
   // left edge of the key art = right edge of the logo/menu band + a gutter (measured on resize, not per frame)
   let fitL = 0.45, fitLe = 0.45;   // measured, eased (a late webfont widens the band: the frame glides, never jumps)
   // menuR: right edge of the menu text (the name tag left of the spear stays clear of it); tagW: the tags' widths
-  let menuR = 0; const tagW = [0, 0];
+  let menuR = 0; const tagW = [0, 0], tagH = [0, 0];
   const measure = () => {
     const r = gameRect($('.t-band')); if (r.width) fitL = Math.min(0.6, (r.right + viewport.height / 72 * 3) / viewport.width);
-    menuR = Math.max(...[...el.querySelectorAll('.t-menu b, .t-menu small, .t-dcard, .t-ccard')].map((e) => gameRect(e).right)) + viewport.height / 72 * 1.2;
-    tags.forEach((e, i) => { tagW[i] = e.offsetWidth; });
+    menuR = Math.max(r.right, ...[...el.querySelectorAll('.t-menu b, .t-menu small, .t-dcard, .t-ccard')].map((e) => gameRect(e).right)) + viewport.height / 72 * 1.2;
+    tags.forEach((e, i) => { tagW[i] = e.offsetWidth; tagH[i] = e.offsetHeight; });
   };
+  let guideTouch = viewport.touch;
   on('viewport', () => {
-    $('.t-ctl table').innerHTML = controlRows().map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('');
-    $('.t-ctl h2 small').textContent = viewport.touch ? 'کنترل لمسی در حالت افقی' : 'کلیدهای صفحه‌کلید و دسته';
+    if (guideTouch !== viewport.touch) { guideTouch = viewport.touch; guide(); }
     $('.t-press b').textContent = viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید';
     $('.t-press small').innerHTML = viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی';
     foot(); measure();
@@ -483,20 +503,32 @@ export function createTitle(el, flow) {
     // name tags in the air beside each silhouette: tag = [x, y] rem from the projected head (tag[2] 'L': from the pair's
     // leftmost point, the spear, at head height) to the tag's bottom centre; clear of the menu text and the frame edges
     const w = viewport.width, h = viewport.height, rem = h / 72;
+    const placedTags = [];
     for (let i = 0; i < tags.length; i++) {
       const c = S.cast[i];
       cast[i].rig.joints.head.getWorldPosition(V);
       if (c.tag[2] === 'L') V.set(pLx, V.y, pLz);
       V.project(camera);
-      const px = Math.max(menuR + tagW[i] / 2, Math.min(w - tagW[i] / 2 - 2 * rem, (V.x * 0.5 + 0.5) * w + c.tag[0] * rem));
+      const px = Math.max(menuR + 16 + tagW[i] / 2, Math.min(w - tagW[i] / 2 - 2 * rem, (V.x * 0.5 + 0.5) * w + c.tag[0] * rem));
       const py = Math.max(20 * rem, (0.5 - V.y * 0.5) * h + c.tag[1] * rem);
+      const box = { left: px - tagW[i] / 2, right: px + tagW[i] / 2, top: py - tagH[i], bottom: py };
+      const overlaps = placedTags.some(b => box.left < b.right + 12 && box.right > b.left - 12 && box.top < b.bottom + 12 && box.bottom > b.top - 12);
+      const hidden = !!panel || w < 1000 || h < 520 || box.left < menuR + 12 || box.right > w - 16 || box.top < 16 || box.bottom > h - 70 || overlaps;
+      tags[i].style.visibility = hidden ? 'hidden' : 'visible';
+      if (!hidden) placedTags.push(box);
       tags[i].style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) translate(-50%, -100%)`;
+      // Validate the final DOM box as fonts/animations may have changed since measure().
+      if (!hidden) {
+        const actual = gameRect(tags[i]), band = gameRect($('.t-band'));
+        if (actual.left < band.right + 12 && actual.right > band.left && actual.top < band.bottom && actual.bottom > band.top) tags[i].style.visibility = 'hidden';
+      }
     }
   }
 
   return {
     view,
     enter(c = {}) {
+      document.title = GAME_NAME_FA;
       if (c.ch || c.notice) pre = false;
       $('.t-status').textContent = c.notice || ''; $('.t-status').hidden = !c.notice;
       busy = false; clearStamp(el); dmode = null; el.classList.remove('dif'); setPanel(null);

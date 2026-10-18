@@ -1,4 +1,4 @@
-<h1 align="center">Voxel Musou | وکسل موسو</h1>
+<h1 align="center">نبرد رستم</h1>
 
 <p align="center">
   <strong>یک پهلوان در برابر سپاهی از دشمنان</strong><br>
@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://abolfazl2600.github.io/voxel-game/">
-    <img src="media/promo.gif" alt="نمایی از مبارزات بازی وکسل موسو" width="100%">
+    <img src="media/promo.gif" alt="نمایی از مبارزات بازی نبرد رستم" width="100%">
   </a>
 </p>
 
@@ -23,6 +23,8 @@
 
 > **وضعیت پروژه — ۱۸ اکتبر ۲۰۲۶:** نسخهٔ **وب قابل بازی** است و زیرساخت کنترل لمسی، چیدمان Landscape و فارسی‌سازی پایه دارد؛ اما اقتباس نهایی شاهنامه **هنوز ساخته نشده** است. فصل «جنگ ایران و اشکبوس» فعلاً یک پیش‌نمایش موقت با دارایی‌های داستان قبلی است. تست نهایی موبایل روی دستگاه واقعی و انتشار APK / Google Play نیز تکمیل نشده‌اند.
 
+تصاویر و ویدئوی معرفی، مبارزات و شخصیت‌های محتوای اولیه را نشان می‌دهند؛ آن‌ها نمایش اقتباس نهایی شاهنامه نیستند. نام رسمی فارسی «نبرد رستم» است و تصاویر منو با رابط فعلی جایگزین شده‌اند.
+
 ## چشم‌انداز پروژه
 
 هدف، ساخت یک بازی اکشن **Hack & Slash / Musou** با ظاهر وکسلی، میدان‌های نبرد پرجمعیت، ترکیب‌ ضربات، پهلوانان و روایت فارسی است؛ به‌تدریج هویت داستانی و بصری آن از فضای اولیهٔ `Dynasty Warriors` به **شاهنامهٔ فردوسی و داستان‌های رستم** تغییر می‌کند.
@@ -33,7 +35,7 @@
 - **پلتفرم‌ها:** بازی در مرورگر دسکتاپ و مرورگر گوشی/تبلت؛ طراحی بازی روی نمایشگر لمسی **همیشه افقی (Landscape)** است، حتی اگر دستگاه عمودی نگه داشته شود.
 - **انتشار:** حفظ نسخهٔ وب و سپس ساخت **APK مستقل** برای نصب مستقیم و **AAB** مخصوص Google Play؛ زمان انتشار هنوز تعیین نشده است.
 
-نام **Voxel Musou** نام فعلی پروژه است؛ نام نهایی نسخهٔ شاهنامه‌ای و هویت فروشگاه هنوز تصویب نشده‌اند.
+نام فارسی رسمی بازی **«نبرد رستم»** است. نگارش رسمی لاتین هنوز تصویب نشده است؛ هویت ناشر، شناسهٔ نهایی Android و اطلاعات حساب انتشار همچنان نیازمند تصمیم جداگانه‌اند.
 
 ## همین حالا چه چیزهایی قابل بازی است؟
 
@@ -185,4 +187,4 @@ media/           تصویر و ویدئوی معرفی
 
 ---
 
-<sub><strong>English summary:</strong> Voxel Musou is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>
+<sub><strong>English summary:</strong> «نبرد رستم» (official Persian title; Latin release name pending) is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>

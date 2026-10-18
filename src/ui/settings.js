@@ -44,6 +44,15 @@ export function createSettings({ post, resetInput }) {
     origin?.focus({ preventScroll: true });
   }
   back.addEventListener('click', close);
+  // A browser may consume the compatibility click after a rotated drag / viewport change.
+  // Close only on a stationary touch release; dragging to scroll must never activate Back.
+  let backTouch = null;
+  back.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') backTouch = { id: e.pointerId, x: e.clientX, y: e.clientY }; });
+  back.addEventListener('pointercancel', () => { backTouch = null; });
+  back.addEventListener('pointerup', e => {
+    const tap = backTouch; backTouch = null;
+    if (tap?.id === e.pointerId && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 8) { e.preventDefault(); close(); }
+  });
   const move = delta => {
     const index = controls.indexOf(document.activeElement);
     controls[(index + delta + controls.length) % controls.length].focus();
@@ -63,7 +72,8 @@ export function createSettings({ post, resetInput }) {
     if (e.code === 'Tab') { e.preventDefault(); move(e.shiftKey ? -1 : 1); }
     e.stopImmediatePropagation();
   }, true);
-  el.addEventListener('pointerdown', e => e.stopPropagation());
+  // Let the shell's logical scroll adapter see new gestures (and clear drag-click suppression).
+  // Gameplay input stays gated by the Title/Pause flow while this panel is open.
   return {
     get isOpen() { return !el.hidden; }, refresh,
     open(from, onClose) {
