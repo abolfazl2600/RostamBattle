@@ -129,7 +129,7 @@ const RaysShader = /* glsl */`
   }`;
 
 const FinalShader = /* glsl */`
-  uniform sampler2D tSharp, tDof, tBloom, tRays; uniform vec2 uRes; uniform float uTime, uFlash, uRayGain;
+  uniform sampler2D tSharp, tDof, tBloom, tRays; uniform vec2 uRes; uniform float uTime, uFlash, uRayGain, uDofEnabled;
   uniform vec3 uRayTint;
   uniform float uExposure, uTmContrast, uTmShoulder, uTmB, uTmC, uKnee, uHotDesat, uSat, uLift, uTintLo, uTintHi, uSharpen, uStreak, uRowNoise, uCa, uGrain, uLevels, uDither, uVignette, uBottom;
   uniform vec3 uShadowTint, uHighTint;
@@ -150,7 +150,7 @@ const FinalShader = /* glsl */`
             + texture2D(tSharp, uv + vec2(0.0, t.y)).rgb + texture2D(tSharp, uv - vec2(0.0, t.y)).rgb;
     vec3 sharp = max(s.rgb + (s.rgb - nb * 0.25) * uSharpen, 0.0);
     vec4 b = texture2D(tDof, uv);
-    float k = max(smoothstep(0.3, 1.3, coc(s.a)), b.a);
+    float k = uDofEnabled * clamp(max(smoothstep(0.3, 1.3, coc(s.a)), b.a), 0.0, 1.0);
     return mix(sharp, b.rgb, k) + texture2D(tBloom, uv).rgb;
   }
   void main() {
@@ -257,7 +257,7 @@ export function createPost({ canvas, width, height }) {
   const rays = new FullScreenQuad(mat(RaysShader, { tAtmos: { value: atmosRT.texture }, uSunUv: { value: new THREE.Vector2() }, uAspect: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 } }));
   const sunNdc = new THREE.Vector3(), camFwd = new THREE.Vector3();
   const fin = new FullScreenQuad(mat(FinalShader, {
-    tSharp: { value: atmosRT.texture }, tDof: { value: dofRT.texture }, tBloom: { value: bloom.renderTargetsHorizontal[0].texture }, tRays: { value: raysRT.texture }, uRayGain: { value: 0 },
+    tSharp: { value: atmosRT.texture }, tDof: { value: dofRT.texture }, tBloom: { value: bloom.renderTargetsHorizontal[0].texture }, tRays: { value: raysRT.texture }, uRayGain: { value: 0 }, uDofEnabled: { value: 1 },
     uRes: { value: new THREE.Vector2(1280, 720) }, uTime: { value: 0 }, uFlash: { value: 0 }, uTmB: { value: 0 }, uTmC: { value: 0 }, ...dofU,
   }));
   // the current look: P with the map's overrides (setLook); every key is uniform u<K> in each pass
@@ -298,6 +298,7 @@ export function createPost({ canvas, width, height }) {
     profile = QUALITY[qualityId]; renderScale = profile.scale;
     renderer.shadowMap.enabled = profile.shadows;
     sceneRT.samples = Math.min(profile.samples, renderer.capabilities.maxSamples); sceneRT.dispose();
+    fin.material.uniforms.uDofEnabled.value = profile.dof ? 1 : 0;
     fin.material.uniforms.tDof.value = profile.dof ? dofRT.texture : atmosRT.texture;
     fin.material.uniforms.tBloom.value = profile.bloom ? bloom.renderTargetsHorizontal[0].texture : black;
     fin.material.uniforms.tRays.value = profile.rays ? raysRT.texture : black;
