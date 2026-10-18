@@ -953,6 +953,37 @@
     .s-name h1 { font-size: 5.5rem; }
     .s-line { right: 2rem; max-width: 18rem; bottom: 12rem; }
   }
+
+  /* Narrative and battle overlays: horizontal, readable Persian rather than CJK vertical calligraphy. */
+  #prologue .pl-card { top: 18vh; bottom: auto; right: 7vw; width: min(65rem, 55vw); max-height: 61vh; overflow-y: auto; }
+  #prologue .pl-cols { writing-mode: horizontal-tb; direction: rtl; height: auto; display: grid; gap: 1.2rem;
+    font: 700 clamp(21px, 2.7rem, 38px)/1.7 var(--brush); letter-spacing: 0; text-align: right; }
+  #prologue .pl-cols span { display: block; margin: 0; -webkit-mask: none; mask: none; }
+  #prologue .pl-cols span:first-child { color: #6e1a12; }
+  #prologue .pl-stamp b { font-size: clamp(44px, 9rem, 110px); letter-spacing: 0; text-align: center; line-height: 1.3; }
+  #prologue .pl-stamp small, #prologue .pl-stamp em { letter-spacing: 0; line-height: 1.4; }
+  #prologue .pl-skip { direction: rtl; gap: 1.4rem; flex-wrap: wrap; line-height: 1.3; }
+  #prologue .pl-skip small { letter-spacing: 0; }
+  #result .rs { max-height: calc(100vh - 6rem); overflow-y: auto; padding-bottom: 1rem; }
+  #result .rs-head h2 { font-size: 6rem; letter-spacing: 0; line-height: 1.3; }
+  #result .rs-head em, #result .rs-head small { letter-spacing: 0; line-height: 1.4; }
+  #result .rs-stats th { font-size: 1.9rem; line-height: 1.5; white-space: normal; }
+  #result .rs-stats th small, #result .rs-unlock small, #result .rs-btns button small { letter-spacing: 0; line-height: 1.5; }
+  #result .rs-epi p { line-height: 1.75; }
+  #result .rs-btns button { letter-spacing: 0; line-height: 1.4; }
+  #hud .h-intro .zh { font-size: 5rem; letter-spacing: 0; line-height: 1.35; }
+  #hud .h-intro .en, #hud .h-intro .sub { letter-spacing: 0; line-height: 1.5; }
+  #hud .h-copy { writing-mode: horizontal-tb; direction: rtl; max-width: 26rem; font-size: 2.5rem; line-height: 1.5; }
+  #hud .h-band, #hud .h-obj, #hud .h-dlg, #hud .h-target, #hud .h-boss { direction: rtl; }
+  #hud :is(.h-band p, .h-dlg p, .h-obj b) { line-height: 1.5; letter-spacing: 0; }
+  #hud .h-map .seal { font-size: 1.2rem; max-width: 19rem; line-height: 1.4; }
+  @media (max-width: 850px) {
+    #prologue .pl-card { right: 6vw; width: 80vw; top: 17vh; }
+    #prologue .pl-cols { font-size: clamp(18px, 2rem, 26px); }
+    #result .rs { width: min(82rem, 92vw); margin-left: 4vw; }
+    #result .rs-stats { min-width: min(46rem, 86vw); }
+    #result .rs-body { flex-wrap: wrap; }
+  }
 </style>
 </head>
 <body class="inkhold">
