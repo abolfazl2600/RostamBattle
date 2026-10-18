@@ -4,7 +4,7 @@
 
 <p align="center">
   بازی اکشن وکسلی الهام‌گرفته از Dynasty Warriors، قابل اجرا مستقیم در مرورگر.<br>
-  <b>۷ شخصیت · ۴ فصل داستانی · ۳ چالش · ۴ درجهٔ سختی</b><br>
+  <b>۷ شخصیت · ۱ فصل موقت فعال و ۴ فصل به‌زودی · ۳ چالش · ۴ درجهٔ سختی</b><br>
   بخش‌های اصلی رابط کاربری و متن‌های داستان بازی به فارسی ترجمه شده‌اند.
 </p>
 
@@ -38,7 +38,7 @@
 
 **[اجرای بازی در GitHub Pages](https://abolfazl2600.github.io/voxel-game/)** — بدون نیاز به نصب یا دانلود. اگر صفحهٔ اصلی دردسترس نبود، [لینک Vercel](https://voxel-musou.vercel.app/) را امتحان کنید.
 
-- **بخش داستانی:** یکی از چهار فصل را انتخاب کنید، درجهٔ سختی را تعیین کنید و با شخصیت مجاز آن فصل وارد میدان شوید.
+- **بخش داستانی:** فصل اول «جنگ ایران و اشکبوس» فعال است؛ چهار کارت بعدی «به‌زودی» هستند و با بردن فصل اول یا رکوردهای قدیمی باز نمی‌شوند. فصل اول فعلاً نمونه‌ای با نقشه، کماندار، باس و مأموریت‌های دینگ‌جون است؛ مدل رستم و روایت نهایی شاهنامه هنوز اضافه نشده‌اند.
 - **چالش‌ها و نبرد آزاد:** سه چالش امتیازی و نبرد آزاد با موج‌های دشمن در دسترس‌اند؛ بعضی چالش‌ها با پیشروی در داستان باز می‌شوند.
 - **کنترل‌ها:** `WASD` حرکت، `J` حمله، `K` حملهٔ قدرتی، `Space` پرش، `L` جاخالی، `I` موسو و `Esc` توقف بازی.
 - **ذخیرهٔ پیشرفت:** رکوردها و موارد آزادشده در حافظهٔ مرورگر (`localStorage`) نگهداری می‌شوند؛ نشانی‌های مختلف سایت و اجرای محلی ذخیرهٔ مشترک ندارند.
@@ -113,7 +113,9 @@ Six officers are available initially; Lü Bu unlocks after clearing Chapter I. S
 
 ## Story campaign
 
-Choose **Story / حالت داستانی** on the title screen, then a chapter, difficulty and officer. Chapters unlock in order when the preceding chapter is cleared, with any of its officers on any difficulty.
+Choose **Story / حالت داستانی** on the title screen, then a chapter and difficulty. The public story menu currently has five cards: **Iran and Ashkabus** (`ashkabus`) is the only released entry; the remaining four cards are marked **Coming soon** regardless of old saves or a new victory. The active entry is explicitly a **temporary Dingjun preview**, played as Huang Zhong against the existing forces and Xiahou Yuan. It is not the finished Shahnameh adaptation.
+
+The four original scenario/map modules below remain intact as historical content. Free Battle still lists their four distinct fields under their original names, and existing records/unlocks remain saved. The new preview writes only its own `ashkabus` record; its results return to the story menu or retry the same chapter. Upcoming story IDs cannot be launched through query links.
 
 <p align="center">
   <img src="media/story.jpg" alt="Chapter I Hulao Gate ink-map prologue" width="100%"><br>
@@ -215,7 +217,7 @@ Add these parameters to the local URL:
 | `?enemies=N` | Enemy grunt slot capacity, 0–2000 (default 300); waves reuse slots, officer and ally slots are separate |
 | `?go=free\|story\|trial` | Start directly in a battle, skipping menu selection and the story prologue |
 | `&char=ID` | Officer: `liubei`, `guanyu`, `zhangfei`, `zhaoyun`, `zhugeliang`, `huangzhong`, `lubu` (default `zhaoyun`) |
-| `&ch=ID` | Chapter: `hulao`, `changban`, `chibi`, `dingjun`; trial: `slay`, `hold`, `gauntlet` |
+| `&ch=ID` | Released story: `ashkabus`; trial: `slay`, `hold`, `gauntlet`. Original story IDs are coming soon and blocked in story mode. |
 | `&map=ID` | Free-battle field: `hulao`, `changban`, `chibi`, `dingjun` |
 | `?hq` | Pin full render quality (no automatic MSAA downgrade) |
 

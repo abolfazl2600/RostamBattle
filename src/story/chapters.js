@@ -92,11 +92,28 @@ import * as hulao from './hulao.js';
 import * as changban from './changban.js';
 import * as chibi from './chibi.js';
 import * as dingjun from './dingjun.js';
+import * as ashkabus from './ashkabus.js';
 import { TRIALS } from './trials.js';
 import { cleared } from '../core/progress.js';
 
+// Historical data registry: also used for four distinct Free Battle maps and archived records.
 export const CHAPTERS = [hulao, changban, chibi, dingjun];
+// Public story release order and the single access policy, independent of saved progression.
+export const STORY_CHAPTERS = [ashkabus, ...CHAPTERS];
+export const STORY_STATUS = Object.freeze(Object.fromEntries(STORY_CHAPTERS.map((m) => [m.CH.id, m === ashkabus ? 'available' : 'comingSoon'])));
+export const storyAvailable = (id) => STORY_STATUS[id] === 'available';
+export const FIRST_STORY = STORY_CHAPTERS.find((m) => storyAvailable(m.CH.id)).CH.id;
+export const nextStory = (id) => {
+  const i = STORY_CHAPTERS.findIndex((m) => m.CH.id === id);
+  return i < 0 ? null : STORY_CHAPTERS.slice(i + 1).find((m) => storyAvailable(m.CH.id)) || null;
+};
+/** Validate raw story IDs before fallback lookup, and restrict the preview's playable roster. */
+export function storyContext(c) {
+  if (!storyAvailable(c.ch)) return null;
+  const { CH } = STORY_CHAPTERS.find((m) => m.CH.id === c.ch);
+  return { ...c, char: CH.heroes.includes(c.char) ? c.char : CH.heroes[0] };
+}
 /** Chapter or trial module by id (unknown / missing id = the first chapter). */
-export const chapter = (id) => CHAPTERS.find((m) => m.CH.id === id) || TRIALS.find((m) => m.CH.id === id) || CHAPTERS[0];
-/** Chapter i (index into CHAPTERS) is playable: the first always, the others once the one before is cleared. */
+export const chapter = (id) => STORY_CHAPTERS.find((m) => m.CH.id === id) || TRIALS.find((m) => m.CH.id === id) || CHAPTERS[0];
+/** Historical progression rule, retained for archived data/tools. Public story access MUST use storyAvailable(id). */
 export const chapterOpen = (i) => i === 0 || !!cleared(CHAPTERS[i - 1].CH.id);

@@ -13,7 +13,7 @@
 // char, art?, diff (core/difficulty.js tier), rec?: { first, prev, fresh, unlocks } }.
 import { viewport } from '../core/viewport.js';
 import { CHARS, paintPortrait } from '../chars/index.js';
-import { CHAPTERS, chapter } from './chapters.js';
+import { chapter, nextStory } from './chapters.js';
 import { inkWipe, afterWipe, createNav } from '../ui/menu.js';
 import { officerFa, stageFa, difficultyFa, unlockFa } from '../i18n/fa.js';
 import { epilogueFa } from '../i18n/narrative-fa.js';
@@ -42,7 +42,7 @@ export function createResult(el, flow) {
     enter(c) {
       ctx = c; gone = false;
       const { win, stats: s } = c, ch = CHARS[c.char] || CHARS.zhaoyun, C = chapter(c.ch), { CH } = C;
-      const epi = epilogueFa(CH.id, ch.id) || (C.EPILOGUE[ch.id] || Object.values(C.EPILOGUE)[0]).en, k = CHAPTERS.indexOf(C), after = k >= 0 ? CHAPTERS[k + 1] : null;   // a trial: no next
+      const epi = epilogueFa(CH.id, ch.id) || (C.EPILOGUE[ch.id] || Object.values(C.EPILOGUE)[0]).en, after = c.mode === 'story' ? nextStory(CH.id) : null;   // a trial: no next
       const R = c.rec, was = R?.prev;                        // records: what this win beat (was: the cell before it)
       const notices = [R?.first && after ? `<p class="rs-unlock">${stageFa(after.CH.id).num} «${stageFa(after.CH.id).title}» باز شد<small>مرحلهٔ جدید در دسترس است</small></p>` : '',
         ...(R?.unlocks || []).map((u) => `<p class="rs-unlock">${unlockFa(u.id).name} باز شد<small>محتوای جدید در دسترس است</small></p>`)].join('');
@@ -70,7 +70,7 @@ export function createResult(el, flow) {
           ? epi.map((z) => `<p>${z}</p>`).join('')
           : `<p>${why}</p>`}</div>
         <div class="rs-btns">${win
-          ? '<button data-act="next">ادامه<small>مرحلهٔ بعد</small></button>'
+          ? c.mode === 'story' ? `<button data-act="next">${after ? 'ادامه' : 'بازگشت به داستان'}<small>${after ? 'مرحلهٔ بعد' : 'فهرست فصل‌ها'}</small></button><button data-act="retry" class="sub">تکرار نبرد<small>همین فصل</small></button>` : '<button data-act="next">ادامه<small>مرحلهٔ بعد</small></button>'
           : '<button data-act="retry">تلاش دوباره<small>تکرار نبرد</small></button><button data-act="title" class="sub">بازگشت<small>منوی اصلی</small></button>'}</div>
       </div>
       <footer class="ui-foot">${win ? '' : '<span><kbd>←</kbd><kbd>→</kbd>انتخاب<small>جابجایی</small></span>'}
