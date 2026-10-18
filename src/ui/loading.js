@@ -7,6 +7,7 @@
 // line; a tip (心得) and a gold brush-stroke progress bar with the current set-up stage along the bottom. No art (dev
 // entry): the plain background.
 // ctx in: { mode ('story' | 'trial' | 'free'), ch, char, art? }. main.js drives progress(p, zh?, en?) and ready(); nothing here touches the sim.
+import { viewport } from '../core/viewport.js';
 import { CHARS } from '../chars/index.js';
 import { replay } from './menu.js';
 import { difficulty } from '../core/difficulty.js';
@@ -28,6 +29,16 @@ const TIPS = [
   ['برای کنترل دوربین با موس روی میدان کلیک کنید؛ Q و E هم زاویه را تغییر می‌دهند.', 'کنترل دوربین'],
   ['با نگه‌داشتن K یا کلیک راست نشانه بگیرید و با رهاکردن آن تیر پرتاب کنید.', 'ویژهٔ هوانگ ژونگ', 'huangzhong'],
   ['با نشانه‌گیری به سر دشمن، آسیب بیشتری وارد کنید.', 'شلیک دقیق', 'huangzhong'],
+];
+
+const TOUCH_TIPS = [
+  ['جوی‌استیک پایین چپ را برای حرکت بکشید و فضای خالی میدان را برای دوربین لمس و جابه‌جا کنید.', 'حرکت و دوربین'],
+  ['دکمهٔ حمله را چند بار لمس کنید؛ سپس قدرتی را برای ادامهٔ کمبو بزنید.', 'ترکیب حمله‌ها'],
+  ['وقتی دکمهٔ موسو روشن شد، برای اجرای قدرت ویژه آن را لمس کنید.', 'قدرت ویژه'],
+  ['برای گریز از ضربه‌ها دکمهٔ جاخالی را لمس کنید.', 'دفاع و حرکت'],
+  ['دکمهٔ هدف دوربین را پشت جنگجو یا رو به فرمانده تنظیم می‌کند.', 'دوربین'],
+  ['قدرتی را نگه دارید؛ با انگشت دیگر روی میدان نشانه بگیرید و قدرتی را برای شلیک رها کنید.', 'ویژهٔ هوانگ ژونگ', 'huangzhong'],
+  ['برای تنظیم کیفیت یا استراحت، دکمهٔ توقف بالای صفحه را لمس کنید.', 'توقف و کیفیت'],
 ];
 
 export function createLoading(el) {
@@ -56,7 +67,7 @@ export function createLoading(el) {
       $('.l-name h1').textContent = officerFa(ch.id); $('.l-seal').textContent = OFFICERS_FA[ch.id].seal;
       $('.l-en').textContent = OFFICERS_FA[ch.id].title;
       $('.l-line b').textContent = OFFICERS_FA[ch.id].intro; $('.l-line small').textContent = OFFICERS_FA[ch.id].motto;
-      const tips = TIPS.filter((t) => !t[2] || t[2] === ch.id), t = tips[Math.floor(Math.random() * tips.length)];   // UI only, not the sim
+      const tips = (viewport.touch ? TOUCH_TIPS : TIPS).filter((t) => !t[2] || t[2] === ch.id), t = tips[Math.floor(Math.random() * tips.length)];   // UI only, not the sim
       $('.l-tip b').textContent = t[0]; $('.l-tip small').textContent = t[1];
       state('آماده‌سازی نبرد', 'آرایش سپاه');           // first stage label; deploy() then climbs 點將 → 佈陣 → 整軍備戰
       this.progress(0.06);
