@@ -23,7 +23,8 @@
 // Screen contract: createTitle(el, flow) → { enter(ctx), exit(), view } (src/main.js header). ctx.ch (result 繼續 after
 // a win, with ctx.mode): open straight on that mode's panel, focused on that chapter / trial.
 import * as THREE from 'three';
-import { viewport } from '../core/viewport.js';
+import { on } from '../core/events.js';
+import { viewport, gamePoint, gameRect } from '../core/viewport.js';
 import { CHARS, CHAR_ORDER, paintPortrait } from '../chars/index.js';
 import { sampleClip, POSE_SIZE, CH } from '../hero/rig.js';
 import { heroLook } from '../hero/model.js';
@@ -288,7 +289,7 @@ export function createTitle(el, flow) {
   });
   // mouse parallax target (-1..1), eased in view()
   const ptr = { x: 0, y: 0, ex: 0, ey: 0 };
-  el.addEventListener('pointermove', (e) => { ptr.x = e.clientX / innerWidth * 2 - 1; ptr.y = e.clientY / innerHeight * 2 - 1; });
+  el.addEventListener('pointermove', (e) => { const p = gamePoint(e.clientX, e.clientY); ptr.x = p.x / viewport.width * 2 - 1; ptr.y = p.y / viewport.height * 2 - 1; });
 
   // ---- 3D stage (render-only; built on the first view, hidden on exit, kept for the session)
   let group = null, embers = null, t = 0, enterT = 0;
@@ -300,11 +301,11 @@ export function createTitle(el, flow) {
   // menuR: right edge of the menu text (the name tag left of the spear stays clear of it); tagW: the tags' widths
   let menuR = 0; const tagW = [0, 0];
   const measure = () => {
-    const r = $('.t-band').getBoundingClientRect(); if (r.width) fitL = Math.min(0.6, (r.right + innerHeight / 72 * 3) / innerWidth);
-    menuR = Math.max(...[...el.querySelectorAll('.t-menu b, .t-menu small, .t-dcard, .t-ccard')].map((e) => e.getBoundingClientRect().right)) + innerHeight / 72 * 1.2;
+    const r = gameRect($('.t-band')); if (r.width) fitL = Math.min(0.6, (r.right + viewport.height / 72 * 3) / viewport.width);
+    menuR = Math.max(...[...el.querySelectorAll('.t-menu b, .t-menu small, .t-dcard, .t-ccard')].map((e) => gameRect(e).right)) + viewport.height / 72 * 1.2;
     tags.forEach((e, i) => { tagW[i] = e.offsetWidth; });
   };
-  addEventListener('resize', measure); document.fonts?.ready.then(measure);
+  on('viewport', measure); document.fonts?.ready.then(measure);
 
   function bannerTex(glyph) {
     const cv = document.createElement('canvas'); cv.width = 128; cv.height = 320;
@@ -473,7 +474,7 @@ export function createTitle(el, flow) {
     focus.set(O.x + S.cast[0].x, O.y + 1.2, O.z + S.cast[0].z);
     // name tags in the air beside each silhouette: tag = [x, y] rem from the projected head (tag[2] 'L': from the pair's
     // leftmost point, the spear, at head height) to the tag's bottom centre; clear of the menu text and the frame edges
-    const w = innerWidth, h = innerHeight, rem = h / 72;
+    const w = viewport.width, h = viewport.height, rem = h / 72;
     for (let i = 0; i < tags.length; i++) {
       const c = S.cast[i];
       cast[i].rig.joints.head.getWorldPosition(V);

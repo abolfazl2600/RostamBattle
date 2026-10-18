@@ -1,4 +1,4 @@
-import { viewport } from '../core/viewport.js';
+import { viewport, gamePoint, gameRect } from '../core/viewport.js';
 import { on } from '../core/events.js';
 
 export function joystickVector(dx, dy, radius, dead = 0.12) {
@@ -16,7 +16,7 @@ export function createTouchControls(touch, { isActive, pause, musouReady = () =>
   root.insertAdjacentHTML('beforeend', '<button class="touch-pause" type="button" aria-label="توقف بازی">توقف Ⅱ</button>');
   root.querySelector('.touch-pause').addEventListener('pointerdown', (e) => { e.stopPropagation(); });
   root.querySelector('.touch-pause').addEventListener('click', (e) => { e.stopPropagation(); touch.reset(); pause(); });
-  document.body.append(root);
+  document.getElementById('game-shell').append(root);
   const buttons = [...root.querySelectorAll('[data-action]')];
   const paintButtons = () => {
     for (const b of buttons) {
@@ -53,13 +53,14 @@ export function createTouchControls(touch, { isActive, pause, musouReady = () =>
   touch.onReset(clearStick);
   function move(e) {
     if (touch.pointers.get(e.pointerId)?.role !== 'move' || !center) return;
-    const v = joystickVector(e.clientX - center.x, e.clientY - center.y, center.r);
+    const p = gamePoint(e.clientX, e.clientY);
+    const v = joystickVector(p.x - center.x, p.y - center.y, center.r);
     touch.move(e.pointerId, v.x, v.y); knob.style.transform = `translate(${v.knobX}px, ${v.knobY}px)`;
     e.preventDefault();
   }
   stick.addEventListener('pointerdown', (e) => {
     if (!touch.claim(e, 'move')) return;
-    const b = stick.getBoundingClientRect(); center = { x: b.x + b.width / 2, y: b.y + b.height / 2, r: b.width * 0.35 };
+    const b = gameRect(stick); center = { x: b.left + b.width / 2, y: b.top + b.height / 2, r: b.width * 0.35 };
     stick.classList.add('held'); move(e);
   });
   stick.addEventListener('pointermove', move);

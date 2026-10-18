@@ -1,4 +1,5 @@
 // Pointer-owned touch source. UI adapters write here; only the fixed-step input sample consumes edges/look.
+import { gamePoint } from './viewport.js';
 import { emit } from './events.js';
 export const TOUCH_LOOK = { yaw: 0.004, pitch: 0.003, maxDelta: 0.3 };
 export function createTouch(enabled = () => true) {
@@ -8,7 +9,7 @@ export function createTouch(enabled = () => true) {
     if (e.pointerType !== 'touch' || !enabled() || pointers.has(e.pointerId)) return false;
     if ((role === 'move' || role === 'look') && [...pointers.values()].some((p) => p.role === role)) return false;
     const wasHeld = action && [...pointers.values()].some((p) => p.action === action);
-    const p = { role, action, el: e.currentTarget, x: e.clientX, y: e.clientY };
+    const p = { role, action, el: e.currentTarget, ...gamePoint(e.clientX, e.clientY) };
     pointers.set(e.pointerId, p);
     try { p.el.setPointerCapture(e.pointerId); } catch { /* synthetic events / removed target */ }
     if (action && !wasHeld) latch.add(action);
@@ -38,9 +39,10 @@ export function createTouch(enabled = () => true) {
     move(id, x, y) { if (pointers.get(id)?.role === 'move') { mx = x; my = y; } },
     look(e) {
       const p = pointers.get(e.pointerId); if (p?.role !== 'look') return;
-      orbit -= (e.clientX - p.x) * TOUCH_LOOK.yaw;
-      tilt += (e.clientY - p.y) * TOUCH_LOOK.pitch;
-      p.x = e.clientX; p.y = e.clientY;
+      const q = gamePoint(e.clientX, e.clientY);
+      orbit -= (q.x - p.x) * TOUCH_LOOK.yaw;
+      tilt += (q.y - p.y) * TOUCH_LOOK.pitch;
+      p.x = q.x; p.y = q.y;
     },
     sample() {
       if (!enabled()) reset();
