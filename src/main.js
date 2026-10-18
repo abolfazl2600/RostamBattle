@@ -51,6 +51,7 @@ import { createPrologue } from './story/prologue.js';
 import { createResult } from './story/result.js';
 import { difficulty } from './core/difficulty.js';
 import { record } from './core/progress.js';
+import { officerFa, difficultyFa, OFFICERS_FA } from './i18n/fa.js';
 
 const params = new URLSearchParams(location.search);
 const ENEMIES = Math.max(0, Math.min(2000, params.get('enemies') ? Number(params.get('enemies')) | 0 : 300));
@@ -149,9 +150,9 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   heroView.reset();
   game.actors.reset(); game.pickups.reset();                                              // C5
   game.story.reset({ mode, char, ch });                                                    // C2
-  menu.querySelector('.t').innerHTML = `${who.name.zh}<i>${who.seal}</i>`;
-  menu.querySelector('.sub').innerHTML = `戰局暫停・${game.diff.zh}<small>Battle paused · ${game.diff.en}</small>`;
-  document.title = `${who.name.zh} — Voxel Musou`;
+  menu.querySelector('.t').innerHTML = `${officerFa(who.id)}<i>${OFFICERS_FA[who.id].seal}</i>`;
+  menu.querySelector('.sub').innerHTML = `نبرد متوقف شد · ${difficultyFa(game.diff.id).name}<small>برای ادامه کلید Escape را بزنید</small>`;
+  document.title = `${officerFa(who.id)} — وُکسل موسو`;
   emit('scenario', { mode, char, ch, map });
 }
 
@@ -174,7 +175,7 @@ const mBtns = [$('go'), $('quit')], quitEl = $('quit');
 let mCur = 0, quitArm = false;
 const armQuit = (v) => {
   quitArm = v; quitEl.classList.toggle('arm', v);
-  quitEl.innerHTML = v ? '確定撤退？<small>Confirm · progress is lost</small>' : '撤退<small>Quit to title</small>';
+  quitEl.innerHTML = v ? 'خروج از نبرد؟<small>پیشرفت این نبرد از دست می‌رود؛ دوباره تأیید کنید</small>' : 'بازگشت به منو<small>خروج از نبرد</small>';
 };
 const mFocus = (i) => {
   mCur = (i + mBtns.length) % mBtns.length;
@@ -238,11 +239,11 @@ async function deploy(c) {
   while (wiping()) await nextFrame();
   if (state !== 'loading') return;
   const t0 = performance.now(), stage = async (p, zh, en) => { L.progress(p, zh, en); await nextFrame(); await nextFrame(); };
-  await stage(0.18, '點將', 'Summoning the officer');
+  await stage(0.18, 'فراخوانی جنگجو', 'آماده‌سازی شخصیت');
   startBattle(c);
-  await stage(0.5, '佈陣', 'Deploying the ranks');
+  await stage(0.5, 'آرایش نیروها', 'چینش سپاه');
   await post.compile(scene, camRig.camera);
-  await stage(0.82, '整軍備戰', 'Preparing the field');
+  await stage(0.82, 'آماده‌سازی میدان', 'آماده برای نبرد');
   hold = false;                                    // the loop renders the field behind the card: shadow / first-draw variants
   for (let i = 0; i < 4; i++) await nextFrame();
   L.progress(1);

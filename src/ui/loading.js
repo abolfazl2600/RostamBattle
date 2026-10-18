@@ -11,24 +11,23 @@ import { CHARS } from '../chars/index.js';
 import { replay } from './menu.js';
 import { difficulty } from '../core/difficulty.js';
 import { chapter } from '../story/chapters.js';
+import { OFFICERS_FA, officerFa, modeLabelFa, difficultyFa } from '../i18n/fa.js';
 
 /** [zh, en] band label for a flow ctx: the chapter (story), the trial, or the battlefield (free: the chapter ctx.ch's
  *  field). */
 export function modeLabel(c) {
   const { CH } = chapter(c.ch);
-  return c.mode === 'free' ? [`自由演武「${CH.title.zh}」`, `Free battle · ${CH.title.en}`]
-    : [`${CH.num.zh}「${CH.title.zh}」`, `${c.mode === 'story' ? 'Story' : 'Trial'} · ${CH.title.en}`];
+  return [modeLabelFa(c), c.mode === 'free' ? 'موج‌های بی‌پایان دشمن' : 'آماده‌سازی میدان نبرد'];
 }
 // [zh, en, char id | undefined = any officer] — keep in step with the controls table (title.js CONTROLS)
 const TIPS = [
-  ['連按 J 打出完整連擊，連擊中按 K 接蓄力技。', 'Tap J for the full combo; press K mid-combo for a charge attack.'],
-  ['無雙槽滿時按 I，發動無雙亂舞。', 'When the gold gauge is full, press I to unleash your Musou.'],
-  ['按 L 或 Shift 閃避，翻滾瞬間刀槍不入。', 'L or Shift dodges; the roll slips through a blow.'],
-  ['按 R 視角回正，或鎖定最近的敵將。', 'R recenters the camera behind you, or onto the nearest officer.'],
-  ['點擊戰場以滑鼠轉動視角，Q / E 亦可轉動鏡頭。', 'Click the field to steer the camera with the mouse; Q / E turn it too.'],
-  ['長按 K 拉弓瞄準（站立或奔跑皆可），放開即射；滿弓可貫穿數人。',
-    'Hold K / right click to draw and aim (standing or running); a full draw pierces a line.', 'huangzhong'],
-  ['爆頭：瞄準敵將頭部，傷害倍增。', 'Aim for an officer\'s head: a headshot hits far harder.', 'huangzhong'],
+  ['با فشردن پیاپی J زنجیرهٔ ضربات بزنید؛ سپس K را برای حملهٔ قدرتی فشار دهید.', 'ترکیب حمله‌ها'],
+  ['وقتی نوار طلایی پر شد، با I قدرت موسو را آزاد کنید.', 'قدرت ویژه'],
+  ['با L یا Shift جاخالی دهید؛ هنگام غلت‌زدن از بسیاری ضربه‌ها در امانید.', 'دفاع و حرکت'],
+  ['برای تنظیم مجدد دوربین یا تمرکز روی نزدیک‌ترین فرمانده، R را بزنید.', 'دوربین'],
+  ['برای کنترل دوربین با موس روی میدان کلیک کنید؛ Q و E هم زاویه را تغییر می‌دهند.', 'کنترل دوربین'],
+  ['با نگه‌داشتن K یا کلیک راست نشانه بگیرید و با رهاکردن آن تیر پرتاب کنید.', 'ویژهٔ هوانگ ژونگ', 'huangzhong'],
+  ['با نشانه‌گیری به سر دشمن، آسیب بیشتری وارد کنید.', 'شلیک دقیق', 'huangzhong'],
 ];
 
 export function createLoading(el) {
@@ -41,7 +40,7 @@ export function createLoading(el) {
       <p class="l-line"><b></b><small></small></p>
     </section>
     <footer class="l-foot">
-      <p class="l-tip"><span>心得</span><b></b><small></small></p>
+      <p class="l-tip"><span>نکته</span><b></b><small></small></p>
       <div class="l-prog"><p class="l-state"><b></b><small></small></p><div class="l-bar"><i></i></div></div>
     </footer>`;
   const $ = (s) => el.querySelector(s), bar = $('.l-bar i');
@@ -53,18 +52,18 @@ export function createLoading(el) {
       $('.l-art').style.backgroundImage = c.art ? `url("${c.art}")` : 'none';
       el.classList.remove('ready'); replay(el, 'in');
       const d = difficulty();
-      $('.l-ch b').textContent = `${zh}・${d.zh}`; $('.l-ch small').textContent = `${en} · ${d.en}`;
-      $('.l-name h1').textContent = ch.name.zh; $('.l-seal').textContent = ch.seal;
-      $('.l-en').textContent = `${ch.name.en} · ${ch.title.en}`;
-      $('.l-line b').textContent = ch.lines.intro.zh; $('.l-line small').textContent = ch.lines.intro.en;
+      $('.l-ch b').textContent = `${zh} · ${difficultyFa(d.id).name}`; $('.l-ch small').textContent = en;
+      $('.l-name h1').textContent = officerFa(ch.id); $('.l-seal').textContent = OFFICERS_FA[ch.id].seal;
+      $('.l-en').textContent = OFFICERS_FA[ch.id].title;
+      $('.l-line b').textContent = OFFICERS_FA[ch.id].intro; $('.l-line small').textContent = OFFICERS_FA[ch.id].motto;
       const tips = TIPS.filter((t) => !t[2] || t[2] === ch.id), t = tips[Math.floor(Math.random() * tips.length)];   // UI only, not the sim
       $('.l-tip b').textContent = t[0]; $('.l-tip small').textContent = t[1];
-      state('出陣準備', 'Marshalling the army');           // first stage label; deploy() then climbs 點將 → 佈陣 → 整軍備戰
+      state('آماده‌سازی نبرد', 'آرایش سپاه');           // first stage label; deploy() then climbs 點將 → 佈陣 → 整軍備戰
       this.progress(0.06);
     },
     exit() {},
     /** p 0..1 plus the stage's label: real set-up stages (main.js deploy). */
     progress(p, zh, en) { bar.style.transform = `scaleX(${p})`; if (zh) state(zh, en); },
-    ready() { el.classList.add('ready'); state('出陣', 'To battle'); },
+    ready() { el.classList.add('ready'); state('آمادهٔ نبرد', 'ورود به میدان'); },
   };
 }

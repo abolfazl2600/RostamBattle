@@ -15,7 +15,7 @@
 // survival time is fixed); gauntlet keeps the story bosses' HP and its own, estimated gate (see its pacing note).
 import { OFF as CHANGBAN_OFF } from './changban.js';
 
-const NUM = { zh: '試煉', en: 'TRIAL' };
+const NUM = { zh: 'چالش', en: 'مأموریت ویژه' };
 /** One epilogue for every officer (result.js: a missing hero = the first entry). */
 const epi = (zh, en) => ({ any: { zh: [zh], en: [en] } });
 /** n charging blocks fanned round the hero, d metres out (they run straight in). */
@@ -27,9 +27,9 @@ const surge = (n, d = 22) => Array.from({ length: n }, (_, k) => {
 // 千人斬 — offence: a thousand KOs against the clock on the open plain before 汜水關.
 const slay = {
   CH: {
-    id: 'slay', num: NUM, title: { zh: '千人斬', en: 'Thousand Slain' }, seal: '速攻', map: 'hulao',
+    id: 'slay', num: NUM, title: { zh: 'شکست هزار دشمن', en: 'نبرد با هزار سرباز' }, seal: 'سرعت', map: 'hulao',
     army: { foe: 'dong', ally: 'liu' }, best: 'time',
-    rule: { zh: '三分鐘內擊破一千人，愈快評價愈高', en: 'Cut down 1,000 within 3:00. The faster, the higher the rank.' },
+    rule: { zh: 'در سه دقیقه هزار سرباز را شکست دهید؛ هرچه سریع‌تر، رتبه بهتر.', en: 'مهلت: سه دقیقه' },
     rank: { kos: [1000, 1000, 1000], time: [90, 115, 150], s: { time: 99, dmg: 0.35 } },
   },
   SPK: {}, OFF: {},
@@ -39,14 +39,14 @@ const slay = {
   BEATS: [
     {
       when: { wait: 30 }, army: true,
-      obj: { zh: '擊破一千人', en: 'Defeat 1,000 soldiers', timer: 180 },
-      fail: { when: { timer: true }, zh: '時限已至……', en: 'Time is up...' },
+      obj: { zh: 'هزار سرباز را شکست دهید', en: 'هدف: ۱۰۰۰ دشمن', timer: 180 },
+      fail: { when: { timer: true }, zh: 'زمان به پایان رسید…', en: 'مهلت چالش تمام شد' },
     },
-    { when: { kos: 300 }, squads: surge(3), banner: { html: '<em>三百人斬</em>', en: '300 down', dur: 130 } },
-    { when: { kos: 300 }, heal: 0.2, squads: surge(4), banner: { html: '<em>六百人斬</em>', en: '600 down', dur: 130 } },
-    { when: { kos: 400 }, win: true, fail: null, morale: 1, banner: { html: '<em>千人斬</em> 達成！', en: 'A thousand cut down!', dur: 260, big: true } },
+    { when: { kos: 300 }, squads: surge(3), banner: { html: '<em>۳۰۰ دشمن</em> شکست خوردند', en: 'سیصد نفر', dur: 130 } },
+    { when: { kos: 300 }, heal: 0.2, squads: surge(4), banner: { html: '<em>۶۰۰ دشمن</em> شکست خوردند', en: 'ششصد نفر', dur: 130 } },
+    { when: { kos: 400 }, win: true, fail: null, morale: 1, banner: { html: '<em>هزار دشمن</em> شکست خوردند!', en: 'هدف انجام شد', dur: 260, big: true } },
   ],
-  EPILOGUE: epi('一人一騎，千軍辟易。', 'One rider, and a thousand men gave way.'),
+  EPILOGUE: epi('یک سوار در برابر هزاران دشمن ایستاد.', 'همه عقب‌نشینی کردند.'),
 };
 
 // 死守 — defence: 長坂橋 for four minutes while 曹軍 comes on in ever heavier pushes (the bridgehead of chapter II,
@@ -54,9 +54,9 @@ const slay = {
 const DECK = ['bridge', 0, 8];
 const hold = {
   CH: {
-    id: 'hold', num: NUM, title: { zh: '死守', en: 'Hold the Bridge' }, seal: '堅守', map: 'changban',
+    id: 'hold', num: NUM, title: { zh: 'دفاع از پل', en: 'پل چانگ‌بان' }, seal: 'دفاع', map: 'changban',
     army: { foe: 'cao', ally: 'liu' }, best: 'kos',
-    rule: { zh: '據守長坂橋四分鐘，橋頭不可失；擊破愈多評價愈高', en: 'Hold Changban Bridge for 4:00. The more you cut down, the higher the rank.' },
+    rule: { zh: 'چهار دقیقه از پل چانگ‌بان دفاع کنید؛ دشمنان بیشتری شکست دهید.', en: 'از پل محافظت کنید' },
     start: { x: 0, z: -121, yaw: 0, tilt: -0.06 },
     van: [{ x: -5, z: -142, n: 10, cols: 5, hold: true }, { x: 5, z: -142, n: 10, cols: 5, hold: true }],
     rank: { kos: [1200, 1700, 2400], time: [999, 999, 999], s: { kos: 2217, dmg: 0.35 } },  // fixed clock: KOs and damage decide
@@ -70,9 +70,9 @@ const hold = {
   BEATS: [
     {
       when: { wait: 30 }, waves: true, morale: -0.1,
-      defend: { key: 'bridge', at: DECK, r: 5, hp: 4000, name: { zh: '長坂橋', en: 'Changban Bridge' } },
-      fail: { when: { hp: ['bridge', 0.01] }, zh: '長坂橋 失守……', en: 'Changban Bridge has fallen...' },
-      obj: { zh: '死守長坂橋', en: 'Hold Changban Bridge', go: DECK, timer: 240 },
+      defend: { key: 'bridge', at: DECK, r: 5, hp: 4000, name: { zh: 'پل چانگ‌بان', en: 'پل چانگ‌بان' } },
+      fail: { when: { hp: ['bridge', 0.01] }, zh: 'پل چانگ‌بان سقوط کرد…', en: 'دفاع از پل شکست خورد' },
+      obj: { zh: 'از پل چانگ‌بان دفاع کنید', en: 'مانع سقوط پل شوید', go: DECK, timer: 240 },
       squads: [{ at: ['bridge', -12, 33], n: 18 }, { at: ['bridge', 14, 36], n: 18 }, { at: ['slopes', -0.2, -0.82], n: 20 }],
       limit: { z: ['slopes', 0, -0.75], back: ['bridge', 0, -6] },
     },
@@ -83,7 +83,7 @@ const hold = {
     },
     {
       when: { wait: 50 * 60 },
-      banner: { html: '<em>曹洪</em>、<em>許褚</em> 殺到', en: 'Cao Hong and Xu Chu join the assault', dur: 150 },
+      banner: { html: '<em>سائو هونگ</em> و <em>شو چو</em> وارد نبرد شدند', en: 'نیروهای تازه‌نفس دشمن', dur: 150 },
       officers: { caohong: { at: ['bridge', -14, 33], engaged: true }, xuchu: { at: ['bridge', 14, 34], engaged: true } },
       squads: [{ at: ['bridge', -20, 31], n: 18, charge: true }, { at: ['bridge', 20, 33], n: 18, charge: true }, { at: ['slopes', 0, -0.8], n: 20, charge: true }],
     },
@@ -94,16 +94,16 @@ const hold = {
     },
     {
       when: { wait: 50 * 60 }, morale: -0.1,
-      banner: { html: '<em>曹軍</em> 總攻', en: 'Cao Cao\'s whole army comes on', dur: 170, big: true },
+      banner: { html: '<em>یورش سراسری</em> سپاه سائو سائو', en: 'حملهٔ نهایی دشمن', dur: 170, big: true },
       officers: { xiahouen: { at: ['bridge', -12, 32], engaged: true }, yanming: { at: ['bridge', 12, 33], engaged: true } },
       squads: [{ at: ['bridge', -20, 31], n: 20, charge: true }, { at: ['bridge', 20, 33], n: 20, charge: true }, { at: ['slopes', 0, -0.8], n: 20, charge: true }],
     },
     {
       when: { timer: true }, win: true, defend: null, fail: null, morale: 1,
-      banner: { html: '<em>長坂橋</em> 守住了！', en: 'The bridge holds!', dur: 260, big: true },
+      banner: { html: 'از <em>پل چانگ‌بان</em> دفاع شد!', en: 'پیروزی در دفاع', dur: 260, big: true },
     },
   ],
-  EPILOGUE: epi('橋頭屍積如山，曹軍終不敢再進一步。', 'The dead lay heaped at the bridgehead, and Cao Cao\'s army came no further.'),
+  EPILOGUE: epi('پل چانگ‌بان در برابر یورش دشمن پایدار ماند.', 'سپاه سائو سائو عقب نشست.'),
 };
 
 // 過關斬將 — the duel: four boss actors one after another in the 定軍山 basin, a little fodder with each for the gauge.
@@ -111,9 +111,9 @@ const boss = (kit, hp, more) => ({ kit, role: 'boss', at: ['hero', 0, 16], hp, .
 const fodder = [{ at: ['hero', -11, 12], n: 14 }, { at: ['hero', 11, 12], n: 14 }];
 const gauntlet = {
   CH: {
-    id: 'gauntlet', num: NUM, title: { zh: '過關斬將', en: 'The Gauntlet' }, seal: '連戰', map: 'dingjun',
+    id: 'gauntlet', num: NUM, title: { zh: 'نبرد فرماندهان', en: 'نبرد پیاپی' }, seal: 'رزم', map: 'dingjun',
     army: { foe: 'wei', ally: 'shu' }, best: 'time', van: [],
-    rule: { zh: '連戰夏侯淵、張遼、曹操、呂布四將，愈快評價愈高', en: 'Four duels in a row: Xiahou Yuan, Zhang Liao, Cao Cao, Lü Bu. The faster, the higher the rank.' },
+    rule: { zh: 'شیا‌هو یوان، ژانگ لیائو، سائو سائو و لو بو را به‌ترتیب شکست دهید.', en: 'چهار نبرد پیاپی' },
     rank: { kos: [0, 0, 0], time: [200, 270, 360], s: { time: 200, dmg: 0.7 } },  // four beaten: time and damage decide
   },
   SPK: {}, OFF: {},
@@ -125,16 +125,16 @@ const gauntlet = {
   // the HUD announces each actor's entry and fall itself outside story mode (hud.js): no banners here
   BEATS: [
     { when: { wait: 30 }, actors: { yuan: boss('xiahouyuan', 2400) }, squads: fodder,
-      obj: { zh: '第一關 擊破夏侯淵', en: 'First gate: defeat Xiahou Yuan', go: 'yuan' } },
+      obj: { zh: 'نبرد اول: شیا‌هو یوان را شکست دهید', en: 'حریف اول', go: 'yuan' } },
     { when: { down: 'yuan' }, heal: 0.35, actors: { liao: boss('zhangliao', 2600) }, squads: fodder,
-      obj: { zh: '第二關 擊破張遼', en: 'Second gate: defeat Zhang Liao', go: 'liao' } },
+      obj: { zh: 'نبرد دوم: ژانگ لیائو را شکست دهید', en: 'حریف دوم', go: 'liao' } },
     { when: { down: 'liao' }, heal: 0.35, actors: { cao: boss('caocao', 3000) }, squads: fodder,
-      obj: { zh: '第三關 擊破曹操', en: 'Third gate: defeat Cao Cao', go: 'cao' } },
+      obj: { zh: 'نبرد سوم: سائو سائو را شکست دهید', en: 'حریف سوم', go: 'cao' } },
     { when: { down: 'cao' }, heal: 0.35, actors: { lubu: boss('lubu', 4400, { poise: 460 }) }, squads: fodder,
-      obj: { zh: '最終關 擊破呂布', en: 'Last gate: defeat Lü Bu', go: 'lubu' } },
+      obj: { zh: 'نبرد نهایی: لو بو را شکست دهید', en: 'حریف آخر', go: 'lubu' } },
     { when: { down: 'lubu' }, win: true, morale: 1 },
   ],
-  EPILOGUE: epi('四將盡破，天下再無人敢攖其鋒。', 'Four champions beaten in a row. No one in the realm dares cross that blade now.'),
+  EPILOGUE: epi('چهار سردار پیاپی شکست خوردند.', 'جنگجویی جرئت رویارویی نداشت.'),
 };
 
 export const TRIALS = [slay, hold, gauntlet];

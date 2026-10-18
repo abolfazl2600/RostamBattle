@@ -7,8 +7,10 @@
 // The paper, grain, filters, vignette and arrow ink are this frame's; the map art and the stamp are rebuilt from the
 // chapter on every enter. Render-side DOM only (wall-clock timers); nothing here touches the sim.
 import { chapter } from './chapters.js';
+import { stageFa } from '../i18n/fa.js';
+import { prologueFa, mapLabelFa } from '../i18n/narrative-fa.js';
 
-const NUM = ['壹', '貳', '參', '肆', '伍', '陸', '柒', '捌', '玖', '拾'];
+const NUM = ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
 const HOLD = 0.8;                                  // s held to skip (index.html: the ring's .on transition)
 
 // ---- the map frame (viewBox 1600×900): paper, blots, [chapter art], grain, troop arrows, [chapter labels], vignette.
@@ -49,9 +51,9 @@ export function createPrologue(el, flow) {
       <div class="pl-pips"></div>
     </div>
     <i class="pl-rod l"></i><i class="pl-rod r"></i>
-    <div class="pl-skip"><span><kbd>Enter</kbd><kbd>Click</kbd>下一頁<small>Next</small></span>
-      <span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>長按跳過<small>Hold to skip</small></span>
-      <span><kbd>Esc</kbd>跳過<small>Skip</small></span></div>`;
+    <div class="pl-skip"><span><kbd>Enter</kbd><kbd>Click</kbd>صفحهٔ بعد<small>ادامه</small></span>
+      <span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>نگه‌دارید تا رد شود<small>پرش از داستان</small></span>
+      <span><kbd>Esc</kbd>رد کردن<small>شروع نبرد</small></span></div>`;
   const $ = (s) => el.querySelector(s);
   const card = $('.pl-card'), cols = $('.pl-cols'), en = $('.pl-en'), pips = $('.pl-pips'), ring = $('.pl-skip .p');
   let ctx = {}, k = -1, timer = 0, swapT = 0, holdTimer = 0, holdT0 = 0, phase = 'off', stampAt = 0;
@@ -138,10 +140,11 @@ export function createPrologue(el, flow) {
       if (built !== CH.id) {
         built = CH.id;
         map.outerHTML = MAP(C.PL_MAP); map = $('.pl-map');
-        $('.pl-stamp').innerHTML = `<small>${CH.num.zh}</small><b>${CH.title.zh}</b><i>${CH.seal}</i><em>${CH.num.en} · ${CH.title.en.toUpperCase()}</em>`;
+        for (const node of map.querySelectorAll('.pl-labels text')) node.textContent = mapLabelFa(node.textContent.trim());
+        $('.pl-stamp').innerHTML = `<small>${stageFa(CH.id).num}</small><b>${stageFa(CH.id).title}</b><i>${stageFa(CH.id).seal}</i><em>${stageFa(CH.id).era}</em>`;
       }
       // this hero's cards: his branch, else the card's own text; a card with neither is skipped
-      PROLOGUE = C.PROLOGUE.map((p) => ({ ...p, v: p[c.char] || p })).filter((p) => p.v.cols).slice(0, NUM.length);
+      PROLOGUE = C.PROLOGUE.map((p, i) => ({ ...p, v: { ...(p[c.char] || p), ...(prologueFa(CH.id, i, c.char) || {}) } })).filter((p) => p.v.cols).slice(0, NUM.length);
       el.classList.remove('stamped', 'out', 'open'); card.classList.remove('on');
       for (const m of el.querySelectorAll('[data-id]')) m.classList.remove('on', 'hot');
       map.style.transform = 'translate(0, 0) scale(1.1)';
