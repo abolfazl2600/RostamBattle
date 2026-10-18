@@ -29,7 +29,21 @@ adb logcat -c
 adb logcat -v time > emulator-evidence/logcat-live.txt 2>&1 &
 logpid=$!
 adb shell am start -W -n "${pkg}/${activity}"
-sleep 25
+if [ "${api}" = "28" ]; then
+  sleep 12
+else
+  # Three.js shader compilation on the emulator's SwiftShader GPU may
+  # significantly exceed a fixed 25-second screenshot delay.
+  for attempt in $(seq 1 26); do
+    sleep 5
+    if grep -q 'ROSTAM_TITLE_VISIBLE' emulator-evidence/logcat-live.txt; then
+      break
+    fi
+    if grep -q 'ROSTAM_TITLE_TIMEOUT' emulator-evidence/logcat-live.txt; then
+      break
+    fi
+  done
+fi
 adb shell pidof "${pkg}"
 collect
 
