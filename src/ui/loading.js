@@ -53,7 +53,7 @@ export function createLoading(el) {
       el.classList.remove('ready'); replay(el, 'in');
       const d = difficulty();
       $('.l-ch b').textContent = `${zh} · ${difficultyFa(d.id).name}`; $('.l-ch small').textContent = en;
-      $('.l-name h1').textContent = officerFa(ch.id); $('.l-seal').textContent = ch.seal;
+      $('.l-name h1').textContent = officerFa(ch.id); $('.l-seal').textContent = OFFICERS_FA[ch.id].seal;
       $('.l-en').textContent = OFFICERS_FA[ch.id].title;
       $('.l-line b').textContent = OFFICERS_FA[ch.id].intro; $('.l-line small').textContent = OFFICERS_FA[ch.id].motto;
       const tips = TIPS.filter((t) => !t[2] || t[2] === ch.id), t = tips[Math.floor(Math.random() * tips.length)];   // UI only, not the sim
