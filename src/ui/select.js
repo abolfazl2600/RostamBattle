@@ -25,40 +25,41 @@ import { modeLabel } from './loading.js';
 import { difficulty } from '../core/difficulty.js';
 import { best, locked } from '../core/progress.js';
 import { chapter } from '../story/chapters.js';
+import { OFFICERS_FA, officerFa, difficultyFa, unlockFa, modeLabelFa } from '../i18n/fa.js';
 import { dotTex, scatter, stagePoint, standOfficer, poseOfficer } from './stage.js';
 
-const STATS = [['atk', '攻', 'Attack'], ['def', '防', 'Defence'], ['speed', '速', 'Speed'], ['range', '射程', 'Reach']];
+const STATS = [['atk', 'حمله', 'قدرت'], ['def', 'دفاع', 'مقاومت'], ['speed', 'سرعت', 'چابکی'], ['range', 'بُرد', 'فاصله']];
 // stage framing: officer ≈ 6.3 m from the lens, 30° vFOV (full body + headroom), aim shifted so he stands at x ≈ 75 %
 // (clear of the info column, which ends at ≈ 60 %)
 const STAGE = { dist: 6.3, eye: 1.2, aim: 1.05, fov: 30, screenX: 0.5, face: Math.PI - 0.38, sway: 0.28, spin: 1.35, motes: 110 };
 // key-art frame (snapshot for the loading card / result, main.js snapArt): closer, knees up, the title's held pose
 const KEYART = { dist: 4.3, eye: 1.35, aim: 1.3, screenX: 0.42 };
-const ALL = CHAR_ORDER.filter((id) => CHARS[id]), SHU = { zh: '蜀', en: 'Shu Han' };
+const ALL = CHAR_ORDER.filter((id) => CHARS[id]), SHU = { zh: 'شو', en: 'پادشاهی شو هان' };
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
 export function createSelect(el, flow) {
   el.innerHTML = `
     <div class="s-veil"></div>
-    <header class="s-head"><h2>選擇武將</h2><small>Choose your officer</small><span class="s-mode"><b></b><small></small></span></header>
+    <header class="s-head"><h2>انتخاب شخصیت</h2><small>جنگجوی خود را انتخاب کنید</small><span class="s-mode"><b></b><small></small></span></header>
     <aside class="s-roster"><div class="s-fac"><i></i><small></small></div>
-      ${ALL.map((id) => { const c = CHARS[id]; return `<button class="s-card" data-id="${id}" style="--acc:${c.accent}" title="${c.name.en} — double-click to deploy">
-        <canvas width="20" height="20"></canvas><b>${c.name.zh}</b><small>${c.name.en}</small><i>${c.seal}</i><em class="t-rk"></em></button>`; }).join('')}
+      ${ALL.map((id) => { const c = CHARS[id]; return `<button class="s-card" data-id="${id}" style="--acc:${c.accent}" title="${officerFa(id)} — برای شروع، دوبار کلیک کنید">
+        <canvas width="20" height="20"></canvas><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small><i>${c.seal}</i><em class="t-rk"></em></button>`; }).join('')}
     </aside>
     <article class="s-info">
       <div class="s-name"><h1></h1><div><i class="s-seal"></i><p class="s-court"></p></div></div>
       <p class="s-en"></p>
       <p class="s-epi"><b></b><small></small></p>
-      <p class="s-wpn"><span>武器</span><b></b><small></small></p>
+      <p class="s-wpn"><span>سلاح</span><b></b><small></small></p>
       <p class="s-bio"></p>
       <ul class="s-stats">${STATS.map(([k, zh, en]) => `<li data-k="${k}"><b>${zh}</b><small>${en}</small><span>${[0, 1, 2, 3, 4].map((j) => `<i style="--i:${j}"></i>`).join('')}</span></li>`).join('')}</ul>
-      <div class="s-musou"><span>無雙亂舞</span><b></b><small></small>${SWASH}</div>
+      <div class="s-musou"><span>قدرت ویژهٔ موسو</span><b></b><small></small>${SWASH}</div>
     </article>
     <div class="s-line"><p></p><small></small></div>
-    <p class="s-rec"><span>戰績</span><b></b><small></small></p>
-    <div class="s-act"><button class="s-back"><b>返回</b><small>Back</small></button><button class="s-go"><b>出陣</b><small>To battle</small></button></div>
-    <footer class="ui-foot"><span><kbd>↑</kbd><kbd>↓</kbd>切換武將<small>Officer</small></span><span><kbd>Click</kbd>選擇<small>Select</small></span>
-      <span><kbd>Enter</kbd><kbd class="pad">A</kbd>出陣<small>Deploy</small></span><span><kbd>Esc</kbd><kbd class="pad">B</kbd>返回<small>Back</small></span>
-      <span><kbd>Drag</kbd>旋轉<small>Turn</small></span></footer>`;
+    <p class="s-rec"><span>رکورد</span><b></b><small></small></p>
+    <div class="s-act"><button class="s-back"><b>بازگشت</b><small>قبلی</small></button><button class="s-go"><b>شروع نبرد</b><small>اعزام به میدان</small></button></div>
+    <footer class="ui-foot"><span><kbd>↑</kbd><kbd>↓</kbd>تغییر شخصیت<small>جابجایی</small></span><span><kbd>Click</kbd>انتخاب<small>تأیید</small></span>
+      <span><kbd>Enter</kbd><kbd class="pad">A</kbd>شروع<small>ورود به نبرد</small></span><span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>
+      <span><kbd>Drag</kbd>چرخش<small>نمایش مدل</small></span></footer>`;
   const $ = (s) => el.querySelector(s), cards = {};
   for (const b of el.querySelectorAll('.s-card')) { cards[b.dataset.id] = b; paintPortrait(b.querySelector('canvas'), CHARS[b.dataset.id]); }
   let ctx = {}, ids = ALL, cur = ALL[0], busy = false, spinT = 0;   // ids: this visit's roster; cur: the focused id
@@ -73,26 +74,26 @@ export function createSelect(el, flow) {
     replay(cards[cur], 'pick');                           // the chosen card flashes in
     const c = CHARS[id], side = c.side || SHU;
     el.style.setProperty('--acc', c.accent);
-    $('.s-fac i').textContent = side.zh; $('.s-fac small').textContent = side.en;
-    $('.s-name h1').textContent = c.name.zh;
+    $('.s-fac i').textContent = side === SHU ? 'شو' : (side.en === 'Warlords' ? 'جنگ‌سالاران' : 'شو'); $('.s-fac small').textContent = OFFICERS_FA[id].side;
+    $('.s-name h1').textContent = officerFa(id);
     $('.s-seal').textContent = c.seal;
-    $('.s-court').textContent = `字${c.courtesy.zh}`;
-    $('.s-en').textContent = `${c.name.en} · ${c.courtesy.en}`;
-    $('.s-epi b').textContent = c.title.zh; $('.s-epi small').textContent = c.title.en;
-    $('.s-wpn b').textContent = c.weapon.zh; $('.s-wpn small').textContent = c.weapon.en;
-    $('.s-bio').innerHTML = c.bio.zh.map((z, k) => `<span>${z}<small>${c.bio.en[k]}</small></span>`).join('');
+    $('.s-court').textContent = `نام ادبی: ${OFFICERS_FA[id].courtesy}`;
+    $('.s-en').textContent = `${OFFICERS_FA[id].title} · ${OFFICERS_FA[id].motto}`;
+    $('.s-epi b').textContent = OFFICERS_FA[id].title; $('.s-epi small').textContent = 'لقب جنگجو';
+    $('.s-wpn b').textContent = OFFICERS_FA[id].weapon; $('.s-wpn small').textContent = 'سلاح اصلی';
+    $('.s-bio').innerHTML = OFFICERS_FA[id].bio.map((z) => `<span>${z}</span>`).join('');
     for (const li of el.querySelectorAll('.s-stats li')) {
       const n = c.stats[li.dataset.k];
       li.querySelectorAll('i').forEach((q, k) => q.classList.toggle('f', k < n));
     }
-    $('.s-musou b').textContent = c.musou.zh; $('.s-musou small').textContent = c.musou.en;
-    $('.s-line p').textContent = c.lines.intro.zh; $('.s-line small').textContent = c.lines.intro.en;
+    $('.s-musou b').textContent = OFFICERS_FA[id].musou; $('.s-musou small').textContent = 'مهارت نهایی';
+    $('.s-line p').textContent = OFFICERS_FA[id].intro; $('.s-line small').textContent = OFFICERS_FA[id].motto;
     // the line above the info: his unlock rule while locked, else his record here at this difficulty
     const lk = locked(id), d = difficulty(), r = ctx.mode !== 'free' && best(ctx.ch, id, d.id);
-    const [zh, en] = lk ? lk.rule : r ? [`評價 ${r.rank}・${mmss(r.time)}・${r.kos} 擊破`, `Best on ${d.en}`] : ['尚無戰績', `No record on ${d.en} yet`];
+    const [zh, en] = lk ? [unlockFa(id).rule, 'شخصیت قفل است'] : r ? [`رتبه ${r.rank} · زمان ${mmss(r.time)} · ${r.kos} شکست`, `بهترین رکورد در سطح ${difficultyFa(d.id).name}`] : ['هنوز رکوردی ثبت نشده است', `سطح ${difficultyFa(d.id).name}`];
     $('.s-rec').hidden = !lk && ctx.mode === 'free';
     $('.s-rec').classList.toggle('lock', !!lk); $('.s-go').classList.toggle('lock', !!lk);
-    $('.s-rec span').textContent = lk ? '未解鎖' : '戰績'; $('.s-rec b').textContent = zh; $('.s-rec small').textContent = en;
+    $('.s-rec span').textContent = lk ? 'قفل' : 'رکورد'; $('.s-rec b').textContent = zh; $('.s-rec small').textContent = en;
     $('.s-info').scrollTop = 0;
     replay(el, 'swap');                                    // name ink-in, stat bars refill, voice line brush reveal
     spinT = 0;
@@ -104,7 +105,7 @@ export function createSelect(el, flow) {
     if (wiping()) return afterWipe(go);             // pressed while this screen is still being uncovered: queued
     if (locked(cur)) return sfx('back');
     busy = true;
-    stamp($('.s-act'), '出陣');
+    stamp($('.s-act'), 'برو');
     const id = cur;
     setTimeout(() => inkWipe(() => flow.go('loading', { mode: ctx.mode, ch: ctx.ch, map: ctx.map, char: id })), 520);
   };
@@ -196,7 +197,7 @@ export function createSelect(el, flow) {
       ctx = c; busy = false; armed = false; clearStamp($('.s-act'));
       const [zh, en] = modeLabel(c);
       const d = difficulty();
-      $('.s-mode b').textContent = `${zh}・${d.zh}`; $('.s-mode small').textContent = `${en} · ${d.en}`;
+      $('.s-mode b').textContent = `${modeLabelFa(c)} · ${difficultyFa(d.id).name}`; $('.s-mode small').textContent = 'انتخاب جنگجو';
       // this visit's roster: the chapter's heroes (story) or everyone (trial / free); the focus stays if he is in it
       const want = (c.mode !== 'free' && chapter(c.ch).CH.heroes) || ALL;
       ids = ALL.filter((id) => want.includes(id));
@@ -204,7 +205,7 @@ export function createSelect(el, flow) {
       for (const id in cards) {                             // 鎖 on a locked officer, else his best rank here on this tier
         const lk = !!locked(id), r = (!lk && c.mode !== 'free' && best(c.ch, id, d.id)?.rank) || '', chip = cards[id].querySelector('.t-rk');
         cards[id].hidden = !ids.includes(id); cards[id].classList.toggle('lock', lk);
-        chip.textContent = lk ? '鎖' : r; chip.className = `t-rk r${r}`;
+        chip.textContent = lk ? 'قفل' : r; chip.className = `t-rk r${r}`;
       }
       if (!ids.includes(cur)) { cards[cur].classList.remove('on'); cur = ids[0]; }
       show(ids.indexOf(cur), true); replay(el, 'in');       // header, roster and actions slide in as the ink uncovers
