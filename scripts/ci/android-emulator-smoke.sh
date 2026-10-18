@@ -62,10 +62,19 @@ else
   initial_font_count=$(grep -c 'ROSTAM_LOCAL_FONT_READY' emulator-evidence/logcat-live.txt || true)
   adb shell screencap -p /sdcard/rostam-online.png
   adb pull /sdcard/rostam-online.png emulator-evidence/rostam-online.png
-  adb shell settings put global airplane_mode_on 1
-  adb shell am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true
+  # Android 14+ blocks ACTION_AIRPLANE_MODE broadcasts from adb shell.
+  # Use the privileged connectivity shell command, then explicitly disable
+  # wifi/data to guarantee the game is relaunched without radio connectivity.
+  if ! adb shell cmd connectivity airplane-mode enable; then
+    adb shell settings put global airplane_mode_on 1
+  fi
   adb shell svc wifi disable
   adb shell svc data disable
+  mode=$(adb shell settings get global airplane_mode_on | tr -d '\r')
+  if [ "$mode" != "1" ]; then
+    echo "Could not enable Android Airplane Mode"
+    exit 1
+  fi
   adb shell am force-stop "${pkg}"
   adb shell am start -W -n "${pkg}/${activity}"
   for attempt in $(seq 1 30); do
