@@ -39,10 +39,11 @@ export async function buildWeb() {
   var startedAt = Date.now();
   var check = setInterval(function() {
     var title = document.getElementById('title');
-    if (title && !title.hidden) {
+    var ink = document.getElementById('ink');
+    if (title && !title.hidden && ink && ink.hidden) {
       console.log('ROSTAM_TITLE_VISIBLE');
       clearInterval(check);
-    } else if (Date.now() - startedAt > 40000) {
+    } else if (Date.now() - startedAt > 120000) {
       console.error('ROSTAM_TITLE_TIMEOUT');
       clearInterval(check);
     }
