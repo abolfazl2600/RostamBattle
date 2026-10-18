@@ -15,8 +15,26 @@ export async function buildWeb() {
   let html = await readFile(join(out, 'index.html'), 'utf8');
   // Android has no dependency on Google Fonts. Local licensed Vazirmatn is tracked in #35.
   html = html.replace(/<link\b[^>]*href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^"]*"[^>]*>\s*/g, '');
+  // The normal website also contains a pinned CDN fallback @font-face
+  // inside its inline CSS. Rewrite that font URL to the same local font
+  // in the generated Android copy, leaving the web source unchanged.
+  const cdnFont = 'url("https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn%5Bwght%5D.woff2")';
+  if (!html.includes(cdnFont)) throw new Error('Missing pinned Vazirmatn CDN fallback in web source');
+  html = html.replace(cdnFont, 'url("./src/ui/vazirmatn.woff2")');
   const csp = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'";
   html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta http-equiv="Content-Security-Policy" content="' + csp + '">');
+  // Bundle a full-variable Persian/Arabic font exclusively for the native
+  // package. No Google Fonts or network is required after installation.
+  // The original GitHub Pages HTML is deliberately not changed.
+  const fontFile = './src/ui/vazirmatn.woff2';
+  const fontCss = `<link rel="preload" href="${fontFile}" as="font" type="font/woff2" crossorigin>
+<style id="android-local-vazirmatn">
+@font-face { font-family: "Vazirmatn"; src: url("${fontFile}") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+:root { --sans: "Vazirmatn", "Avenir Next", "Helvetica Neue", sans-serif; }
+html, body, button, input, select, textarea { font-family: var(--sans); }
+</style>`;
+  if (!html.includes('</head>')) throw new Error('Missing Android head');
+  html = html.replace('</head>', fontCss + '\n</head>');
   // Android-only capability check. API level does not guarantee a sufficiently
   // recent System WebView: import maps are needed for Three.js bare specifiers,
   // and older WebViews cannot parse optional chaining in the game's modules.
@@ -36,6 +54,12 @@ export async function buildWeb() {
   }
   document.body.setAttribute('data-native-webview', 'supported');
   console.log('ROSTAM_WEBVIEW_IMPORTMAP_SUPPORTED');
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('600 16px "Vazirmatn"', 'نبرد رستم').then(function(faces) {
+      if (faces.length) console.log('ROSTAM_LOCAL_FONT_READY');
+      else console.error('ROSTAM_LOCAL_FONT_MISSING');
+    }, function(e) { console.error('ROSTAM_LOCAL_FONT_ERROR', e); });
+  }
   var startedAt = Date.now();
   var check = setInterval(function() {
     var title = document.getElementById('title');
