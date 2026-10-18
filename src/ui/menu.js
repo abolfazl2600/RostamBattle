@@ -111,7 +111,7 @@ export function inkWipe(mid) {
   busy = true;
   ink.hidden = false;
   sfx('swish');
-  ink.animate([{ transform: 'translateX(100vw)' }, { transform: 'translateX(-60vw)' }],
+  ink.animate([{ transform: 'translateX(calc(100 * var(--game-vw)))' }, { transform: 'translateX(calc(-60 * var(--game-vw)))' }],
     { duration: reduced() ? 1 : 420, easing: 'cubic-bezier(.7,0,.35,1)', fill: 'forwards' }).finished.then(() => hold(mid));
 }
 /** Boot: index.html opens under full ink (#ink.boot + body.inkhold); uncover once mid() settles. */
@@ -123,7 +123,7 @@ function hold(mid) {
     // two frames under full ink: the swapped screen lays out and the 3D view re-frames before the reveal
     requestAnimationFrame(() => requestAnimationFrame(() => {
       body.classList.remove('inkhold'); ink.classList.remove('boot');
-      ink.animate([{ transform: 'translateX(-60vw)' }, { transform: 'translateX(-230vw)' }],
+      ink.animate([{ transform: 'translateX(calc(-60 * var(--game-vw)))' }, { transform: 'translateX(calc(-230 * var(--game-vw)))' }],
         { duration: reduced() ? 1 : 520, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'forwards' }).finished.then(() => {
         ink.hidden = true; ink.getAnimations().forEach((a) => a.cancel());   // fill-forwards: they would pile up, one pair per wipe
         busy = false; const f = pend; pend = null; f?.();

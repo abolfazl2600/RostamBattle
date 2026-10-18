@@ -201,12 +201,12 @@ const mOk = () => {
 };
 const mNav = createNav({ move: (d) => { mFocus(mCur + d); sfx('move'); }, ok: mOk, back: () => setPaused(false) });
 const setPaused = (v) => {
-  if (!v && state === 'battle' && (viewport.blocked || document.hidden || graphicsFailed)) v = true;
+  if (!v && state === 'battle' && (document.hidden || graphicsFailed)) v = true;
   input.reset(); post.resetTiming();
   paused = v; emit('pause', { paused: v }); menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
-const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && !viewport.blocked && state === 'battle' && !paused, pause: () => setPaused(true), musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
+const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && state === 'battle' && !paused, pause: () => setPaused(true), musouReady: () => game.musou.ready() && game.hero.grounded && !game.musou.active });
 mBtns.forEach((b, i) => {
   b.addEventListener('pointerenter', () => { if (mCur !== i) { mFocus(i); sfx('move'); } });
   b.addEventListener('click', () => { mFocus(i); mOk(); });
@@ -225,7 +225,7 @@ const flow = {
     const set = state === 'loading' || state === 'prologue';   // deploy() already started this battle (its field is on screen)
     state = s; ctx = c;
     if (s === 'title') { world.load(HOME); game.crowd.reset(); }   // menus stand on HOME, the field empty (under the ink)
-    if (s === 'battle') { if (!set) startBattle(c); setPaused(viewport.blocked || document.hidden); replay(hudEl, 'in'); }
+    if (s === 'battle') { if (!set) startBattle(c); setPaused(document.hidden); replay(hudEl, 'in'); }
     else { setPaused(false); hudEl.hidden = true; $(s).hidden = false; screens[s].enter(c); }
     emit('flow', { state: s, ctx: c });
     if (s === 'loading') { deploy(c); return nextFrame(); }

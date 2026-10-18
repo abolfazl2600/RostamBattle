@@ -1,25 +1,33 @@
-// Capability-based viewport state, shared by flow, input and mobile UI. No orientation lock required.
-import { emit, on } from './events.js';
+// One logical landscape surface for rendering, DOM and pointer input.
+import { emit } from './events.js';
+import { viewport } from './surface.js';
+export { viewport, gamePoint, gameRect } from './surface.js';
 const coarse = matchMedia('(pointer: coarse)');
-export const viewport = { touch: false, landscape: true, blocked: false, width: 1, height: 1 };
 export function updateViewport() {
-  const width = Math.max(1, Math.round(globalThis.visualViewport?.width || innerWidth));
-  const height = Math.max(1, Math.round(globalThis.visualViewport?.height || innerHeight));
-  const touch = coarse.matches || navigator.maxTouchPoints > 0;
-  Object.assign(viewport, { width, height, touch, landscape: width >= height, blocked: touch && width < height });
+  const vv = globalThis.visualViewport;
+  const physicalWidth = Math.max(1, Math.round(vv?.width || innerWidth));
+  const physicalHeight = Math.max(1, Math.round(vv?.height || innerHeight));
+  const touch = coarse.matches || navigator.maxTouchPoints > 0, rotated = touch && physicalWidth < physicalHeight;
+  const width = rotated ? physicalHeight : physicalWidth, height = rotated ? physicalWidth : physicalHeight;
+  const offsetX = vv?.offsetLeft || 0, offsetY = vv?.offsetTop || 0;
+  Object.assign(viewport, { width, height, physicalWidth, physicalHeight, touch, rotated,
+    mode: rotated ? 'rotated-landscape' : 'native-landscape', offsetX, offsetY });
   const root = document.documentElement;
   root.classList.toggle('touch-device', touch);
-  root.classList.toggle('portrait-blocked', viewport.blocked);
+  root.classList.toggle('rotated-landscape', rotated);
+  root.style.setProperty('--game-width', `${width}px`);
+  root.style.setProperty('--game-height', `${height}px`);
+  root.style.setProperty('--game-vw', `${width / 100}px`);
+  root.style.setProperty('--game-vh', `${height / 100}px`);
   root.style.setProperty('--view-height', `${height}px`);
-  document.getElementById('rotate-device').hidden = !viewport.blocked;
+  root.style.setProperty('--surface-x', `${offsetX + (rotated ? physicalWidth : 0)}px`);
+  root.style.setProperty('--surface-y', `${offsetY}px`);
+  root.style.fontSize = `${height / 72}px`;
   emit('viewport', { ...viewport });
 }
 addEventListener('resize', updateViewport);
 addEventListener('orientationchange', updateViewport);
 globalThis.visualViewport?.addEventListener('resize', updateViewport);
+globalThis.visualViewport?.addEventListener('scroll', updateViewport);
 coarse.addEventListener('change', updateViewport);
-// A hidden screen stays inert while the rotate message covers it (including menus).
-on('viewport', ({ blocked }) => {
-  for (const el of document.querySelectorAll('#c, #hud, #menu, .scr')) el.inert = blocked;
-});
 updateViewport();

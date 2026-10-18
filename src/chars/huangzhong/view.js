@@ -1,3 +1,4 @@
+import { viewport } from '../../core/surface.js';
 // Huang Zhong's kit view (render-only; reads game.musou = the kit sim of musou.js, never writes sim state):
 //  · the fx primitives (fx.js) and the arrows (src/vfx/arrows.js); the camera thump is applied here, after the rig
 //  · aim mode: a dotted flight path of the next arrow (same integrator as the sim: speed, gravity, ground) that turns
@@ -64,14 +65,14 @@ export function createMusouView(parent, game, camera) {
   ret.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:4;display:none';
   ret.innerHTML = '<svg viewBox="-50 -50 100 100" width="120" height="120" style="position:absolute;left:-60px;top:-60px;overflow:visible">' +
     '<circle r="22" fill="none" stroke-width="3"/><circle r="3"/><path d="M0-42V-28M0 42V28M-42 0H-28M42 0H28" stroke-width="4" stroke-linecap="round"/></svg>';
-  document.body.appendChild(ret);
+  document.getElementById('game-shell').appendChild(ret);
   const retSvg = ret.firstChild;
   const setRet = (on, x, y, z, d, gold) => {
     if (!on) { if (ret.style.display !== 'none') ret.style.display = 'none'; return; }
     _p.set(x, y + ground(x, z), z).project(camera);
     if (_p.z > 1) { ret.style.display = 'none'; return; }
     ret.style.display = 'block';
-    ret.style.transform = `translate(${((_p.x * 0.5 + 0.5) * innerWidth).toFixed(1)}px,${((0.5 - _p.y * 0.5) * innerHeight).toFixed(1)}px) scale(${(1.35 - 0.45 * d).toFixed(3)})`;
+    ret.style.transform = `translate(${((_p.x * 0.5 + 0.5) * viewport.width).toFixed(1)}px,${((0.5 - _p.y * 0.5) * viewport.height).toFixed(1)}px) scale(${(1.35 - 0.45 * d).toFixed(3)})`;
     const col = gold ? '#ffd24a' : d >= 1 ? '#fff4dc' : '#f2c890';
     retSvg.style.stroke = col; retSvg.style.fill = col;
     retSvg.style.filter = `drop-shadow(0 0 ${gold ? 6 : 2}px ${gold ? 'rgba(255,170,40,.9)' : 'rgba(0,0,0,.85)'})`;

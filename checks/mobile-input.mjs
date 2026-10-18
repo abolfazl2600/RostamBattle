@@ -13,7 +13,7 @@ globalThis.matchMedia = () => ({ matches: false, addEventListener() {} });
 globalThis.innerWidth = 812; globalThis.innerHeight = 375;
 const { createInput } = await import('../src/core/input.js');
 const { emit } = await import('../src/core/events.js');
-const { viewport, updateViewport } = await import('../src/core/viewport.js');
+const { viewport, updateViewport, gamePoint, gameRect } = await import('../src/core/viewport.js');
 const { joystickVector } = await import('../src/ui/touch-controls.js');
 const { defaultQuality, createAdaptiveScale } = await import('../src/post/quality.js');
 const input = createInput(), touch = input.touch;
@@ -52,8 +52,26 @@ send('blur'); sample = input.sample(); assert.equal(sample.mx, 0); assert.equal(
 emit('flow', { state: 'title' }); send('keydown', { code: 'KeyJ' }); assert.equal(input.sample().pressed.attack, false);
 emit('flow', { state: 'battle' }); nodes.menu.hidden = false; assert.equal(touch.claim(pointer(11), 'action', 'attack'), false);
 nodes.menu.hidden = true;
-globalThis.innerWidth = 375; globalThis.innerHeight = 812; updateViewport(); assert(viewport.blocked); assert.equal(touch.claim(pointer(12), 'move'), false);
-globalThis.innerWidth = 812; globalThis.innerHeight = 375; updateViewport(); assert(!viewport.blocked);
+globalThis.innerWidth = 375; globalThis.innerHeight = 812; updateViewport(); assert(viewport.rotated); assert.equal(viewport.mode, 'rotated-landscape');
+assert.equal(viewport.width, 812); assert.equal(viewport.height, 375);
+assert.deepEqual(gamePoint(375, 0), { x: 0, y: 0 });
+assert.deepEqual(gamePoint(0, 812), { x: 812, y: 375 });
+assert.deepEqual(gameRect({ getBoundingClientRect: () => ({ left: 275, right: 325, top: 100, bottom: 180 }) }),
+  { left: 100, right: 180, top: 50, bottom: 100, width: 80, height: 50 });
+assert(touch.claim(pointer(12), 'move')); touch.move(12, 1, 0);
+assert(touch.claim(pointer(13, 200, 100), 'look')); touch.look(pointer(13, 210, 125));
+sample = input.sample(); assert(sample.orbit < 0); assert(sample.tilt < 0); assert.equal(sample.mx, 1);
+// visualViewport offsets (browser chrome/keyboard/zoom panning) share the same inverse mapping.
+globalThis.visualViewport = { width: 375, height: 700, offsetLeft: 8, offsetTop: 12 }; updateViewport();
+assert.deepEqual(gamePoint(383, 12), { x: 0, y: 0 });
+assert.equal(touch.pointers.size, 0, 'resize cancels all owned pointers without disabling input');
+delete globalThis.visualViewport;
+globalThis.innerWidth = 812; globalThis.innerHeight = 375; updateViewport(); assert(!viewport.rotated);
+assert.equal(viewport.width, 812); assert.equal(viewport.height, 375);
+navigator.maxTouchPoints = 0; innerWidth = 375; innerHeight = 812; updateViewport();
+assert(!viewport.rotated, 'narrow mouse-only desktop remains native');
+assert.deepEqual(gamePoint(40, 90), { x: 40, y: 90 });
+navigator.maxTouchPoints = 5; innerWidth = 812; innerHeight = 375; updateViewport();
 // Standard pad held and pressed, including release-before-rearm on resume.
 pad = { axes: [0, 0, 0, 0], buttons: Array.from({ length: 16 }, () => ({ pressed: false })) };
 pad.buttons[3].pressed = true; sample = input.sample(); assert(sample.pressed.charge); assert(sample.held.charge);
