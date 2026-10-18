@@ -1,6 +1,39 @@
 // Persian narrative copy, kept separate from the deterministic chapter scripts.
 // Each prologue entry is indexed by the corresponding CHAPTERS[id].PROLOGUE card.
 // The optional hero variant follows the chapter's existing hero-branch semantics.
+export const MAP_LABELS_FA = {
+  "洛陽": "لوئویانگ",
+  "董卓": "دونگ ژو",
+  "虎牢關": "هولائو",
+  "汜水關": "سی‌شویی",
+  "華雄": "هوآ شیونگ",
+  "酸棗": "سوآن‌زائو",
+  "盟主 袁紹": "یوان شائو",
+  "黃 河": "رود زرد",
+  "呂布": "لو بو",
+  "樊城": "فان‌چنگ",
+  "襄陽": "شیانگ‌یانگ",
+  "長坂": "چانگ‌بان",
+  "當陽": "دانگ‌یانگ",
+  "景山 曹操": "کوه جینگ ـ سائو سائو",
+  "江陵": "جیانگ‌لینگ",
+  "漢津": "هان‌جین",
+  "漢 水": "رود هان",
+  "華容": "هوآرونگ",
+  "烏林": "وو‌لین",
+  "連環船": "کشتی‌های زنجیردار",
+  "赤壁": "صخره‌های سرخ",
+  "夏口": "شیاکو",
+  "雲夢澤": "باتلاق یون‌مِنگ",
+  "長 江": "رود یانگ‌تسه",
+  "陽平關": "یانگ‌پینگ",
+  "南鄭": "نان‌ژنگ",
+  "定軍山": "دینگ‌جون",
+  "夏侯淵": "شیا‌هو یوان",
+  "張郃 東圍": "ژانگ هه ـ شرق"
+};
+export const mapLabelFa = (source) => MAP_LABELS_FA[source] || source;
+
 export const PROLOGUE_FA = {
   hulao: [
     { cols: ['سال ۱۹۰ میلادی', 'دونگ ژو امپراتور خردسال را گروگان گرفت', 'پایتخت را با وحشت اداره کرد.'] },
