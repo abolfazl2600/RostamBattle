@@ -133,11 +133,13 @@ export const BATTLE_EVENTS_FA = {
   'Enemy commander Xiahou Yuan has fallen!': 'فرماندهٔ دشمن، شیا‌هو یوان، شکست خورد!',
 };
 
+const CASELESS_NAMES_FA = Object.fromEntries(
+  Object.entries(BATTLE_NAMES_FA).map(([key, value]) => [key.toLocaleLowerCase('en'), value]),
+);
 export const battleNameFa = (name) => {
   if (!name) return '';
   const raw = typeof name === 'string' ? name : (name.en || name.zh || '');
-  return BATTLE_NAMES_FA[raw] || BATTLE_NAMES_FA[raw.replace(/\s+/g, ' ').toLowerCase().replace(/\b\w/g, (x) => x.toUpperCase())]
-    || raw;
+  return BATTLE_NAMES_FA[raw] || CASELESS_NAMES_FA[raw.toLocaleLowerCase('en')] || raw;
 };
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
