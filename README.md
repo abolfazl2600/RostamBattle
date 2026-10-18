@@ -1,32 +1,52 @@
-<h1 align="center">Voxel Musou</h1>
+<h1 align="center">Voxel Musou | وکسل موسو</h1>
 
-<p align="center"><b>一騎當千 · One warrior. A thousand foes.</b></p>
-
-<p align="center">A voxel action game inspired by Dynasty Warriors.<br>Seven officers, four historical chapters and three ranked trials — playable in your browser.</p>
+<p align="center"><b>یک جنگجو در برابر هزار دشمن | One warrior. A thousand foes.</b></p>
 
 <p align="center">
-  <a href="https://voxel-musou.vercel.app"><img src="media/promo.gif" alt="Voxel Musou trailer: seven officers, four chapters, three trials" width="100%"></a>
+  بازی اکشن وکسلی الهام‌گرفته از Dynasty Warriors، قابل اجرا مستقیم در مرورگر.<br>
+  <b>۷ شخصیت · ۴ فصل داستانی · ۳ چالش · ۴ درجهٔ سختی</b><br>
+  بخش‌های اصلی رابط کاربری و متن‌های داستان بازی به فارسی ترجمه شده‌اند.
 </p>
 
 <p align="center">
-  <b><a href="https://voxel-musou.vercel.app">▶ Play now</a></b>
+  <a href="https://abolfazl2600.github.io/voxel-game/"><img src="media/promo.gif" alt="پیش‌نمایش بازی Voxel Musou / Voxel Musou gameplay" width="100%"></a>
+</p>
+
+<p align="center">
+  <b><a href="https://abolfazl2600.github.io/voxel-game/">▶ اجرای آنلاین بازی — GitHub Pages | Play the game</a></b>
   &nbsp; · &nbsp;
-  <a href="media/promo.mp4">Watch trailer with sound</a>
-  &nbsp; · &nbsp;
-  <a href="#run">Run locally</a>
+  <a href="https://voxel-musou.vercel.app/">نسخهٔ جایگزین در Vercel</a>
 </p>
-
-<p align="center"><b>7 officers</b> &nbsp; / &nbsp; <b>4 chapters</b> &nbsp; / &nbsp; <b>3 trials</b> &nbsp; / &nbsp; <b>4 difficulties</b></p>
+<p align="center">
+  <a href="media/promo.mp4">تماشای تریلر با صدا</a>
+  &nbsp; · &nbsp;
+  <a href="#run">اجرای محلی</a>
+  &nbsp; · &nbsp;
+  <a href="#controls">کنترل‌ها</a>
+</p>
 
 <p align="center">
-  <a href="#officers">Officers</a> &nbsp; · &nbsp;
-  <a href="#story-campaign">Campaign</a> &nbsp; · &nbsp;
-  <a href="#trials-and-free-battle">Trials</a> &nbsp; · &nbsp;
-  <a href="#difficulty-records-and-saves">Progression</a> &nbsp; · &nbsp;
-  <a href="#controls">Controls</a> &nbsp; · &nbsp;
-  <a href="#development">Development</a>
+  <a href="#راهنمای-سریع-فارسی">راهنمای فارسی</a> &nbsp; · &nbsp;
+  <a href="#officers">شخصیت‌ها</a> &nbsp; · &nbsp;
+  <a href="#story-campaign">داستان</a> &nbsp; · &nbsp;
+  <a href="#trials-and-free-battle">چالش‌ها</a> &nbsp; · &nbsp;
+  <a href="#difficulty-records-and-saves">ذخیره‌ها</a> &nbsp; · &nbsp;
+  <a href="#development">توسعه</a>
 </p>
 
+## راهنمای سریع فارسی
+
+**[اجرای بازی در GitHub Pages](https://abolfazl2600.github.io/voxel-game/)** — بدون نیاز به نصب یا دانلود. اگر صفحهٔ اصلی دردسترس نبود، [لینک Vercel](https://voxel-musou.vercel.app/) را امتحان کنید.
+
+- **بخش داستانی:** یکی از چهار فصل را انتخاب کنید، درجهٔ سختی را تعیین کنید و با شخصیت مجاز آن فصل وارد میدان شوید.
+- **چالش‌ها و نبرد آزاد:** سه چالش امتیازی و نبرد آزاد با موج‌های دشمن در دسترس‌اند؛ بعضی چالش‌ها با پیشروی در داستان باز می‌شوند.
+- **کنترل‌ها:** `WASD` حرکت، `J` حمله، `K` حملهٔ قدرتی، `Space` پرش، `L` جاخالی، `I` موسو و `Esc` توقف بازی.
+- **ذخیرهٔ پیشرفت:** رکوردها و موارد آزادشده در حافظهٔ مرورگر (`localStorage`) نگهداری می‌شوند؛ نشانی‌های مختلف سایت و اجرای محلی ذخیرهٔ مشترک ندارند.
+- **پیش‌نیاز:** مرورگر دسکتاپ با پشتیبانی WebGL2؛ استفاده از صفحه‌کلید/ماوس یا دستهٔ بازی توصیه می‌شود.
+
+> فارسی‌سازی بر متن‌های اصلی رابط، داستان و نبرد تمرکز دارد؛ ممکن است بعضی نوشته‌های تزئینی یا قسمت‌های فرعی هنوز به زبان اصلی باشند.
+
+English documentation, controls and developer reference continue below.
 ---
 
 ## Features
@@ -39,7 +59,7 @@ Built with **Three.js r186** and a **fixed 60 Hz simulation**. Plain ES modules,
 - Enemy officers and allied hero NPCs with name and HP tags; Cao Cao, Zhang Liao and Xiahou Yuan have dedicated boss models and telegraphed attacks.
 - Four fields: daylight Hulao Gate, dusk at Changban, the Red Cliffs night fleet and the golden-hour Mount Dingjun valley, switching within the same page.
 - Atmospheric haze, depth of field, bloom, a retro pixel look and automatic MSAA quality reduction under sustained load.
-- Procedural WebAudio sound, Chinese / English screen text, brush calligraphy, ink-map prologues and ink-wipe transitions.
+- Procedural WebAudio sound, a Persian-localized presentation layer, brush-inspired calligraphy, ink-map prologues and ink-wipe transitions.
 
 <table>
   <tr>
@@ -93,7 +113,7 @@ Six officers are available initially; Lü Bu unlocks after clearing Chapter I. S
 
 ## Story campaign
 
-Choose **Story (劇情模式)** on the title screen, then a chapter, difficulty and officer. Chapters unlock in order when the preceding chapter is cleared, with any of its officers on any difficulty.
+Choose **Story / حالت داستانی** on the title screen, then a chapter, difficulty and officer. Chapters unlock in order when the preceding chapter is cleared, with any of its officers on any difficulty.
 
 <p align="center">
   <img src="media/story.jpg" alt="Chapter I Hulao Gate ink-map prologue" width="100%"><br>
@@ -111,7 +131,7 @@ Follow the objective panel, its direction marker and the minimap. Story battles 
 
 ## Trials and free battle
 
-Choose **Trials (演武試煉)** on the title screen for ranked challenges or **Free battle (自由演武)** at the end of that list.
+Choose **Trials / چالش‌ها** on the title screen for ranked challenges or **Free battle / نبرد آزاد** at the end of that list.
 
 | Trial | Goal | Unlock |
 | --- | --- | --- |
@@ -225,6 +245,7 @@ src/musou/       Shared Musou simulation, scripted sequences and presentation
 src/story/       Chapter / trial data, objective director, prologue and results
 src/world/       Four maps, terrain, set pieces, sky and scenery
 src/ui/          Title, officer select, loading, HUD and menu navigation
+src/i18n/        Persian interface, story and battlefield text dictionaries
 src/camera/      Camera control and occlusion handling
 src/vfx/         Combat effects and arrow rendering
 src/post/        Post-processing and adaptive MSAA
@@ -241,7 +262,7 @@ Simulation and presentation are separated: gameplay advances in fixed 60 Hz step
 <details>
 <summary><b>Manual checks and simulation probes</b></summary>
 
-The repository includes checks that can be run explicitly with **Node 22.15+**; they do not require a browser or package installation:
+The repository includes optional checks that can be run explicitly with **Node 22.15+**; they do not require a browser or package installation:
 
 | Command | Scope |
 | --- | --- |
@@ -252,6 +273,7 @@ The repository includes checks that can be run explicitly with **Node 22.15+**; 
 | `node checks/shared-originality.mjs` | Shared model geometry, render commands and scripted Musou timing |
 | `node src/chars/check.mjs` | Playable / NPC kit contracts, portraits, moves, animation clips and Musou |
 | `node src/world/changban.check.mjs` | Changban bridge set pieces and terrain / walk-height consistency |
+| `node checks/fa-localization.mjs` | Persian dictionary and narrative translation coverage |
 
 These scripts cover simulation and source contracts; they do not verify browser rendering or replace playing the battles.
 
