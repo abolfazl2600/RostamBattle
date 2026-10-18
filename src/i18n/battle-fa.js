@@ -178,7 +178,67 @@ export const BATTLE_DIALOGUE_FA = {
   "Old Huang Zhong has cut down Xiahou Yuan!": "هوانگ ژونگِ کهنه‌کار شیا‌هو یوان را شکست داد!",
   "Xiahou Yuan has fallen to Zhao Zilong of Changshan!": "شیا‌هو یوان به دست ژائو زی‌لونگ از چانگ‌شان شکست خورد!"
 };
+
+// First chapter: Hulao Gate dialogue, including all three hero branches.
+export const HULAO_DIALOGUE_FA = {
+  "Hold! Hua Xiong still stands. Don't push on alone.": "ایست! هوآ شیونگ هنوز زنده است. تنها پیشروی نکن!",
+  "The gorge is barred. Break the ambush first!": "راه تنگه بسته است. نخست کمین دشمن را بشکن!",
+  "The gate is shut fast. Beat its guards first!": "دروازه بسته است؛ ابتدا نگهبانان را شکست بده!",
+  "Hua Xiong has cut down Bao Zhong, Zu Mao, Yu She and Pan Feng. The coalition has lost its nerve...": "هوآ شیونگ بائو ژونگ، زو مائو، یو شه و پان فنگ را شکست داده؛ روحیهٔ سپاه متحد از دست رفته است…",
+  "If only Yan Liang or Wen Chou were here! With either of them, who would fear Hua Xiong?": "ای‌کاش یان لیانگ یا ون چو اینجا بودند! با حضور یکی از آنان چه کسی از هوآ شیونگ می‌ترسید؟",
+  "Unworthy as I am, my brothers and I will go, and lift this burden from you!": "من و برادرانم به میدان می‌رویم تا این بار را از دوش اتحاد برداریم!",
+  "Let this humble soldier go. I will lay Hua Xiong's head before your tent!": "اجازه دهید من بروم؛ هوآ شیونگ را شکست می‌دهم و نزد شما بازمی‌گردم!",
+  "One Hua Xiong? I'll go and twist his head off!": "یک هوآ شیونگ؟ همین حالا به میدان می‌روم و شکستش می‌دهم!",
+  "A mere archer, talking out of turn? Throw him out!": "یک کماندار ساده بی‌اجازه سخن می‌گوید؟ بیرونش کنید!",
+  "A petty magistrate of Pingyuan, boasting before the lords?": "یک حاکم کوچک پینگ‌یوان می‌خواهد نزد فرمانروایان لاف بزند؟",
+  "A petty magistrate's man, boasting before the lords?": "زیردستِ یک حاکم کوچک می‌خواهد پیش فرمانروایان لاف بزند؟",
+  "Calm yourself, Gonglu. A man who speaks so boldly must have the courage to match. If he fails, blame him then.": "گونگ‌لو، آرام باش. کسی که این‌قدر جسورانه سخن می‌گوید باید دلیر هم باشد؛ اگر شکست خورد، آن‌گاه سرزنشش کن.",
+  "More coalition fools come to die! General Hua's blade is still thirsty!": "باز هم سربازان اتحاد برای شکست آمده‌اند! شمشیر سردار هوآ هنوز تشنه است!",
+  "General, drink this cup of warm wine before you ride.": "سردار، پیش از رفتن به میدان این جام شراب گرم را بنوشید.",
+  "Pour it and leave it. I'll be back before it cools.": "آن را بریزید و نگه دارید؛ پیش از سردشدنش بازمی‌گردم.",
+  "Another one come to die! Name yourself!": "یکی دیگر به میدان آمد؟ نامت چیست؟",
+  "I am Hua Xiong! Every champion the coalition sends dies on my blade!": "من هوآ شیونگ هستم! هر سرداری که اتحاد فرستاده، با تیغ من شکست خورده است!",
+  "Enough boasting, Hua Xiong! Liu Xuande of Zhuo is here!": "این‌قدر لاف نزن، هوآ شیونگ! لیو شوان‌ده از ژوئو اینجاست!",
+  "Zhang Yide of Yan is here! Hua Xiong, taste my spear!": "ژانگ یی‌ده از یان اینجاست! هوآ شیونگ، ضربهٔ نیزه‌ام را بچش!",
+  "...The wine has gone cold. Yunchang, don't keep me waiting!": "شراب سرد شد… یون‌چانگ، بیش از این مرا منتظر نگذار!",
+  "The wine is still warm! Yunchang, you are a god of war!": "شراب هنوز گرم است! یون‌چانگ، تو به‌راستی پهلوانی بی‌نظیری!",
+  "Hua Xiong is dead! Brothers, into the gorge with me!": "هوآ شیونگ شکست خورد! برادران، همراه من به تنگه بیایید!",
+  "Here is Hua Xiong's head. My lords, advance.": "هوآ شیونگ شکست خورده است. سرداران، پیشروی کنید!",
+  "Ha! So much for Hua Xiong!": "هاها! این هم از هوآ شیونگ!",
+  "Dong Zhuo's vanguard is broken! All armies advance on Hulao Gate!": "صف پیشروی دونگ ژو شکسته شد! همهٔ سپاهیان به سوی دروازهٔ هولائو پیشروی کنند!",
+  "The coalition is in the gorge! Warn General Li and General Guo!": "سپاه اتحاد وارد تنگه شد! به سرداران لی و گو خبر بدهید!",
+  "Ha! Both walls are ours. Where will you run now?": "هاها! هر دو سوی تنگه دست ماست؛ حالا کجا فرار می‌کنید؟",
+  "Loose! Let none of them through!": "تیرها را رها کنید! نگذارید حتی یکی عبور کند!",
+  "Careful, brother! Cut down their leaders and the rest will break!": "برادر، مراقب باش! فرماندهانشان را شکست بده تا بقیه بگریزند!",
+  "Brother, Li Jue and Guo Si lead them. Strike them down!": "برادر، لی جوئه و گو سی رهبری دشمن را بر عهده دارند. آن‌ها را شکست بده!",
+  "Don't get bogged down, brother. Take their leaders first!": "برادر، درگیر سربازان عادی نشو؛ ابتدا فرماندهان را بزن!",
+  "Curse it... Guo Si, it's yours now!": "لعنت… گو سی، ادامهٔ نبرد با تو!",
+  "The ambush is beaten! Hulao Gate lies ahead. I'll lead my riders on first!": "کمین دشمن شکست خورد! هولائو پیش روست؛ من با سوارانم جلو می‌روم!",
+  "I am Zhang Liao of Yanmen! While I hold this gate, none pass!": "من ژانگ لیائو از یان‌من هستم! تا وقتی اینجا هستم هیچ‌کس نمی‌گذرد!",
+  "The Vanguard Breakers know no retreat — only death!": "پیش‌قراولان عقب‌نشینی نمی‌کنند؛ تا آخرین نفس می‌جنگند!",
+  "That Lü Bu is too strong! I can't hold him — fall back!": "لو بو بیش از اندازه نیرومند است! نمی‌توانم در برابرش بمانم؛ عقب‌نشینی کنید!",
+  "Hold fast, Bogui! Liu Bei is here!": "ایستادگی کن بوگوی! لیو بی به کمکت آمده است!",
+  "Fall back, General Gongsun. Guan Yu stands here!": "سردار گونگ‌سون، عقب بروید؛ گوان یو اینجاست!",
+  "Don't panic, General! If Lü Bu shows his face, I'll fight him three hundred bouts!": "نگران نباشید سردار! اگر لو بو بیاید سیصد دور با او می‌جنگم!",
+  "...Well fought. Gao Shun, the gate is yours!": "خوب جنگیدی… گائو شون، حفاظت از دروازه با تو!",
+  "Who dares stand before Lü Fengxian!": "چه کسی جرئت ایستادن برابر لو فنگ‌شیان را دارد؟",
+  "Lü Bu has no equal. We cannot take him lightly...": "لو بو همتایی ندارد؛ نباید دست‌کمش بگیریم…",
+  "Lü Bu. Guan Yu will face you!": "لو بو! گوان یو در برابر تو می‌ایستد!",
+  "Fengxian, you have judged every man here too lightly. My spear will correct you!": "فنگ‌شیان، همهٔ پهلوانان اینجا را دست‌کم گرفتی. نیزه‌ام پاسخت را می‌دهد!",
+  "Brother! I'm here!": "برادر! من هم رسیدم!",
+  "Fear not, brother. Yide and I are with you!": "برادر، نگران نباش؛ من و یی‌ده کنارت هستیم!",
+  "Brother! Save half of Lü Bu for me!": "برادر! نیمی از نبرد با لو بو را برای من نگه دار!",
+  "We three brothers fight as one today!": "امروز ما سه برادر با یک دل می‌جنگیم!",
+  "Yide! I'm with you!": "یی‌ده! کنارت می‌جنگم!",
+  "Good! Good! It's been too long since I had a real fight!": "عالی است! مدت‌ها بود چنین نبرد جانانه‌ای نداشتم!",
+  "Leave their reinforcements to me, brother. Keep at Lü Bu!": "برادر، نیروهای کمکی را به من بسپار؛ با لو بو بجنگ!",
+  "Brother, press him harder!": "برادر، فشار را بیشتر کن!",
+  "...Three on one — some heroes! I'll spare you today!": "سه نفر در برابر یک نفر؟ عجب پهلوانانی! امروز از جانتان می‌گذرم!",
+  "Lü Bu runs! Dong Zhuo's fortune is spent!": "لو بو گریخت! بخت دونگ ژو به پایان رسیده است!",
+  "So that is Lü Bu.": "پس این بود لو بو!",
+  "Come back, Lü Bu! Three hundred more bouts!": "برگرد لو بو! هنوز سیصد دور دیگر مانده!"
+};
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
-  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || en;
+  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || en;
 };
