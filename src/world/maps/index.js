@@ -101,10 +101,11 @@
 //   [n, x0, x1, z] } }) — after every formation
 //   k.sites: the world's firelight sites [{ x, y (world height), z, i, d }] (a set piece may push sites or change their i)
 import dingjun from './dingjun.js';
+import ashkabus from './ashkabus.js';
 import hulao from './hulao.js';
 import changban from './changban.js';
 import chibi from './chibi.js';
 
-export const MAPS = { hulao, changban, chibi, dingjun };
+export const MAPS = { hulao, changban, chibi, dingjun, ashkabus };
 /** The map the menus stand on (title / select) and free mode's default. */
 export const HOME = 'dingjun';
