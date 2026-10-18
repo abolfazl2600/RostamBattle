@@ -79,16 +79,16 @@ export function createHud(root, game, camera) {
   const nAct = 4;                                                    // actors lane: tags for hero-model actors (after the officers')
   root.innerHTML = `
     <div class="h-obj"><i>◆</i><b></b><small></small><span class="tm"><i>زمان</i><b></b></span><span class="go"><i class="ar"></i><em></em></span></div>
-    <div class="h-def"><i class="seal">دفاع</i><b></b><span></span><div class="bar"><em></em><i></i></div></div>
+    <div class="h-def"><i class="seal">د</i><b></b><span></span><div class="bar"><em></em><i></i></div></div>
     <div class="h-intro"><div class="zh"></div><i class="seal"></i><div class="en"></div>
       <div class="sub"></div>
       <div class="keys"></div></div>
-    <div class="h-target"><i class="seal">فرمانده</i><b></b><span></span><div class="bar"><em></em><i></i></div><strong>شکست خورد</strong></div>
+    <div class="h-target"><i class="seal">ف</i><b></b><span></span><div class="bar"><em></em><i></i></div><strong>شکست خورد</strong></div>
     <div class="h-boss"><div class="nm"><b></b><i class="seal"></i><span></span></div><div class="bar bhp"><em></em><i></i></div><div class="bar bpo"><i></i></div></div>
     <div class="h-map"><div class="morale"><i></i><span></span><span></span></div><canvas width="200" height="200"></canvas><i class="seal">${battleNameFa(MAP.name)}</i></div>
     <div class="h-offs">${'<div class="off"><i class="ld"></i><div class="mk">▼▼</div><div class="bd"><b></b><span></span><div class="bar"><em></em><i></i></div></div></div>'.repeat(nOff + nAct)}</div>
     <div class="h-chain"><div class="num"><b class="dig" data-t="0"><span>0</span></b><u></u><u></u><u></u></div><small><em>ترکیب</em>ضربات</small></div>
-    <div class="h-mile"><b class="dig" data-t="50"><span>50</span></b><i class="seal">شکست</i></div>
+    <div class="h-mile"><b class="dig" data-t="50"><span>50</span></b><i class="seal">ش</i></div>
     <div class="h-band"><p></p><small></small></div>
     <div class="h-dlg"><canvas width="20" height="20"></canvas><i class="dseal"></i><div><b><i></i> <span></span></b><p></p><small></small></div></div>
     <div class="h-copy"></div>
@@ -163,7 +163,9 @@ export function createHud(root, game, camera) {
   // dialogue: speaker {zh, en} (default: the hero); portrait = CHARS id (default: the hero's) or {seal: glyph} (story
   // NPCs: a carved name seal instead of a face). side 'wei' turns the panel's rule and name vermilion (enemy speaking).
   const say = (zh, en, dur = 300, speaker = game.hero.char.name, portrait = game.hero.char.id, side = 'shu') => {
-    S.dlg = { zh: battleTextFa(en, zh), en: '', f: game.frame, dur };
+    const hero = game.hero.char;
+    const spoken = en && en === hero.lines.intro.en ? OFFICERS_FA[hero.id].intro : battleTextFa(en, zh);
+    S.dlg = { zh: spoken, en: '', f: game.frame, dur };
     text(dlgN, battleNameFa(speaker)); text(dlgE, '');
     const seal = portrait.seal;
     if (!seal) paintPortrait(dlgCv, CHARS[portrait] || NPCS[portrait]);
@@ -393,7 +395,7 @@ export function createHud(root, game, camera) {
       }
       set(boss, 'opacity', ba && !inMusou ? (mt < 19 ? '0.3' : '1') : '0');
       if (ba) {
-        text(bossB, battleNameFa(ba.name)); text(bossSeal, 'نبرد'); text(bossS, 'فرمانده');
+        text(bossB, battleNameFa(ba.name)); text(bossSeal, 'ف'); text(bossS, 'فرمانده');
         const k = clamp01(ba.hp / ba.hpMax);
         if (f - S.bossF >= 20) S.bossLag = Math.max(k, S.bossLag - 0.006 * df);
         if (S.bossLag < k) S.bossLag = k;
