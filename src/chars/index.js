@@ -42,6 +42,8 @@
 import { ZHAOYUN_KIT } from './zhaoyun/kit.js';
 import { HUANGZHONG_KIT } from './huangzhong/kit.js';
 import { ZHANGFEI_KIT } from './zhangfei/kit.js';
+import { ROSTAM_KIT } from './rostam/kit.js';
+import { FACE as RS_FACE, PAL as RS_PAL } from './rostam/model.js';
 import { FACE as ZF_FACE, PAL as ZF_PAL } from './zhangfei/model.js';
 import { GUANYU_KIT } from './guanyu/kit.js';
 import { FACE as GY_FACE, PAL as GY_PAL } from './guanyu/model.js';
@@ -175,6 +177,27 @@ export const CHARS = {
     portrait: { face: ZF_FACE, pal: ZF_PAL },
     kit: ZHANGFEI_KIT,
   },
+  rostam: {
+    id: 'rostam', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'رستم', en: 'Rostam' }, courtesy: { zh: 'تهمتن', en: 'Tahamtan' }, seal: 'رستم',
+    title: { zh: 'جهان‌پهلوان ایران', en: 'Champion of Iran' }, motto: 'رستم دستان · پهلوان سیستان · پاسدار ایران',
+    // The actual, unchanged serpent spear: no legendary mace or alternate weapon exists yet.
+    weapon: { zh: 'نیزهٔ مارشکل بلند', en: 'Long Serpent Spear' },
+    bio: {
+      zh: ['رستم، فرزند زال و رودابه و پهلوان نامدار سیستان است.',
+        'این پیش‌نمایش نیزه و حرکات ژانگ فی را حفظ می‌کند؛ سلاح‌های شاهنامه‌ای هنوز پیاده نشده‌اند.'],
+      en: ['Rostam, son of Zal and Rudabeh, is the famed champion of Sistan.',
+        'This preview keeps Zhang Fei’s original serpent spear and moves; Rostam’s legendary weapons are not yet implemented.'],
+    },
+    stats: { atk: 5, def: 4, speed: 2, range: 4 }, musou: { zh: 'غرش تهمتن', en: 'Tahamtan’s Roar' }, accent: '#d4552a',
+    lines: {
+      intro: { zh: 'من رستم دستانم؛ برای ایران به میدان آمده‌ام!', en: 'I am Rostam, son of Dastan. I stand for Iran!' },
+      musouEnd: { zh: 'این میدان از دلاوران ایران خالی نمی‌ماند!', en: 'Iran’s champions shall not yield this field!' },
+      copy: ['رستم دستان', 'پهلوان ایران'],
+    },
+    portrait: { face: RS_FACE, pal: RS_PAL },
+    kit: ROSTAM_KIT,
+  },
   guanyu: {
     id: 'guanyu', side: { zh: '蜀', en: 'Shu Han' },
     name: { zh: '關羽', en: 'Guan Yu' }, courtesy: { zh: '雲長', en: 'Yunchang' }, seal: '武聖',
@@ -233,7 +256,7 @@ export const CHARS = {
     kit: LUBU_KIT,
   },
 };
-export const CHAR_ORDER = ['liubei', 'guanyu', 'zhangfei', 'zhaoyun', 'zhugeliang', 'huangzhong', 'lubu'].filter((id) => CHARS[id]);
+export const CHAR_ORDER = ['liubei', 'guanyu', 'zhangfei', 'zhaoyun', 'zhugeliang', 'huangzhong', 'lubu', 'rostam'].filter((id) => CHARS[id]);
 
 /** Paint a char's 20×20 portrait into a canvas (width/height 20; scale it with CSS, image-rendering: pixelated). */
 export function paintPortrait(cv, char) {

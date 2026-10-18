@@ -83,7 +83,7 @@ export function createSelect(el, flow) {
     updateOverflow();
     const c = CHARS[id], side = c.side || SHU;
     el.style.setProperty('--acc', c.accent);
-    $('.s-fac i').textContent = side === SHU ? 'شو' : (side.en === 'Warlords' ? 'جنگ‌سالاران' : 'شو'); $('.s-fac small').textContent = OFFICERS_FA[id].side;
+    $('.s-fac i').textContent = side.en === 'Iran' ? 'ایران' : (side.en === 'Warlords' ? 'جنگ‌سالاران' : 'شو'); $('.s-fac small').textContent = OFFICERS_FA[id].side;
     $('.s-name h1').textContent = officerFa(id);
     $('.s-seal').textContent = OFFICERS_FA[id].seal;
     $('.s-court').textContent = `نام ادبی: ${OFFICERS_FA[id].courtesy}`;
@@ -223,8 +223,9 @@ export function createSelect(el, flow) {
       $('.s-mode b').textContent = `${modeLabelFa(c)} · ${difficultyFa(d.id).name}`; $('.s-mode small').textContent = 'انتخاب جنگجو';
       // this visit's roster: the chapter's heroes (story) or everyone (trial / free); the focus stays if he is in it
       const want = (c.mode !== 'free' && chapter(c.ch).CH.heroes) || ALL;
-      ids = ALL.filter((id) => want.includes(id));
-      if (!ids.length) ids = ALL;                           // a chapter none of whose heroes exist yet (phase A): anyone
+      // Only the Ashkabus story exposes Rostam; Free Battle and trials retain the original seven.
+      ids = ALL.filter((id) => want.includes(id) && (id !== 'rostam' || (c.mode === 'story' && c.ch === 'ashkabus')));
+      if (!ids.length) ids = ALL.filter((id) => id !== 'rostam'); // legacy fallback excludes Rostam
       for (const id in cards) {                             // 鎖 on a locked officer, else his best rank here on this tier
         const lk = !!locked(id), r = (!lk && c.mode !== 'free' && best(c.ch, id, d.id)?.rank) || '', chip = cards[id].querySelector('.t-rk');
         cards[id].hidden = !ids.includes(id); cards[id].classList.toggle('lock', lk);
