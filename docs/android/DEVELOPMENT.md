@@ -29,7 +29,7 @@ The native project uses JDK 21, Android SDK 36, Gradle 8.14.3, AGP 8.13.0 and **
 
 The bundled WebView origin is fixed at `https://localhost`; do not change this after users have saved progress without a migration plan (#39). There is no `server.url`, remote live-reload URL, mixed content permission or unrestricted navigation allowlist. Production WebView debugging is disabled.
 
-Only the generated Android HTML drops Google Fonts stylesheet/preconnect requests. Existing system font fallbacks remain usable; bundled licensed Vazirmatn and offline device QA remain #35. The original browser HTML is unchanged.
+Only the generated Android HTML drops Google Fonts stylesheet/preconnect requests and adds the **bundled SIL-OFL-1.1 Vazirmatn variable font**, with the license shipped alongside the asset. The original browser HTML is unchanged. See [OFFLINE.md](OFFLINE.md). Full physical-device offline gameplay QA remains #35.
 
 The generated HTML has a restrictive local CSP: connections, fonts and modules use self; inline scripts/styles remain allowed because the existing import map, boot handler and UI use them. This is an explicit compatibility exception, not a claim of strict CSP. Objects, frames, form submissions and external base URLs are disabled. Data/blob images and blob media support local rendering. There is no unsafe-eval permission.
 
