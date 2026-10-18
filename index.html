@@ -1589,6 +1589,8 @@
   .touch-device #title.chp.story-chapters:not(.dif) .t-tag {
     display: none; /* stage character labels must not overlap chapter information */
   }
+  /* The menu drag adapter maps physical touch movement into the rotated surface's axes. */
+  .rotated-landscape .scr, .rotated-landscape #menu { touch-action: pinch-zoom; }
 </style>
 </head>
 <body class="inkhold">
