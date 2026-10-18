@@ -115,7 +115,7 @@ export function createTitle(el, flow) {
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>
         <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p>
-          <div class="t-cdetail" role="region" aria-label="جزئیات فصل" tabindex="0"><p class="t-cline"><b></b><small></small></p>
+          <div class="t-cdetail" role="region" aria-label="جزئیات گزینه" tabindex="0"><p class="t-cline"><b></b><small></small></p>
             <p class="t-cfoot"></p></div></div></div>
       <div class="t-dpanel"><nav class="t-menu t-dif">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${difficultyFa(d.id).name}<i class="t-lk">قفل</i><i class="t-rk"></i></b><small>درجهٔ سختی</small>${SWASH}</button>`).join('')}</nav>
         <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
