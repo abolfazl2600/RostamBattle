@@ -34,6 +34,16 @@ export function createTouchControls(touch, { isActive, musouReady = () => false 
     // Actions are driven by pointer edges, never compatibility clicks.
     b.addEventListener('click', (e) => e.preventDefault());
   }
+  // Only a gesture beginning on the canvas owns the camera; controls never bubble into it.
+  const canvas = document.getElementById('c');
+  canvas.addEventListener('pointerdown', (e) => { touch.claim(e, 'look'); });
+  canvas.addEventListener('pointermove', (e) => {
+    if (touch.pointers.get(e.pointerId)?.role !== 'look') return;
+    touch.look(e); e.preventDefault();
+  });
+  for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(name, (e) => {
+    if (touch.pointers.get(e.pointerId)?.role === 'look') touch.release(e.pointerId, name !== 'pointerup');
+  });
   const stick = root.querySelector('.touch-stick'), knob = stick.querySelector('i');
   let center = null;
   const clearStick = () => { center = null; knob.style.transform = 'translate(0px, 0px)'; stick.classList.remove('held'); };
