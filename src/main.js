@@ -25,6 +25,7 @@ import { viewport } from './core/viewport.js';
 import { vrng, rng } from './core/rng.js';
 import { emit, on, collect } from './core/events.js';
 import { createInput } from './core/input.js';
+import { createTouchControls } from './ui/touch-controls.js';
 import { createPost } from './post/post.js';
 import { createWorld } from './world/world.js';
 import { createHero, createHeroView } from './hero/hero.js';
@@ -125,7 +126,7 @@ function render(real) {
   world.update(dt, camRig.focus, game);
   musouView.update(dt);
   post.render(scene, camRig.camera, game.frame / 60, camRig.focus, vfx.flash);   // post-fx: DoF focus + screen flash
-  hud.update();
+  hud.update(); touchControls.update();
 }
 
 /** New battle: { char: CHARS id, mode: 'story' | 'trial' | 'free', ch: chapter / trial id, map: maps/index.js id (free;
@@ -194,9 +195,10 @@ const mNav = createNav({ move: (d) => { mFocus(mCur + d); sfx('move'); }, ok: mO
 const setPaused = (v) => {
   if (!v && state === 'battle' && viewport.blocked) v = true;
   input.reset();
-  paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample();   // sample(): drop keys pressed on the menu
+  paused = v; menu.hidden = !v; hudEl.hidden = v; input.sample(); touchControls.update();   // drop keys pressed on the menu
   if (v) { mFocus(0); armQuit(false); mNav.start(); } else mNav.stop();
 };
+const touchControls = createTouchControls(input.touch, { isActive: () => viewport.touch && !viewport.blocked && state === 'battle' && !paused });
 mBtns.forEach((b, i) => {
   b.addEventListener('pointerenter', () => { if (mCur !== i) { mFocus(i); sfx('move'); } });
   b.addEventListener('click', () => { mFocus(i); mOk(); });
