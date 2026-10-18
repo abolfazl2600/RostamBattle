@@ -6,7 +6,7 @@ import { OFFICERS_FA, CHAPTERS_FA, TRIALS_FA, DIFFICULTIES_FA, UNLOCKS_FA,
   officerFa, stageFa, difficultyFa, unlockFa, modeLabelFa } from '../src/i18n/fa.js';
 import { PROLOGUE_FA, EPILOGUE_FA, MAP_LABELS_FA, prologueFa, epilogueFa, mapLabelFa } from '../src/i18n/narrative-fa.js';
 import { BATTLE_NAMES_FA, BATTLE_EVENTS_FA, BATTLE_DIALOGUE_FA, HULAO_DIALOGUE_FA,
-  battleNameFa, battleTextFa } from '../src/i18n/battle-fa.js';
+  CHANGBAN_DIALOGUE_FA, CHIBI_DIALOGUE_FA, battleNameFa, battleTextFa } from '../src/i18n/battle-fa.js';
 
 const officers = ['liubei', 'guanyu', 'zhangfei', 'zhaoyun', 'zhugeliang', 'huangzhong', 'lubu'];
 const chapters = ['hulao', 'changban', 'chibi', 'dingjun'];
@@ -84,6 +84,7 @@ for (const [key, fa] of Object.entries(BATTLE_NAMES_FA)) {
 }
 for (const [kind, dictionary] of Object.entries({
   event: BATTLE_EVENTS_FA, dingjunDialogue: BATTLE_DIALOGUE_FA, hulaoDialogue: HULAO_DIALOGUE_FA,
+  changbanDialogue: CHANGBAN_DIALOGUE_FA, chibiDialogue: CHIBI_DIALOGUE_FA,
 })) {
   for (const [key, fa] of Object.entries(dictionary)) {
     required(fa, kind + ': ' + key);
@@ -101,6 +102,10 @@ function englishOnLine(line) {
   }
   return null;
 }
+assert.equal(Object.keys(BATTLE_DIALOGUE_FA).length, 33, 'Expected all Dingjun dialogue lines');
+assert.equal(Object.keys(HULAO_DIALOGUE_FA).length, 56, 'Expected all Hulao dialogue lines');
+assert.equal(Object.keys(CHANGBAN_DIALOGUE_FA).length, 69, 'Expected all Changban dialogue lines');
+assert.equal(Object.keys(CHIBI_DIALOGUE_FA).length, 56, 'Expected all Chibi dialogue lines');
 const eventKeys = new Set();
 for (const id of chapters) {
   const lines = readFileSync(new URL('../src/story/' + id + '.js', import.meta.url), 'utf8').split('\n');
