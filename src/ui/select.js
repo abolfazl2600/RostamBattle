@@ -17,6 +17,8 @@
 // 3D is render-only: view(scene, camera, focus, dt) runs after the gameplay camera rig while this screen is up; an
 // officer's model is built the first time he is focused (kept for the session).
 import * as THREE from 'three';
+import { viewport } from '../core/viewport.js';
+import { on } from '../core/events.js';
 import { CHARS, CHAR_ORDER, paintPortrait } from '../chars/index.js';
 import { sampleClip, POSE_SIZE } from '../hero/rig.js';
 import { createNav, sfx, inkWipe, wiping, afterWipe, stamp, clearStamp, replay } from './menu.js';
@@ -132,9 +134,21 @@ export function createSelect(el, flow) {
   });
   // drag anywhere off the panels turns the officer (eased back to the pose when let go)
   let drag = null, userYaw = 0;
-  el.addEventListener('pointerdown', (e) => { if (!e.target.closest('button, .s-info, .s-roster, .s-head')) drag = e.clientX; });
-  addEventListener('pointermove', (e) => { if (drag !== null) { userYaw += (e.clientX - drag) * 0.012; drag = e.clientX; } });
-  addEventListener('pointerup', () => { drag = null; });
+  const stopDrag = () => {
+    const p = drag; drag = null;
+    if (p) try { if (el.hasPointerCapture(p.id)) el.releasePointerCapture(p.id); } catch { /* detached */ }
+  };
+  el.addEventListener('pointerdown', (e) => {
+    if (el.hidden || drag || e.button !== 0 || e.target.closest('button, .s-info, .s-roster, .s-head, .ui-foot')) return;
+    drag = { id: e.pointerId, x: e.clientX }; el.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (drag?.id !== e.pointerId) return;
+    userYaw += (e.clientX - drag.x) * 0.012; drag.x = e.clientX; e.preventDefault();
+  });
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) el.addEventListener(type, (e) => { if (drag?.id === e.pointerId) stopDrag(); });
+  addEventListener('blur', stopDrag); addEventListener('pagehide', stopDrag); on('viewport', stopDrag);
+  if (viewport.touch) $('.ui-foot').textContent = 'شخصیت را لمس کنید، سپس شروع نبرد؛ برای چرخش مدل، روی میدان بکشید.';
 
   // ---- 3D: officer stage (render-only; an officer is meshed when first focused, kept for the session)
   let group = null, motes = null, t = 0, keyart = false, key = null, keyHome = null;
@@ -211,6 +225,6 @@ export function createSelect(el, flow) {
       show(ids.indexOf(cur), true); replay(el, 'in');       // header, roster and actions slide in as the ink uncovers
       nav.start();
     },
-    exit() { nav.stop(); drag = null; if (group) group.visible = false; if (key) key.position.copy(keyHome); },
+    exit() { stopDrag(); nav.stop(); drag = null; if (group) group.visible = false; if (key) key.position.copy(keyHome); },
   };
 }

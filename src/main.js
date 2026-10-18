@@ -45,7 +45,7 @@ import { spawnPoint, MAP } from './world/map.js';
 import { HOME } from './world/maps/index.js';
 import { createStory } from './story/index.js';
 import { CHAPTERS, chapter } from './story/chapters.js';
-import { createTitle, CONTROLS } from './ui/title.js';
+import { createTitle, controlRows } from './ui/title.js';
 import { createSelect } from './ui/select.js';
 import { createLoading } from './ui/loading.js';
 import { inkWipe, inkBoot, wiping, createNav, sfx, replay } from './ui/menu.js';
@@ -153,7 +153,7 @@ function startBattle({ char = 'zhaoyun', mode = 'free', ch, map } = {}) {
   game.actors.reset(); game.pickups.reset();                                              // C5
   game.story.reset({ mode, char, ch });                                                    // C2
   menu.querySelector('.t').innerHTML = `${officerFa(who.id)}<i>${OFFICERS_FA[who.id].seal}</i>`;
-  menu.querySelector('.sub').innerHTML = `نبرد متوقف شد · ${difficultyFa(game.diff.id).name}<small>برای ادامه کلید Escape را بزنید</small>`;
+  menu.querySelector('.sub').innerHTML = `نبرد متوقف شد · ${difficultyFa(game.diff.id).name}<small>${viewport.touch ? 'برای ادامه دکمهٔ ادامه را لمس کنید' : 'برای ادامه کلید Escape را بزنید'}</small>`;
   document.title = `${officerFa(who.id)} — وُکسل موسو`;
   emit('scenario', { mode, char, ch, map });
 }
@@ -170,7 +170,8 @@ on('viewport', () => {
 const $ = (id) => document.getElementById(id);
 const menu = $('menu'), hudEl = $('hud');
 // the bindings mid-battle too (critic: checking aim meant quitting the chapter)
-menu.querySelector('.hint').insertAdjacentHTML('beforebegin', `<table>${CONTROLS.map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>`);
+menu.querySelector('.hint').insertAdjacentHTML('beforebegin', `<table>${controlRows().map(([zh, en, kb, pad]) => `<tr><td>${zh}<small>${en}</small></td><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>`);
+if (viewport.touch) menu.querySelector('.hint').textContent = 'برای بازگشت، دوباره خروج از نبرد را تأیید کنید.';
 let paused = false, state = null, ctx = {}, hold = false;   // hold: loading, no renders until the new kit is compiled
 // pause menu: title-screen vocabulary (diamond + swash on the focused item), 繼續 focused on open, ↑/↓ / pad move,
 // Enter / A confirm, Esc / B resume. 撤退 asks once (確定撤退？), a second confirm ink-wipes to the title.

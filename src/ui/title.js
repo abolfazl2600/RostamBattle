@@ -23,6 +23,7 @@
 // Screen contract: createTitle(el, flow) → { enter(ctx), exit(), view } (src/main.js header). ctx.ch (result 繼續 after
 // a win, with ctx.mode): open straight on that mode's panel, focused on that chapter / trial.
 import * as THREE from 'three';
+import { viewport } from '../core/viewport.js';
 import { CHARS, CHAR_ORDER, paintPortrait } from '../chars/index.js';
 import { sampleClip, POSE_SIZE, CH } from '../hero/rig.js';
 import { heroLook } from '../hero/model.js';
@@ -64,6 +65,9 @@ export const CONTROLS = [
   ['توقف', 'مکث در نبرد', '<kbd>Esc</kbd> (رهاسازی نشانگر موس)', ''],
 ];
 
+const TOUCH_GUIDE = ['جوی‌استیک پایین چپ', 'دکمهٔ حمله؛ چند بار برای کمبو', 'دکمهٔ قدرتی پس از حمله', 'دکمهٔ پرش', 'دکمهٔ جاخالی', 'دکمهٔ موسو پس از روشن شدن', 'کشیدن انگشت روی میدان خالی', 'دکمهٔ هدف', 'نگه‌داشتن قدرتی، کشیدن برای هدف و رهاکردن برای شلیک', 'دکمهٔ توقف بالای صفحه'];
+export const controlRows = () => viewport.touch ? CONTROLS.map(([zh, en], i) => [zh, en, TOUCH_GUIDE[i], '']) : CONTROLS;
+
 // ---- key-art stage. Frame: origin at the HOME map's def.stage.title point (定軍山: up its pass road, north of the idle
 // gameplay hero), camera looks +Z (up the valley, into the low sun → rim light).
 // Cast offsets in metres (x + = world +X = screen-left), face = yaw (0 = facing +Z, π = facing the camera), pose = a held
@@ -101,12 +105,12 @@ const SMOKE = [[-17, 16, 40, 38, 24, 0.2, 0.1, 0.06, 0.9], [-26, 22, 46, 44, 26,
 
 export function createTitle(el, flow) {
   el.innerHTML = `
-    <div class="t-veil"></div>
+    <div class="t-veil"></div><button type="button" class="t-back">بازگشت</button>
     ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
       <div class="t-logo"><i class="t-seal">سه پادشاهی</i><h1 data-t="موسو"><span>موسو</span></h1>
         <p class="t-en"><span>وُکسل موسو</span></p></div>
-      <div class="t-press"><b>برای شروع یک کلید فشار دهید</b><small><kbd>Enter</kbd> ورود به بازی</small></div>
+      <div class="t-press"><b>${viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید'}</b><small>${viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی'}</small></div>
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>
         <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p><p class="t-cline"><b></b><small></small></p>
@@ -115,8 +119,8 @@ export function createTitle(el, flow) {
         <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
           <ul class="s-stats t-dbars">${[['فشار دشمن', 'تعداد مهاجمان'], ['فرماندهان', 'قدرت افسران'], ['آسیب', 'شدت ضربات']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
     </div>
-    <section class="t-ctl"><h2>راهنمای کنترل‌ها<small>کلیدهای صفحه‌کلید و دسته</small></h2>
-      <table>${CONTROLS.map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>
+    <section class="t-ctl"><h2>راهنمای کنترل‌ها<small>${viewport.touch ? 'کنترل لمسی در حالت افقی' : 'کلیدهای صفحه‌کلید و دسته'}</small></h2>
+      <table>${controlRows().map(([zh, en, kb, pad]) => `<tr><th>${zh}<small>${en}</small></th><td>${kb}</td><td class="pad">${pad}</td></tr>`).join('')}</table>
       <p>با تکرار حمله، ضربات پی‌درپی بزنید و میان زنجیره از حملهٔ قدرتی استفاده کنید. پس از پر شدن نوار طلایی، موسو را فعال کنید.</p></section>
     <section class="t-rec"></section>
     <footer class="ui-foot"></footer>`;
@@ -132,6 +136,7 @@ export function createTitle(el, flow) {
     if (!quiet) sfx('move');
   };
   const foot = () => {
+    if (viewport.touch) { $('.ui-foot').textContent = 'برای انتخاب، گزینه را لمس کنید؛ فهرست‌ها قابل پیمایش‌اند.'; return; }
     const what = dmode ? 'سختی' : cmode === 'story' ? 'فصل' : cmode === 'trial' ? 'چالش' : cmode ? 'میدان نبرد' : '';
     $('.ui-foot').innerHTML = panel ? `<span><kbd>Esc</kbd><kbd class="pad">B</kbd>بازگشت<small>قبلی</small></span>`
       : `<span><kbd>↑</kbd><kbd>↓</kbd>انتخاب ${what}<small>جابجایی</small></span><span><kbd>Enter</kbd><kbd class="pad">A</kbd>تأیید<small>انتخاب</small></span>`
@@ -264,11 +269,13 @@ export function createTitle(el, flow) {
   const point = (b, quiet) => (b.dataset.d ? dfocus(+b.dataset.d, quiet) : b.dataset.c ? cfocus(+b.dataset.c, quiet) : focus(+b.dataset.i, quiet));
 
   el.addEventListener('pointerover', (e) => {
+    if (e.pointerType === 'touch') return;
     const b = e.target.closest('.t-menu button');
     if (b && !pre && !panel && !busy) point(b);
   });
   el.addEventListener('click', (e) => {
     if (pre) return wake();
+    if (e.target.closest('.t-back')) return back();
     const b = e.target.closest('.t-menu button');
     if (b) { if (panel) back(); else { point(b, true); ok(); } }
     else if (panel && !e.target.closest('.t-ctl, .t-rec')) back();
