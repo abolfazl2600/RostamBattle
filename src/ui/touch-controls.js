@@ -1,6 +1,6 @@
 import { viewport, gamePoint, gameRect } from '../core/viewport.js';
 import { on } from '../core/events.js';
-import { TOUCH_ACTIONS } from './touch-layout.js';
+import { TOUCH_ACTIONS, touchButtonMarkup } from './touch-layout.js';
 
 export function joystickVector(dx, dy, radius, dead = 0.12) {
   const distance = Math.hypot(dx, dy), length = Math.min(1, distance / radius);
@@ -11,17 +11,21 @@ export function joystickVector(dx, dy, radius, dead = 0.12) {
 
 export function createTouchControls(touch, { isActive, pause, musouReady = () => false }) {
   const root = document.createElement('div'); root.id = 'touch-controls'; root.hidden = true;
-  root.innerHTML = '<div class="touch-stick" role="group" aria-label="جوی‌استیک حرکت"><i></i><span>حرکت</span></div>';
-  root.insertAdjacentHTML('beforeend', `<div class="touch-actions">${TOUCH_ACTIONS.map(({ id, label, column, row }) => `<button type="button" data-action="${id}" style="grid-column:${column};grid-row:${row}" aria-label="${label}" aria-pressed="false">${label}</button>`).join('')}</div>`);
-  root.insertAdjacentHTML('beforeend', '<button class="touch-pause" type="button" aria-label="توقف بازی">توقف Ⅱ</button>');
+  root.innerHTML = '<div class="touch-stick" role="group" aria-label="جوی‌استیک حرکت"><i></i></div>';
+  root.insertAdjacentHTML('beforeend', `<div class="touch-actions">${TOUCH_ACTIONS.map(touchButtonMarkup).join('')}</div>`);
+  root.insertAdjacentHTML('beforeend', '<button class="touch-pause" type="button" aria-label="توقف بازی"><span class="touch-pause-icon" aria-hidden="true"><i></i><i></i></span></button>');
   root.querySelector('.touch-pause').addEventListener('pointerdown', (e) => { e.stopPropagation(); });
   root.querySelector('.touch-pause').addEventListener('click', (e) => { e.stopPropagation(); touch.reset(); pause(); });
   document.getElementById('game-shell').append(root);
   const buttons = [...root.querySelectorAll('[data-action]')];
   const paintButtons = () => {
+    const heldActions = new Set();
+    for (const pointer of touch.pointers.values()) if (pointer.action) heldActions.add(pointer.action);
     for (const b of buttons) {
-      const held = [...touch.pointers.values()].some((p) => p.action === b.dataset.action);
-      b.classList.toggle('held', held); b.setAttribute('aria-pressed', String(held));
+      const held = heldActions.has(b.dataset.action);
+      if (b.classList.contains('held') === held) continue;
+      b.classList.toggle('held', held);
+      b.setAttribute('aria-pressed', String(held));
     }
   };
   touch.onReset(paintButtons);
@@ -68,13 +72,19 @@ export function createTouchControls(touch, { isActive, pause, musouReady = () =>
     if (touch.pointers.get(e.pointerId)?.role !== 'move') return;
     touch.release(e.pointerId, name !== 'pointerup'); clearStick();
   });
+  const musou = root.querySelector('[data-action="musou"]');
+  let lastReady = null;
   function update() {
     const active = isActive();
     if (!active && !root.hidden) touch.reset();
-    root.hidden = !active;
-    const ready = musouReady(), musou = buttons.find((b) => b.dataset.action === 'musou');
-    musou.classList.toggle('ready', ready); musou.setAttribute('aria-disabled', String(!ready));
-    musou.title = ready ? 'موسو آماده است' : 'موسو: پرشدن نوار طلایی و قرارگرفتن روی زمین لازم است';
+    if (root.hidden === active) root.hidden = !active;
+    const ready = active && musouReady();
+    if (ready !== lastReady) {
+      lastReady = ready;
+      musou.classList.toggle('ready', ready);
+      musou.setAttribute('aria-disabled', String(!ready));
+      musou.title = ready ? 'موسو آماده است' : 'موسو: پرشدن نوار طلایی و قرارگرفتن روی زمین لازم است';
+    }
   }
   on('viewport', update);
   return { update, root };
