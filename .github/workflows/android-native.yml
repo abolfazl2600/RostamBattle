@@ -46,6 +46,26 @@ jobs:
           chmod +x android/gradlew
           cd android
           ./gradlew --no-daemon assembleDebug assembleRelease
+      - name: Direct release must fail closed without secrets
+        shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE: ''
+          ROSTAM_DIRECT_STORE_PASSWORD: ''
+          ROSTAM_DIRECT_KEY_ALIAS: ''
+          ROSTAM_DIRECT_KEY_PASSWORD: ''
+        run: |
+          set -euo pipefail
+          cd android
+          if ./gradlew --no-daemon :app:assembleDirectRelease > /tmp/rostam-direct-unsigned-block.log 2>&1; then
+            echo "FAIL: Direct release succeeded with no signing credentials." >&2
+            exit 1
+          fi
+          if ! grep -Fq "Direct release signing is not configured." /tmp/rostam-direct-unsigned-block.log; then
+            echo "FAIL: Direct release did not fail for the expected missing-signing reason." >&2
+            tail -n 45 /tmp/rostam-direct-unsigned-block.log >&2
+            exit 1
+          fi
+          echo "PASS: Missing signing credentials block Direct release."
       - name: Verify Android application metadata
         shell: bash
         run: |
