@@ -5,12 +5,69 @@
 // from the records (UNLOCKS: open(rec)), so no flag can fall out of step with them. Story chapters open in order
 // (chapters.js chapterOpen, same records). Readers: the title (chapter / trial / difficulty panels, the 戰績 wall),
 // select (rank chips, locked officers), result (new records, unlock lines).
-const KEY = 'voxel-musou.save', ORDER = 'SABC';
+// Never change the origin, key or v:1 shape just to package the game for
+// Android: existing web saves must remain readable and updateable.
+export const PROGRESS_KEY = 'voxel-musou.save';
+const KEY = PROGRESS_KEY, ORDER = 'SABC';
+const empty = () => ({ v: 1, rec: {} });
+const object = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const valid = (s) => {
+  if (!object(s) || s.v !== 1 || !object(s.rec)) return false;
+  for (const [stage, chars] of Object.entries(s.rec)) {
+    if (stage === '__proto__' || !object(chars)) return false;
+    for (const [char, diffs] of Object.entries(chars)) {
+      if (char === '__proto__' || !object(diffs)) return false;
+      for (const [diff, r] of Object.entries(diffs)) {
+        if (diff === '__proto__' || !object(r) || !ORDER.includes(r.rank) ||
+          !Number.isFinite(r.time) || r.time < 0 ||
+          !Number.isFinite(r.kos) || r.kos < 0) return false;
+      }
+    }
+  }
+  return true;
+};
+
+// If localStorage is blocked, a win still survives other screens in this
+// session. If the saved schema is corrupt/newer than supported, never overwrite
+// its original bytes with an empty v1 save: only an explicit reset may delete it.
+let pending = null, writeProtected = false, status = 'unchecked', warned = false;
+function issue(reason) {
+  status = reason;
+  if (!warned) {
+    warned = true;
+    console.warn('Progress storage unavailable or incompatible: original saved data will not be overwritten (' + reason + ')');
+  }
+}
 const load = () => {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s?.v === 1 && s.rec) return s; } catch { /* no storage / bad JSON: a fresh save */ }
-  return { v: 1, rec: {} };
+  if (pending) return pending;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw == null) { status = 'empty'; return empty(); }
+    const s = JSON.parse(raw);
+    if (valid(s)) { status = 'persisted'; return s; }
+    writeProtected = true; issue('protected-save');
+  } catch {
+    writeProtected = true; issue('storage-unavailable');
+  }
+  return (pending = empty());
 };
 const better = (a, b) => ORDER.indexOf(a) < ORDER.indexOf(b);
+
+/** Inspect save health without reading or exposing record contents. */
+export function progressStatus() {
+  load();
+  return { mode: status, persistent: !writeProtected && !pending,
+    protected: writeProtected, key: KEY, version: 1 };
+}
+
+/** Destructive reset is only possible after the calling UI obtains explicit
+ * confirmation. No automatic migration or reset is run on Android update. */
+export function resetProgress(confirmed = false) {
+  if (confirmed !== true) return false;
+  try { localStorage.removeItem(KEY); } catch { return false; }
+  pending = null; writeProtected = false; status = 'empty'; warned = false;
+  return true;
+}
 
 /** The whole record tree { [stage]: { [char]: { [difficulty]: { rank, time, kos } } } } (read it, never write it). */
 export const records = () => load().rec;
@@ -51,6 +108,16 @@ export function record(stage, char, diff, { rank = 'C', time, kos }) {
   const row = (s.rec[stage] ||= {})[char] ||= {}, prev = row[diff] || null;
   const fresh = { rank: !!prev && better(rank, prev.rank), time: !!prev && time < prev.time, kos: !!prev && kos > prev.kos };
   row[diff] = prev ? { rank: fresh.rank ? rank : prev.rank, time: Math.min(time, prev.time), kos: Math.max(kos, prev.kos) } : { rank, time, kos };
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* no storage: the session still plays */ }
+  // Commit the complete v1 tree atomically. Keep a same-session copy if storage
+  // refuses the write, but never erase an unknown/corrupt or future-version save.
+  pending = s;
+  if (!writeProtected) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(s));
+      pending = null; status = 'persisted';
+    } catch {
+      writeProtected = true; issue('memory-only');
+    }
+  }
   return { first, prev, fresh, unlocks: UNLOCKS.filter((u) => u.open(s.rec) && !was.includes(u)) };
 }
