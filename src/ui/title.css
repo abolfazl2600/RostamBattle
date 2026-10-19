@@ -11,7 +11,7 @@
 }
 #title.menu-refined { --menu-top: max(12px, var(--safe-top)); --menu-right: max(16px, var(--safe-right));
   --menu-left: max(16px, var(--safe-left)); --menu-bottom: max(8px, var(--safe-bottom));
-  --menu-footer: 52px; color: var(--menu-text); font-family: var(--fa-font); }
+  color: var(--menu-text); font-family: var(--fa-font); }
 #title.menu-refined :is(h1,h2,h3,h4,p,b,strong,small,span,button,th,td,figcaption) {
   font-family: var(--fa-font); letter-spacing: 0; line-height: 1.7; overflow-wrap: break-word; }
 #title.menu-refined :is(h1,h2,h3,h4,p,button,th,td,figcaption) { direction: rtl; text-align: right; }
@@ -20,7 +20,7 @@
 #title.menu-refined .t-veil { background: linear-gradient(90deg,#100b08e8 0%,#100b08b8 38%,#100b0830 68%,transparent); }
 /* Main menu keeps an art column; nested chapter geometry retains its own contract. */
 #title.menu-refined:not(.chp):not(.dif) .t-band {
-  top: var(--menu-top); bottom: calc(var(--menu-bottom) + var(--menu-footer) + 10px);
+  top: var(--menu-top); bottom: calc(var(--menu-bottom) + 10px);
   left: var(--menu-left); width: clamp(280px,calc(47 * var(--game-vw)),580px);
   max-width: calc(100% - var(--menu-left) - var(--menu-right)); padding: 0; overflow: hidden; gap: 8px; box-sizing: border-box; }
 #title.menu-refined .t-logo, #title.menu-refined:not(.pre) .t-logo { display: block; min-height: 0; width: 100%; }
@@ -51,18 +51,13 @@
 #title.menu-refined .t-menu button[aria-disabled="true"] { opacity: 1; border-style: dashed; }
 #title.menu-refined .t-menu button[aria-disabled="true"] :is(b,small) { opacity: 1; color: var(--menu-secondary); }
 #title.menu-refined .t-menu button:focus-visible { outline: 3px solid var(--menu-gold); outline-offset: -3px; }
-/* Explicit top/back and bottom/footer lanes keep all scrollable content clear of controls. */
-#title.menu-refined > .ui-foot { left: var(--menu-left) !important; right: var(--menu-right); bottom: var(--menu-bottom);
-  height: var(--menu-footer); box-sizing: border-box; padding: 6px 10px; z-index: 6; margin: 0; display: flex;
-  align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 4px 16px; direction: rtl;
-  background: #21170ff2; border: 1px solid #77603e; border-image: none; color: var(--menu-secondary); font: 500 12px/1.6 var(--fa-font); }
-#title.menu-refined > .ui-foot span { gap: 4px; white-space: normal; }
+/* Keep the top back button visible while scroll panels use the recovered footer space. */
 #title.menu-refined .t-back { display: none; }
 #title.menu-refined:is(.ctl,.rec,.chp,.dif) .t-back { display: block; position: absolute; z-index: 8; top: var(--menu-top); right: var(--menu-right);
   min-height: 48px; min-width: 96px; padding: 6px 18px; border: 1px solid var(--menu-gold); border-radius: 4px;
   background: var(--menu-panel); color: var(--menu-text); font: 700 15px/1.6 var(--fa-font); cursor: pointer; }
 #title.menu-refined:is(.ctl,.rec) :is(.t-band,.t-tag,.t-status) { display: none; }
-#title.menu-refined .title-panel { position: absolute; z-index: 5; inset: calc(var(--menu-top) + 58px) var(--menu-right) calc(var(--menu-bottom) + var(--menu-footer) + 10px) var(--menu-left);
+#title.menu-refined .title-panel { position: absolute; z-index: 5; inset: calc(var(--menu-top) + 58px) var(--menu-right) calc(var(--menu-bottom) + 10px) var(--menu-left);
   width: auto; max-width: 1100px; max-height: none; height: auto; margin: 0 auto; box-sizing: border-box; padding: 18px 22px 30px;
   transform: none; opacity: 1; pointer-events: auto; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
   touch-action: pan-y; direction: rtl; background: var(--menu-panel); border: 1px solid var(--menu-border);
@@ -148,7 +143,6 @@
 .settings-card :is(select,button) { background: var(--menu-card); color: var(--menu-text); }
 .settings-card .settings-pad-help { color: var(--menu-secondary); }
 @container game-surface (max-height: 440px) {
-  #title.menu-refined { --menu-footer: 40px; }
   .record-grid { grid-template-columns: 1fr; }
   #title.menu-refined .brand-kicker { display: none; }
   #title.menu-refined .t-logo h1 { font-size: 30px; line-height: 1.4; }
