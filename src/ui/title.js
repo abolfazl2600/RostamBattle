@@ -129,7 +129,7 @@ export function createTitle(el, flow) {
     </div>
     <section class="t-ctl title-panel" role="region" aria-labelledby="controls-heading" tabindex="0" hidden></section>
     <section class="t-rec title-panel" role="region" aria-labelledby="records-heading" tabindex="0" hidden></section>
-    <footer class="ui-foot"></footer>`;
+    `;
   const $ = (s) => el.querySelector(s), btns = [...el.querySelectorAll('.t-main button')], dbtns = [...el.querySelectorAll('.t-dif button')];
   const tags = [...el.querySelectorAll('.t-tag')];
   let cur = 0, pre = true, panel = null, busy = false, dcur = 1, dmode = null;   // panel: 'ctl' | 'rec' overlay; dmode: the mode picked, while the difficulty panel is up
@@ -143,14 +143,6 @@ export function createTitle(el, flow) {
     if (buttonBox.top < listBox.top) list.scrollTop -= listBox.top - buttonBox.top;
     else if (buttonBox.bottom > listBox.bottom) list.scrollTop += buttonBox.bottom - listBox.bottom;
     if (!quiet) sfx('move');
-  };
-  const foot = () => {
-    if (panel) { $('.ui-foot').innerHTML = viewport.touch
-      ? 'برای دیدن همهٔ موارد، داخل پنل پیمایش کنید؛ «بازگشت» بالای صفحه است.'
-      : '<span><kbd>↑</kbd><kbd>↓</kbd> پیمایش</span><span><kbd>Esc</kbd> / <bdi dir="ltr">B</bdi> بازگشت</span>'; return; }
-    if (viewport.touch) { $('.ui-foot').textContent = 'گزینه را لمس کنید؛ فهرست‌ها قابل پیمایش‌اند.'; return; }
-    $('.ui-foot').innerHTML = '<span><kbd>↑</kbd><kbd>↓</kbd> انتخاب</span><span><kbd>Enter</kbd> / <bdi dir="ltr">A</bdi> تأیید</span>'
-      + (cmode || dmode ? '<span><kbd>Esc</kbd> بازگشت</span>' : '');
   };
   /** Why entry i of the panel's list can't be picked yet ([zh, en]), or null: a story chapter waits on the one before
    *  it, a trial on the records (progress.js UNLOCKS); battlefields are all open. */
@@ -185,7 +177,7 @@ export function createTitle(el, flow) {
   /** Open the chapter panel for mode ('story' | 'trial' | 'free'; null closes it), focused on entry id (default: story
    *  = the furthest open chapter, else the first). */
   const setCh = (mode, id) => {
-    cmode = mode; el.classList.toggle('chp', !!mode); el.classList.toggle('story-chapters', mode === 'story'); foot();
+    cmode = mode; el.classList.toggle('chp', !!mode); el.classList.toggle('story-chapters', mode === 'story');
     if (mode) {
       const story = mode === 'story';
       list = LISTS[mode];
@@ -216,7 +208,6 @@ export function createTitle(el, flow) {
     panel = v; el.classList.toggle('ctl', v === 'ctl'); el.classList.toggle('rec', v === 'rec');
     $('.t-band').inert = !!v;
     $('.t-ctl').hidden = v !== 'ctl'; $('.t-rec').hidden = v !== 'rec';
-    foot();
     if (v === 'rec') wall();
     if (v) { const region = v === 'ctl' ? $('.t-ctl') : $('.t-rec'); region.scrollTop = 0; region.focus({ preventScroll: true }); }
     else if (active) btns[cur].focus({ preventScroll: true });
@@ -237,7 +228,7 @@ export function createTitle(el, flow) {
     if (!quiet) sfx('move');
   };
   const setDif = (mode) => {
-    dmode = mode; el.classList.toggle('dif', !!mode); foot();
+    dmode = mode; el.classList.toggle('dif', !!mode);
     if (!mode) return;
     dbtns.forEach((b, k) => {                             // each tier: its lock, the best rank won on it for this pick
       const r = (mode !== 'free' && best(list[cpick].CH.id, null, DIFFS[k].id)?.rank) || '', chip = b.querySelector('.t-rk');
@@ -331,8 +322,7 @@ export function createTitle(el, flow) {
   on('viewport', () => {
     if (guideTouch !== viewport.touch) { guideTouch = viewport.touch; guide(); }
     $('.t-press b').textContent = viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید';
-    $('.t-press small').innerHTML = viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی';
-    foot(); measure();
+    $('.t-press small').innerHTML = viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی'; measure();
   }); document.fonts?.ready.then(measure);
 
   function bannerTex(glyph) {
