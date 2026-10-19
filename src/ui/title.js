@@ -191,7 +191,7 @@ export function createTitle(el, flow) {
       list = LISTS[mode];
       $('.t-chs').innerHTML = list.map(({ CH }, i) => {
         const meta = story ? storyMenuFa(CH.id) : stageFa(CH.id), closed = !!lockOf(i);
-        return `<button data-c="${i}" aria-disabled="${closed}" class="${closed ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${meta.num}</em>` : ''}${meta.title}<i class="t-lk">${story ? 'به‌زودی' : 'قفل'}</i>${mode === 'free' || (story && closed) ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? closed ? 'این فصل هنوز منتشر نشده است' : meta.description : meta.description}</small>${SWASH}</button>`;
+        return `<button data-c="${i}" aria-disabled="${closed}" class="${closed ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${meta.num}</em>` : ''}${meta.title}<i class="t-lk">${story ? 'به‌زودی' : 'قفل'}</i>${mode === 'free' || (story && closed) ? '' : rk(best(CH.id)?.rank)}</b><small>${story && closed ? 'این فصل هنوز منتشر نشده است' : meta.description}</small>${SWASH}</button>`;
       }).join('');
       cbtns = [...el.querySelectorAll('.t-chs button')];
       let k = list.findIndex((m) => m.CH.id === id);

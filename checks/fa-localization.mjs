@@ -179,7 +179,7 @@ assert(titleSource.includes('id="difficulty-heading">انتخاب درجهٔ س�
 assert(!titleSource.includes('سختی بازی<small>'), 'Old duplicate heading removed');
 assert(titleSource.includes('aria-labelledby="difficulty-heading"'), 'Difficulty region has accessible title');
 assert(titleSource.includes('این فصل هنوز منتشر نشده است'), 'Locked chapter label remains intact');
-assert(titleSource.includes('class="t-dif"'), 'Difficulty buttons remain in original selector');
+assert(titleSource.includes('class="t-menu t-dif"'), 'Difficulty buttons remain in original selector');
 const difficultyStyles = readFileSync(new URL('../src/ui/title.css', import.meta.url), 'utf8');
 assert(difficultyStyles.includes('.touch-device #title.menu-refined.dif > .ui-foot'));
 assert(difficultyStyles.includes('display: none !important; /* #86:'));
