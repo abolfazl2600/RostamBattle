@@ -6,17 +6,17 @@
 </p>
 
 <p align="center">
-  <a href="https://abolfazl2600.github.io/voxel-game/">
+  <a href="https://abolfazl2600.github.io/RostamBattle/">
     <img src="media/promo.gif" alt="نمایی از مبارزات بازی نبرد رستم" width="100%">
   </a>
 </p>
 
 <p align="center">
-  <strong><a href="https://abolfazl2600.github.io/voxel-game/">اجرای آنلاین بازی (GitHub Pages)</a></strong>
+  <strong><a href="https://abolfazl2600.github.io/RostamBattle/">اجرای آنلاین بازی (GitHub Pages)</a></strong>
   &nbsp; | &nbsp;
   <a href="media/promo.mp4">ویدئوی بازی</a>
   &nbsp; | &nbsp;
-  <a href="https://github.com/abolfazl2600/voxel-game/issues">پیگیری توسعه در GitHub</a>
+  <a href="https://github.com/abolfazl2600/RostamBattle/issues">پیگیری توسعه در GitHub</a>
 </p>
 
 > **وضعیت پروژه — ۱۹ اکتبر ۲۰۲۶:** نسخهٔ **وب قابل بازی** است و زیرساخت کنترل لمسی، چیدمان Landscape و فارسی‌سازی پایه دارد؛ اما اقتباس نهایی شاهنامه **هنوز ساخته نشده** است. فصل «جنگ ایران و اشکبوس» فعلاً یک پیش‌نمایش موقت با دارایی‌های داستان قبلی است. تست نهایی موبایل روی دستگاه واقعی و انتشار APK / Google Play نیز تکمیل نشده‌اند.
@@ -67,7 +67,7 @@
 ### فاز ۱ — پایهٔ بازی و فارسی‌سازی
 
 - [x] پیاده‌سازی هستهٔ نبرد وکسلی، شخصیت‌های اولیه، چهار میدان تاریخی، چالش‌ها، رکوردها و ذخیرهٔ محلی.
-- [x] پیاده‌سازی لایهٔ فارسی و RTL برای بخش‌های اصلی منو، HUD، نتایج، شخصیت‌ها و متن‌های داستانی موجود ([PR #1](https://github.com/abolfazl2600/voxel-game/pull/1)).
+- [x] پیاده‌سازی لایهٔ فارسی و RTL برای بخش‌های اصلی منو، HUD، نتایج، شخصیت‌ها و متن‌های داستانی موجود ([PR #1](https://github.com/abolfazl2600/RostamBattle/pull/1)).
 - [x] افزودن فونت فارسی «وزیرمتن» و بهبود خوانایی متن‌ها در رابط فعلی.
 - [x] انتشار نسخهٔ وب و درج لینک اجرای آنلاین بازی.
 - [ ] بازبینی نهایی متن‌های باقی‌مانده، شکست خطوط و چیدمان فارسی در همهٔ صفحه‌ها؛ **فارسی‌سازی صددرصدی هنوز تأیید نشده است**.
@@ -76,42 +76,42 @@
 
 ### فاز ۲ — تجربهٔ لمسی موبایل و تبلت (وب)
 
-- [x] تشخیص دستگاه لمسی و یکپارچه‌سازی ورودی Touch با ماوس/صفحه‌کلید/دسته ([#2](https://github.com/abolfazl2600/voxel-game/issues/2)، [#3](https://github.com/abolfazl2600/voxel-game/issues/3)).
-- [x] جوی‌استیک مجازی با حرکت آنالوگ و چندلمسی ([#4](https://github.com/abolfazl2600/voxel-game/issues/4)).
-- [x] دکمه‌های حمله، حملهٔ قدرتی، پرش، جاخالی، Musou و هدف‌گیری؛ لمس نگه‌داشته‌شده و ترکیب ضربات ([#5](https://github.com/abolfazl2600/voxel-game/issues/5)).
-- [x] کنترل مستقل دوربین با کشیدن انگشت و نشانه‌گیری کمان ([#6](https://github.com/abolfazl2600/voxel-game/issues/6)).
-- [x] HUD سازگار با Landscape، ناحیه‌های امن و توقف بازی ([#7](https://github.com/abolfazl2600/voxel-game/issues/7)).
-- [x] ناوبری لمسی منوها، انتخاب شخصیت و نمایش نتیجه؛ بهبود پیمایش منوهای فشرده ([#8](https://github.com/abolfazl2600/voxel-game/issues/8)، [PR #30](https://github.com/abolfazl2600/voxel-game/pull/30)، [PR #38](https://github.com/abolfazl2600/voxel-game/pull/38)).
-- [x] پروفایل‌های کیفیت گرافیکی موبایل، رزولوشن تطبیقی و بازیابی گرافیک/صدا پس از وقفه ([#9](https://github.com/abolfazl2600/voxel-game/issues/9)، [#10](https://github.com/abolfazl2600/voxel-game/issues/10)).
-- [x] نمایش خودکار سطح بازی به صورت تمام‌صفحهٔ افقی با چرخش نرم‌افزاری ۹۰ درجه هنگام عمودی‌بودن دستگاه؛ بدون نیاز به پیام «گوشی را بچرخانید» ([#31](https://github.com/abolfazl2600/voxel-game/issues/31)).
-- [x] نگارش راهنمای فارسی و چک‌لیست آزمایش موبایل ([PR #24](https://github.com/abolfazl2600/voxel-game/pull/24)).
-- [ ] **تأیید واقعی روی Android Chrome و iPhone Safari:** یک نبرد کامل، چندلمسی، صدا، FPS، گرما، Safe Area، چرخش و وقفه‌ها ([#11](https://github.com/abolfazl2600/voxel-game/issues/11)).
+- [x] تشخیص دستگاه لمسی و یکپارچه‌سازی ورودی Touch با ماوس/صفحه‌کلید/دسته ([#2](https://github.com/abolfazl2600/RostamBattle/issues/2)، [#3](https://github.com/abolfazl2600/RostamBattle/issues/3)).
+- [x] جوی‌استیک مجازی با حرکت آنالوگ و چندلمسی ([#4](https://github.com/abolfazl2600/RostamBattle/issues/4)).
+- [x] دکمه‌های حمله، حملهٔ قدرتی، پرش، جاخالی، Musou و هدف‌گیری؛ لمس نگه‌داشته‌شده و ترکیب ضربات ([#5](https://github.com/abolfazl2600/RostamBattle/issues/5)).
+- [x] کنترل مستقل دوربین با کشیدن انگشت و نشانه‌گیری کمان ([#6](https://github.com/abolfazl2600/RostamBattle/issues/6)).
+- [x] HUD سازگار با Landscape، ناحیه‌های امن و توقف بازی ([#7](https://github.com/abolfazl2600/RostamBattle/issues/7)).
+- [x] ناوبری لمسی منوها، انتخاب شخصیت و نمایش نتیجه؛ بهبود پیمایش منوهای فشرده ([#8](https://github.com/abolfazl2600/RostamBattle/issues/8)، [PR #30](https://github.com/abolfazl2600/RostamBattle/pull/30)، [PR #38](https://github.com/abolfazl2600/RostamBattle/pull/38)).
+- [x] پروفایل‌های کیفیت گرافیکی موبایل، رزولوشن تطبیقی و بازیابی گرافیک/صدا پس از وقفه ([#9](https://github.com/abolfazl2600/RostamBattle/issues/9)، [#10](https://github.com/abolfazl2600/RostamBattle/issues/10)).
+- [x] نمایش خودکار سطح بازی به صورت تمام‌صفحهٔ افقی با چرخش نرم‌افزاری ۹۰ درجه هنگام عمودی‌بودن دستگاه؛ بدون نیاز به پیام «گوشی را بچرخانید» ([#31](https://github.com/abolfazl2600/RostamBattle/issues/31)).
+- [x] نگارش راهنمای فارسی و چک‌لیست آزمایش موبایل ([PR #24](https://github.com/abolfazl2600/RostamBattle/pull/24)).
+- [ ] **تأیید واقعی روی Android Chrome و iPhone Safari:** یک نبرد کامل، چندلمسی، صدا، FPS، گرما، Safe Area، چرخش و وقفه‌ها ([#11](https://github.com/abolfazl2600/RostamBattle/issues/11)).
 
 [راهنمای پیاده‌سازی لمسی](docs/MOBILE_IMPLEMENTATION.md) · [ماتریس تست دستگاه واقعی](docs/MOBILE_QA.md)
 
 ### فاز ۳ — تبدیل روایت بازی به شاهنامه
 
-- [x] افزودن پنج عنوان جدید به منوی داستان و تعیین وضعیت «به‌زودی» برای چهار فصل ([#14](https://github.com/abolfazl2600/voxel-game/issues/14)).
-- [x] ایجاد فصل قابل بازیِ **موقت** «جنگ ایران و اشکبوس» با شناسه و رکورد مستقل، بدون حذف محتوا و ذخیره‌های قبلی ([PR #23](https://github.com/abolfazl2600/voxel-game/pull/23)).
-- [x] بررسی متن شاهنامه و تدوین گزینه‌های طراحیِ رستم، اشکبوس، اسب، سپاه، میدان و روایت ([PR #25](https://github.com/abolfazl2600/voxel-game/pull/25))؛ **این سند هنوز تصویب نهایی طراحی نیست**.
+- [x] افزودن پنج عنوان جدید به منوی داستان و تعیین وضعیت «به‌زودی» برای چهار فصل ([#14](https://github.com/abolfazl2600/RostamBattle/issues/14)).
+- [x] ایجاد فصل قابل بازیِ **موقت** «جنگ ایران و اشکبوس» با شناسه و رکورد مستقل، بدون حذف محتوا و ذخیره‌های قبلی ([PR #23](https://github.com/abolfazl2600/RostamBattle/pull/23)).
+- [x] بررسی متن شاهنامه و تدوین گزینه‌های طراحیِ رستم، اشکبوس، اسب، سپاه، میدان و روایت ([PR #25](https://github.com/abolfazl2600/RostamBattle/pull/25))؛ **این سند هنوز تصویب نهایی طراحی نیست**.
 - [ ] تأیید دامنهٔ نسخهٔ اول داستان، شخصیت‌ها، شیوهٔ مبارزه و نسبت اقتباس با شاهنامه.
 - [ ] ساخت مدل، ظاهر، پرتره، سلاح و حرکات اختصاصی **رستم**.
 - [ ] ساخت **اشکبوس** به‌عنوان باس مستقل و تعریف الگوی حملات و رویارویی نهایی.
 - [ ] ساخت سپاه و میدان ایرانی، مقدمه، دیالوگ‌ها، هدف‌های مأموریت و پایان فارسی مستقل.
-- [ ] جایگزین‌کردن پیش‌نمایش موقت با فصل واقعی «جنگ ایران و اشکبوس»، همراه با حفظ سازگاری رکوردها و کنترل‌های لمسی ([#12](https://github.com/abolfazl2600/voxel-game/issues/12)).
+- [ ] جایگزین‌کردن پیش‌نمایش موقت با فصل واقعی «جنگ ایران و اشکبوس»، همراه با حفظ سازگاری رکوردها و کنترل‌های لمسی ([#12](https://github.com/abolfazl2600/RostamBattle/issues/12)).
 - [ ] طراحی و ساخت چهار فصل بعدی شاهنامه؛ تا زمان انتشار، کارت‌های آن‌ها بسته بمانند.
 
-[سند بررسی طراحی فصل اول](docs/ASHKABUS_DESIGN_REVIEW.md) · [Issue اصلی داستان #12](https://github.com/abolfazl2600/voxel-game/issues/12)
+[سند بررسی طراحی فصل اول](docs/ASHKABUS_DESIGN_REVIEW.md) · [Issue اصلی داستان #12](https://github.com/abolfazl2600/RostamBattle/issues/12)
 
 ### فاز ۴ — نسخهٔ Android، APK و Google Play
 
-- [x] تدوین **پیش‌نویس** جدول تصمیم‌های انتشار و پیش‌نیازهای Android ([PR #51](https://github.com/abolfazl2600/voxel-game/pull/51))؛ تأیید تصمیم‌ها هنوز انجام نشده است.
-- [ ] تکمیل نام ناشر، حساب Play، ثبت‌پذیری `applicationId` مصوب، بازار و مدل انتشار ([#32](https://github.com/abolfazl2600/voxel-game/issues/32)).
-- [ ] بسته‌بندی نسخهٔ وب با Capacitor و آماده‌سازی پروژهٔ Android، محتوای آفلاین، Landscape، چرخهٔ عمر و ذخیره‌ها ([#33](https://github.com/abolfazl2600/voxel-game/issues/33) تا [#39](https://github.com/abolfazl2600/voxel-game/issues/39)).
-- [ ] بررسی سازگاری دستگاه واقعی، WebGL2، امنیت، مجوزها و هویت بصری ([#40](https://github.com/abolfazl2600/voxel-game/issues/40) تا [#42](https://github.com/abolfazl2600/voxel-game/issues/42)).
-- [ ] تعیین راهبرد امضا و ساخت **APK قابل نصب مستقیم** و **AAB ویژهٔ Play**؛ افزودن خروجی‌های مجزا به GitHub Actions ([#43](https://github.com/abolfazl2600/voxel-game/issues/43) تا [#46](https://github.com/abolfazl2600/voxel-game/issues/46)).
-- [ ] ممیزی داده‌ها و مجوز محتوا، Privacy Policy، سیاست‌های Google Play و آماده‌سازی صفحهٔ فروشگاه ([#47](https://github.com/abolfazl2600/voxel-game/issues/47) تا [#52](https://github.com/abolfazl2600/voxel-game/issues/52)).
-- [ ] تست داخلی/بسته، عبور از معیار پذیرش و انتشار مرحله‌ای APK و Google Play ([#53](https://github.com/abolfazl2600/voxel-game/issues/53) تا [#55](https://github.com/abolfazl2600/voxel-game/issues/55)).
+- [x] تدوین **پیش‌نویس** جدول تصمیم‌های انتشار و پیش‌نیازهای Android ([PR #51](https://github.com/abolfazl2600/RostamBattle/pull/51))؛ تأیید تصمیم‌ها هنوز انجام نشده است.
+- [ ] تکمیل نام ناشر، حساب Play، ثبت‌پذیری `applicationId` مصوب، بازار و مدل انتشار ([#32](https://github.com/abolfazl2600/RostamBattle/issues/32)).
+- [ ] بسته‌بندی نسخهٔ وب با Capacitor و آماده‌سازی پروژهٔ Android، محتوای آفلاین، Landscape، چرخهٔ عمر و ذخیره‌ها ([#33](https://github.com/abolfazl2600/RostamBattle/issues/33) تا [#39](https://github.com/abolfazl2600/RostamBattle/issues/39)).
+- [ ] بررسی سازگاری دستگاه واقعی، WebGL2، امنیت، مجوزها و هویت بصری ([#40](https://github.com/abolfazl2600/RostamBattle/issues/40) تا [#42](https://github.com/abolfazl2600/RostamBattle/issues/42)).
+- [ ] تعیین راهبرد امضا و ساخت **APK قابل نصب مستقیم** و **AAB ویژهٔ Play**؛ افزودن خروجی‌های مجزا به GitHub Actions ([#43](https://github.com/abolfazl2600/RostamBattle/issues/43) تا [#46](https://github.com/abolfazl2600/RostamBattle/issues/46)).
+- [ ] ممیزی داده‌ها و مجوز محتوا، Privacy Policy، سیاست‌های Google Play و آماده‌سازی صفحهٔ فروشگاه ([#47](https://github.com/abolfazl2600/RostamBattle/issues/47) تا [#52](https://github.com/abolfazl2600/RostamBattle/issues/52)).
+- [ ] تست داخلی/بسته، عبور از معیار پذیرش و انتشار مرحله‌ای APK و Google Play ([#53](https://github.com/abolfazl2600/RostamBattle/issues/53) تا [#55](https://github.com/abolfazl2600/RostamBattle/issues/55)).
 
 ### ساخت APK مستقیم (مرحله فنی، هنوز منتشرنشده)
 
@@ -119,7 +119,7 @@
 
 [راهنمای کامل تولید کلید، امضای APK و آزمون نصب/ارتقا](docs/android/DIRECT_APK.md) · [سیاست دو کلید Direct/Play](docs/android/SIGNING_STRATEGY.md).
 
-**مرجع دقیق ترتیب ۲۲ کار اندروید:** [نقشهٔ راه Android — Issue #56](https://github.com/abolfazl2600/voxel-game/issues/56) · [تصمیم‌های باز](docs/android/RELEASE_DECISIONS.md). ساخت فایل تصمیم‌ها به معنی وجود پروژهٔ Android یا انتشار نسخهٔ نهایی نیست.
+**مرجع دقیق ترتیب ۲۲ کار اندروید:** [نقشهٔ راه Android — Issue #56](https://github.com/abolfazl2600/RostamBattle/issues/56) · [تصمیم‌های باز](docs/android/RELEASE_DECISIONS.md). ساخت فایل تصمیم‌ها به معنی وجود پروژهٔ Android یا انتشار نسخهٔ نهایی نیست.
 
 ## راهنمای کنترل
 
@@ -136,7 +136,7 @@
 | کمان هوانگ ژونگ | نگه‌داشتن `K`، سپس رهاکردن | نگه‌داشتن قدرتی، نشانه‌گیری با کشیدن و رهاکردن |
 | توقف | `Esc` | دکمهٔ توقف بالای صفحه |
 
-دستهٔ بازی نیز پشتیبانی می‌شود. برای کمبو، چند حملهٔ متوالی بزنید و سپس قدرتی را اجرا کنید؛ برای مثال `J → J → K`. در گوشی، می‌توانید هم‌زمان حرکت کنید، دوربین را بچرخانید و حمله کنید. اگر گوشی عمودی نگه داشته شود، **خود محیط بازی می‌چرخد** و به‌صورت افقی نمایش داده می‌شود. نتیجهٔ آزمایش روی دستگاه واقعی هنوز در [#11](https://github.com/abolfazl2600/voxel-game/issues/11) باز است.
+دستهٔ بازی نیز پشتیبانی می‌شود. برای کمبو، چند حملهٔ متوالی بزنید و سپس قدرتی را اجرا کنید؛ برای مثال `J → J → K`. در گوشی، می‌توانید هم‌زمان حرکت کنید، دوربین را بچرخانید و حمله کنید. اگر گوشی عمودی نگه داشته شود، **خود محیط بازی می‌چرخد** و به‌صورت افقی نمایش داده می‌شود. نتیجهٔ آزمایش روی دستگاه واقعی هنوز در [#11](https://github.com/abolfazl2600/RostamBattle/issues/11) باز است.
 
 ## اجرا روی رایانه
 
@@ -174,12 +174,12 @@ media/           تصویر و ویدئوی معرفی
 
 ## اسناد و مشارکت
 
-- [Issueهای پروژه و پیگیری کارها](https://github.com/abolfazl2600/voxel-game/issues)
+- [Issueهای پروژه و پیگیری کارها](https://github.com/abolfazl2600/RostamBattle/issues)
 - [بررسی سناریوی شاهنامه و فصل اشکبوس](docs/ASHKABUS_DESIGN_REVIEW.md)
 - [راهنمای پیاده‌سازی کنترل لمسی](docs/MOBILE_IMPLEMENTATION.md)
 - [چک‌لیست تأیید موبایل](docs/MOBILE_QA.md)
-- [نقشهٔ راه انتشار Android](https://github.com/abolfazl2600/voxel-game/issues/56)
-- [تاریخچهٔ تغییرات و Pull Requestها](https://github.com/abolfazl2600/voxel-game/pulls?q=is%3Apr)
+- [نقشهٔ راه انتشار Android](https://github.com/abolfazl2600/RostamBattle/issues/56)
+- [تاریخچهٔ تغییرات و Pull Requestها](https://github.com/abolfazl2600/RostamBattle/pulls?q=is%3Apr)
 
 برای مشارکت، تغییرات را با یک Issue مرتبط و در یک Pull Request جداگانه پیشنهاد کنید. قبل از بستن هر Issue، معیار پذیرش همان Issue را بررسی کنید؛ تیک‌های این README خودکار به وضعیت Issueها متصل نیستند.
 
@@ -187,8 +187,8 @@ media/           تصویر و ویدئوی معرفی
 
 کد پروژه تحت مجوز [MIT](LICENSE) است. [Three.js](https://threejs.org/) نیز با مجوز MIT استفاده می‌شود. فونت فارسی [Vazirmatn](https://github.com/rastikerdar/vazirmatn) اثر صابر راستی‌کردار تحت **SIL Open Font License 1.1** از منابع آنلاین بارگذاری می‌شود؛ فونت فعلی `src/ui/brush.woff2` زیرمجموعه‌ای از Yuji Boku با مجوز OFL 1.1 است. محلی‌سازی دارایی‌ها برای نسخهٔ آفلاین Android هنوز در نقشهٔ راه قرار دارد.
 
-این پروژه در ابتدا از سبک مبارزات `Dynasty Warriors` الهام گرفته و **هیچ وابستگی یا تأییدیه‌ای از KOEI TECMO ندارد**. `Dynasty Warriors` علامت تجاری آن شرکت است و بنا بر اطلاعات مخزن، دارایی مستقیم آن بازی‌ها استفاده نشده است. برای انتشار تجاری/فروشگاهی، بررسی نهایی حقوق محتوا، فونت‌ها و برند در [#50](https://github.com/abolfazl2600/voxel-game/issues/50) انجام خواهد شد.
+این پروژه در ابتدا از سبک مبارزات `Dynasty Warriors` الهام گرفته و **هیچ وابستگی یا تأییدیه‌ای از KOEI TECMO ندارد**. `Dynasty Warriors` علامت تجاری آن شرکت است و بنا بر اطلاعات مخزن، دارایی مستقیم آن بازی‌ها استفاده نشده است. برای انتشار تجاری/فروشگاهی، بررسی نهایی حقوق محتوا، فونت‌ها و برند در [#50](https://github.com/abolfazl2600/RostamBattle/issues/50) انجام خواهد شد.
 
 ---
 
-<sub><strong>English summary:</strong> «نبرد رستم» (Rostam’s Battle) is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>
+<sub><strong>English summary:</strong> «نبرد رستم» (Rostam’s Battle) is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/RostamBattle/">Play in browser</a>.</sub>
