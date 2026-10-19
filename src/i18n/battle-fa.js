@@ -209,7 +209,11 @@ export const BATTLE_DIALOGUE_FA = {
   "Leave the reinforcements to me. Take Xiahou Yuan!": "نیروهای کمکی با من؛ تو شیا‌هو یوان را شکست بده!",
   "This old man will hold their reinforcements. Go, Zilong!": "من جلوی نیروهای کمکی را می‌گیرم. برو زی‌لونگ!",
   "Old Huang Zhong has cut down Xiahou Yuan!": "هوانگ ژونگِ کهنه‌کار شیا‌هو یوان را شکست داد!",
-  "Xiahou Yuan has fallen to Zhao Zilong of Changshan!": "شیا‌هو یوان به دست ژائو زی‌لونگ از چانگ‌شان شکست خورد!",
+  "Xiahou Yuan has fallen to Zhao Zilong of Changshan!": "شیا‌هو یوان به دست ژائو زی‌لونگ از چانگ‌شان شکست خورد!"
+};
+
+// Ashkabus-only lines keep the original Dingjun dialogue table stable.
+export const ASHKABUS_DIALOGUE_FA = {
   "Warriors of Iran, hold the line and open the road ahead!": "سپاه ایران، صف‌ها را استوار کنید؛ راه پیشروی باید باز شود!",
   "Ashkabus has challenged Iran. Clear the route before you reach him.": "اشکبوس میدان را به مبارزه طلبیده است؛ پیش از رسیدن به او، راه را پاک‌سازی کنید.",
   "I am Rostam Dastan. I will not leave this field until I face Ashkabus.": "من رستم دستانم؛ تا اشکبوس را نبینم از این میدان بازنمی‌گردم.",
@@ -432,5 +436,5 @@ export const CHIBI_DIALOGUE_FA = {
 
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
-  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || CHIBI_DIALOGUE_FA[en] || en;
+  return BATTLE_EVENTS_FA[en] || ASHKABUS_DIALOGUE_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || CHIBI_DIALOGUE_FA[en] || en;
 };
