@@ -22,6 +22,7 @@ import { hash01 } from '../core/rng.js';
 import { HUD_TAG_R } from '../ui/hud.js';
 import { ground } from '../world/map.js';
 import { palette } from './armies.js';
+import { drawDerafsh } from '../core/derafsh.js';
 
 const V = 0.042;
 const b = (a, bb, c, paint) => ({ a, b: bb, c, paint });
@@ -217,16 +218,20 @@ function buildCrowdGeometries(gp, op, ap) {
 }
 
 /** An army standard: glyph in ink on a bg cloth (lighter panel behind the character, gold edging, swallow tail). */
-function flagTexture(glyph, bg, ink = '#1a0f0c') {
+function flagTexture(glyph, bg, ink = '#1a0f0c', emblem) {
   const c = document.createElement('canvas'); c.width = 64; c.height = 112;
   const g = c.getContext('2d');
   g.fillStyle = bg; g.fillRect(0, 0, 64, 112);
   g.fillStyle = '#e0b058'; g.fillRect(0, 0, 64, 5); g.fillRect(0, 0, 4, 112); g.fillRect(60, 0, 4, 112);
   g.fillStyle = 'rgba(255,225,180,0.28)'; g.fillRect(10, 16, 44, 60);                  // lighter panel behind the character
-  g.fillStyle = ink;
-  g.font = 'bold 44px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif';
-  g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(glyph, 32, 46);
+  if (emblem === 'derafsh') {
+    drawDerafsh(g, 32, 46, 42);
+  } else {
+    g.fillStyle = ink;
+    g.font = 'bold 44px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(glyph, 32, 46);
+  }
   g.globalCompositeOperation = 'destination-out';                                    // swallow-tail bottom
   g.beginPath(); g.moveTo(14, 112); g.lineTo(32, 88); g.lineTo(50, 112); g.fill();
   const t = new THREE.CanvasTexture(c);
@@ -478,7 +483,7 @@ export function createCrowdView(scene, game) {
   nearFade(flagMat, 3.2, flagWave);
   M.flag = mk(flagGeo, G, flagMat, false);
   const allyFlagMat = flagMat.clone();
-  allyFlagMat.map = flagTexture(ally.glyph, ally.flag, ally.ink);
+  allyFlagMat.map = flagTexture(ally.glyph, ally.flag, ally.ink, ally.emblem);
   nearFade(allyFlagMat, 3.2, flagWave, 'ally');
   MA.flag = mk(flagGeo, A, allyFlagMat, false);
   const markerMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: new THREE.Color(0.85, 0.8, 0.75), fog: false });

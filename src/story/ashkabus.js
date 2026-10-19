@@ -14,6 +14,7 @@ export const CH = {
   seal: 'ایران',
   era: { zh: 'روزگار شاهنامه', en: 'Shahnameh era' },
   heroes: ['rostam'],
+  army: { ...base.army, ally: 'iran' }, // visual identity only; enemy and encounter logic unchanged
   ally: { ...base.ally, rostam: 'zhaoyun' },
 };
 

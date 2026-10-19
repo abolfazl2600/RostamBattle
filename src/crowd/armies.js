@@ -123,6 +123,15 @@ export const ARMIES = {
   },
 };
 
+// Chapter-specific Iranian identity. Reuse Shu soldier models, colours and motion unchanged.
+ARMIES.iran = {
+  ...ARMIES.shu,
+  name: { zh: 'سپاه ایران', en: 'Iranian Army' },
+  glyph: '◆', // compact HUD mark; the flag itself uses the drawn emblem
+  emblem: 'derafsh',
+  ink: '#f2cf78',
+};
+
 /** Free mode's pair (ids). */
 export const FREE_ARMY = { foe: 'wei', ally: 'shu' };
 /** { foe, ally } ids → { foe, ally } army objects (game.army). */
