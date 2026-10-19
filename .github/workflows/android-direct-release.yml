@@ -104,8 +104,8 @@ jobs:
           APK="android/app/build/outputs/apk/release/app-release.apk"
           test -f "$APK"
 
-          VERSION_NAME="$(sed -n 's/^versionName=//p' android/version.properties | tr -d '\\r')"
-          VERSION_CODE="$(sed -n 's/^versionCode=//p' android/version.properties | tr -d '\\r')"
+          VERSION_NAME="$(sed -n 's/^versionName=//p' android/version.properties | tr -d '\r')"
+          VERSION_CODE="$(sed -n 's/^versionCode=//p' android/version.properties | tr -d '\r')"
           test -n "$VERSION_NAME"
           test -n "$VERSION_CODE"
 
