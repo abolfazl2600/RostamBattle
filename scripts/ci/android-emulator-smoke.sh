@@ -44,7 +44,48 @@ else
     fi
   done
 fi
+# The hosted Google APIs emulator occasionally crashes GMS's FontsProvider and
+# Android then kills this otherwise healthy app as a dependent client. Do not
+# turn that platform failure into a false app regression: allow exactly ONE
+# fresh launch, but only when the GMS-provider kill is explicitly in logcat.
+# Retain first-attempt evidence; the second attempt gets a clean log and must
+# independently pass ALL startup/font checks.
+if ! adb shell pidof "${pkg}" >/dev/null 2>&1; then
+  if [ "${api}" != "28" ] && grep -F "depends on provider com.google.android.gms/.fonts.provider.FontsProvider in dying proc" emulator-evidence/logcat-live.txt | grep -Fq "Killing "; then
+    echo "Emulator Google Play Services FontsProvider crash killed the app; retrying native launch once"
+    if [ -n "$logpid" ]; then
+      kill "$logpid" >/dev/null 2>&1 || true
+      wait "$logpid" >/dev/null 2>&1 || true
+      logpid=''
+    fi
+    mv emulator-evidence/logcat-live.txt emulator-evidence/logcat-first-attempt.txt
+    adb logcat -c
+    adb logcat -v time > emulator-evidence/logcat-live.txt 2>&1 &
+    logpid=$!
+    adb shell am start -W -n "${pkg}/${activity}"
+    for attempt in $(seq 1 36); do
+      sleep 5
+      if grep -q 'ROSTAM_TITLE_VISIBLE' emulator-evidence/logcat-live.txt; then
+        break
+      fi
+      if grep -Eq 'ROSTAM_TITLE_TIMEOUT|Uncaught SyntaxError' emulator-evidence/logcat-live.txt; then
+        break
+      fi
+      if ! adb shell pidof "${pkg}" >/dev/null 2>&1; then
+        break
+      fi
+    done
+  else
+    echo "App process exited without the known GMS FontsProvider crash; failing smoke test" >&2
+    exit 1
+  fi
+fi
+
+# A startup marker can be emitted just before an OS-level process kill.
+# Require the app to still exist AND be the resumed foreground Activity when
+# taking screenshots; never count the emulator home screen as a passing test.
 adb shell pidof "${pkg}"
+adb shell dumpsys activity activities | grep -E 'topResumedActivity=.*io.github.abolfazl.nabardrostam.dev/'
 collect
 
 if [ "${api}" = "28" ]; then
