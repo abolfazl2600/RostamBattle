@@ -108,13 +108,28 @@ adb shell pm path io.github.abolfazl.nabardrostam
 1. در `Settings → Environments` محیطی با نام دقیق `android-direct-release` بسازید.
 2. برای این Environment، **Required reviewers** را فعال کنید و یک بازبین قابل اعتماد تعیین کنید؛ در صورت امکان تأیید توسط آغازکننده را ممنوع کنید. به workflow اکتفا نکنید: حفاظت محیط باید در تنظیمات GitHub فعال باشد.
 3. این چهار مقدار را فقط به‌عنوان **Environment secrets** در همان محیط ثبت کنید:
-   - `ROSTAM_DIRECT_KEYSTORE_BASE64`: محتوای keystore امضای App Signing به‌صورت Base64؛ فایل باید با فرمت keystore مورد استفاده در مرحلهٔ ساخت (در دستورهای این سند PKCS12) سازگار باشد.
+   - `ROSTAM_DIRECT_KEYSTORE_BASE64`: محتوای keystore امضای App Signing به‌صورت Base64؛ این راهنما از قالب **PKCS12** استفاده می‌کند.
    - `ROSTAM_DIRECT_STORE_PASSWORD`: گذرواژهٔ keystore.
    - `ROSTAM_DIRECT_KEY_ALIAS`: alias کلید خصوصی.
    - `ROSTAM_DIRECT_KEY_PASSWORD`: گذرواژهٔ کلید خصوصی.
-4. در همان Environment یک **Variable غیرمحرمانه** با نام `ROSTAM_DIRECT_CERT_SHA256` ثبت کنید؛ مقدار آن fingerprint گواهی SHA-256 کلید App Signing است. برای مشاهدهٔ آن روی رایانهٔ امن اجرا کنید: `keytool -list -v -keystore "$HOME/.config/nabard-rostam/keys/app-signing.jks" -alias nabard-rostam-app` و مقدار `SHA256` را وارد کنید. workflow fingerprint واقعی APK را با این مقدار مقایسه می‌کند؛ نبودن یا مغایرت آن باعث توقف انتشار می‌شود.
-5. برای تولید مقدار Base64 روی رایانهٔ امن مالک، فایل keystore را محلی encode کنید؛ برای مثال در Linux/macOS: `base64 < "$HOME/.config/nabard-rostam/keys/app-signing.jks" | tr -d '\n'`. مقدار حاصل را مستقیماً در فرم secret گیت‌هاب وارد کنید. **آن را در گفتگو، Issue، commit، log یا artifact قرار ندهید.**
+4. در همان Environment یک **Variable غیرمحرمانه** با نام `ROSTAM_DIRECT_CERT_SHA256` ثبت کنید؛ مقدار آن fingerprint گواهی SHA-256 کلید App Signing است. برای مشاهدهٔ آن روی رایانهٔ امن اجرا کنید: `keytool -list -v -storetype PKCS12 -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" -alias nabard-rostam-app` و مقدار `SHA256` را وارد کنید. workflow fingerprint واقعی APK را با این مقدار مقایسه می‌کند؛ نبودن یا مغایرت آن باعث توقف انتشار می‌شود.
+5. برای تولید مقدار Base64 روی رایانهٔ امن مالک، فایل keystore را محلی encode کنید؛ برای مثال در Linux/macOS: `base64 < "$HOME/.config/nabard-rostam/keys/app-signing.p12" | tr -d '\n'`. مقدار حاصل را مستقیماً در فرم secret گیت‌هاب وارد کنید. **آن را در گفتگو، Issue، commit، log یا artifact قرار ندهید.**
 6. کلید App Signing باید اختصاصی همین برنامه باشد و دست‌کم دو نسخهٔ پشتیبان رمزگذاری‌شدهٔ آفلاین داشته باشد. کلید آزمایشی CI را هرگز به‌عنوان کلید انتشار استفاده نکنید.
+
+### اگر هنوز کلید App Signing نداری
+
+روی رایانهٔ امن خودت (نه داخل GitHub Actions) این دستور را اجرا کن تا یک کلید جدید محلی ساخته شود؛ `keytool` رمزها را تعاملی می‌پرسد و آن‌ها را داخل دستور/تاریخچهٔ shell قرار نمی‌دهد:
+
+```bash
+umask 077
+mkdir -p "$HOME/.config/nabard-rostam/keys"
+keytool -genkeypair -v -storetype PKCS12 \
+  -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" \
+  -alias nabard-rostam-app -keyalg RSA -keysize 3072 -validity 10000 \
+  -dname "CN=Nabard Rostam App, OU=Release, O=Game Publisher"
+```
+
+این کلید را در دو محل آفلاین رمزگذاری‌شده پشتیبان بگیر. رمزها و فایل `.p12` را در Git، Issue، PR، گفتگو یا artifact قرار نده. سپس fingerprint را با دستور مرحلهٔ قبل بخوان و مقدار Base64 را فقط مستقیماً در Environment secret وارد کن. اگر از قبل کلید App Signing داری، **کلید جدید نساز**؛ همان کلید و fingerprint آن باید برای همهٔ نسخه‌های Direct آینده حفظ شوند.
 
 ### اجرای ساخت
 
