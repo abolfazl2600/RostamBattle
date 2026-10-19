@@ -10,7 +10,7 @@
 - **APK نصب‌شده از Google Play:** توسط Play App Signing با **همان App Signing Key** نسخه Direct امضا شود.
 - برای نخستین پیکربندی Play App Signing، به‌جای «Google-generated app signing key» گزینه **ارائه کلید App Signing از پیش ایجادشده توسط ناشر** انتخاب شود؛ روش انتقال امن کلید مطابق راهنمای خود Play Console (مانند PEPK در صورت ارائه) باشد.
 - **هدف:** نصب/ارتقای نسخه جدیدتر از هر یک از کانال‌های Direct و Play بدون حذف اپ و رکوردها. این هدف هنوز با دستگاه واقعی آزمایش نشده است.
-- **Debug:** بسته آزمایشی با شناسه توسعه‌ای مجزا و کلید Debug؛ هرگز با خروجی رسمی یا کلید Release اشتباه نشود. شناسه توسعه فعلی در `capacitor.config.json` برابر `io.github.abolfazl2600.voxelgame.dev` است؛ تصمیم باز برای هماهنگ‌سازی نهایی آن در #34.
+- **Debug:** بسته آزمایشی با شناسه توسعه‌ای مجزا و کلید Debug؛ هرگز با خروجی رسمی یا کلید Release اشتباه نشود. شناسهٔ Debug فعلی در Gradle با پسوند `.dev` برابر `io.github.abolfazl.nabardrostam.dev` است؛ `capacitor.config.json` شناسهٔ اصلی `io.github.abolfazl.nabardrostam` را نگه می‌دارد.
 
 ## دو مسیر مستقل
 

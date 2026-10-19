@@ -1,13 +1,14 @@
 // Progress: every battle record and what it unlocks, kept per browser.
-//   localStorage voxel-musou.save = { v: 1, rec: { [stage id]: { [char id]: { [difficulty id]: { rank, time, kos } } } } }
+//   localStorage nabard-rostam.save = { v: 1, rec: { [stage id]: { [char id]: { [difficulty id]: { rank, time, kos } } } } }
 // A stage = a story chapter or a trial (story/chapters.js chapter(id)). A win (main.js, story:end → record()) keeps each
 // best on its own: the best rank, the fastest clear (s), the most KOs. Nothing else is stored — every unlock is derived
 // from the records (UNLOCKS: open(rec)), so no flag can fall out of step with them. Story chapters open in order
 // (chapters.js chapterOpen, same records). Readers: the title (chapter / trial / difficulty panels, the 戰績 wall),
 // select (rank chips, locked officers), result (new records, unlock lines).
-const KEY = 'voxel-musou.save', ORDER = 'SABC';
+import { readGameStorage, writeGameStorage } from './storage.js';
+const ORDER = 'SABC';
 const load = () => {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s?.v === 1 && s.rec) return s; } catch { /* no storage / bad JSON: a fresh save */ }
+  try { const s = JSON.parse(readGameStorage('save')); if (s?.v === 1 && s.rec) return s; } catch { /* no storage / bad JSON: a fresh save */ }
   return { v: 1, rec: {} };
 };
 const better = (a, b) => ORDER.indexOf(a) < ORDER.indexOf(b);
@@ -51,6 +52,6 @@ export function record(stage, char, diff, { rank = 'C', time, kos }) {
   const row = (s.rec[stage] ||= {})[char] ||= {}, prev = row[diff] || null;
   const fresh = { rank: !!prev && better(rank, prev.rank), time: !!prev && time < prev.time, kos: !!prev && kos > prev.kos };
   row[diff] = prev ? { rank: fresh.rank ? rank : prev.rank, time: Math.min(time, prev.time), kos: Math.max(kos, prev.kos) } : { rank, time, kos };
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* no storage: the session still plays */ }
+  try { writeGameStorage('save', JSON.stringify(s)); } catch { /* no storage: the session still plays */ }
   return { first, prev, fresh, unlocks: UNLOCKS.filter((u) => u.open(s.rec) && !was.includes(u)) };
 }

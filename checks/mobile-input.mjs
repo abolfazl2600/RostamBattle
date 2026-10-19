@@ -100,7 +100,7 @@ let locks = 0; nodes.c.requestPointerLock = () => { locks++; };
 emit('flow', { state: 'battle' });
 assert.equal(locks, 0, 'Desktop on a touch device must not trap the recovery button under automatic pointer lock');
 assert.equal(input.sample().mx, 0); assert.equal(input.sample().held.charge, false);
-assert.equal(storage.get('voxel-device-mode'), 'desktop');
+assert.equal(storage.get('nabard-rostam.deviceMode'), 'desktop');
 assert.equal((await import('../src/core/device-mode.js?persisted')).deviceMode(), 'desktop');
 localStorage.getItem = () => { throw new Error('storage blocked'); };
 assert.equal((await import('../src/core/device-mode.js?blocked')).deviceMode(), 'auto');

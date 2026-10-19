@@ -47,7 +47,7 @@ export const SWASH = `<svg class="swash" viewBox="0 0 400 26" preserveAspectRati
   S352 11 397 5L395 9C368 15 330 17 280 18C226 19 170 17 128 19C84 21 38 22 3 15ZM300 20C330 19 360 17 384 14L382 16C356 20 326 22 300 20Z"/></svg>`;
 
 const ITEMS = [
-  { go: 'story', zh: 'داستان', en: 'نبردهای سه پادشاهی' },
+  { go: 'story', zh: 'داستان', en: 'داستان‌های شاهنامه' },
   { go: 'trial', zh: 'چالش‌ها', en: 'آزمون‌ها و نبرد آزاد' },
   { go: 'rec', zh: 'رکوردها', en: 'افتخارات شما' },
   { go: 'ctl', zh: 'راهنمای بازی', en: 'کلیدها و کنترل‌ها' },
@@ -116,7 +116,7 @@ export function createTitle(el, flow) {
     <div class="t-veil"></div><p class="t-status" role="status" hidden></p><button type="button" class="t-back">بازگشت</button>
     ${STAGE.cast.map(({ id }) => { const c = CHARS[id]; return `<div class="t-tag" style="visibility:hidden" data-id="${id}"><i>${OFFICERS_FA[id].seal}</i><b>${officerFa(id)}</b><small>${OFFICERS_FA[id].title}</small></div>`; }).join('')}
     <div class="t-band">
-      <div class="t-logo"><p class="brand-kicker">بازی اکشن وکسل</p><h1 data-t="${GAME_NAME_FA}"><span>${GAME_NAME_FA}</span></h1></div>
+      <div class="t-logo"><p class="brand-kicker">حماسه‌ای از شاهنامه</p><h1 data-t="${GAME_NAME_FA}"><span>${GAME_NAME_FA}</span></h1></div>
       <div class="t-press"><b>${viewport.touch ? 'برای شروع صفحه را لمس کنید' : 'برای شروع یک کلید فشار دهید'}</b><small>${viewport.touch ? 'بازی در حالت افقی' : '<kbd>Enter</kbd> ورود به بازی'}</small></div>
       <nav class="t-menu t-main">${ITEMS.map((it, i) => `<button data-i="${i}" style="--i:${i}"><b>${it.zh}</b><small>${it.en}</small>${SWASH}</button>`).join('')}</nav>
       <div class="t-cpanel"><nav class="t-menu t-chs"></nav>

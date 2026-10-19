@@ -18,6 +18,7 @@ import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { viewport } from '../core/viewport.js';
 import { QUALITY, normalizeQuality, qualityOverride, resolveQuality, createAdaptiveScale } from './quality.js';
 import { showRecovery } from '../ui/recovery.js';
+import { readGameStorage, writeGameStorage } from '../core/storage.js';
 import { SUN_DIR } from '../world/sky.js';
 
 // Tunables. Every key k is uniform u<K> in all passes.
@@ -215,7 +216,7 @@ export function createPost({ canvas, width, height }) {
   }
   const query = new URLSearchParams(location.search);
   let choice = 'auto';
-  try { choice = localStorage.getItem('voxel-quality') || 'auto'; } catch { /* storage disabled */ }
+  try { choice = readGameStorage('quality') || 'auto'; } catch { /* storage disabled */ }
   choice = normalizeQuality(choice);
   const override = qualityOverride(query);
   let adaptiveEnabled = false;
@@ -309,7 +310,7 @@ export function createPost({ canvas, width, height }) {
     fin.material.uniforms.uFarBlur.value = profile.dof ? L.farBlur : 0;
     adaptive = createAdaptiveScale(profile.scale, viewport.touch ? 33.3 : 20, (scale) => { renderScale = scale; setSize(width, height); });
     setSize(width, height);
-    if (persist) try { localStorage.setItem('voxel-quality', choice); } catch { /* storage disabled */ }
+    if (persist) try { writeGameStorage('quality', choice); } catch { /* storage disabled */ }
   }
   setQuality(choice, false);
 
