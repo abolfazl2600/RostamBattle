@@ -68,7 +68,7 @@ export const CONTROLS = [
   ['موسو', 'قدرت ویژه', '<kbd>I</kbd> — پس از پر شدن نوار طلایی', '<kbd>B</kbd> ○'],
   ['دوربین', 'تغییر زاویهٔ دید', 'حرکت موس (پس از کلیک روی میدان) / <kbd>Q</kbd><kbd>E</kbd>', 'آنالوگ راست'],
   ['تنظیم دوربین', 'تمرکز روی فرمانده', '<kbd>R</kbd> — رو به نزدیک‌ترین فرمانده', '<kbd>L1</kbd> <kbd>L2</kbd>'],
-  ['نشانه‌گیری', 'ویژهٔ هوانگ ژونگ', 'نگه‌داشتن <kbd>K</kbd> / کلیک راست، رهاکردن برای شلیک', 'نگه‌داشتن <kbd>Y</kbd> △'],
+  ['نشانه‌گیری', 'ویژهٔ آرش کمانگیر', 'نگه‌داشتن <kbd>K</kbd> / کلیک راست، رهاکردن برای شلیک', 'نگه‌داشتن <kbd>Y</kbd> △'],
   ['توقف', 'مکث در نبرد', '<kbd>Esc</kbd> (رهاسازی نشانگر موس)', ''],
 ];
 
@@ -341,13 +341,13 @@ export function createTitle(el, flow) {
       // thin faded-vermilion hems (a wide dark border read as a black doorway frame round the cloth when backlit)
       g.fillStyle = '#a8442a'; g.fillRect(0, 0, 128, 10); g.fillRect(0, 0, 5, 320); g.fillRect(123, 0, 5, 320);
       for (let y = 300; y < 320; y += 4) g.clearRect(5 + ((y * 7) % 20), y, 110 - ((y * 13) % 30), 4);    // frayed hem
-      g.fillStyle = '#140905'; g.font = '700 96px "Xingkai SC", "STXingkai", "HudBrush", serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillStyle = '#140905'; g.font = '700 96px Vazirmatn, Tahoma, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
       g.fillText(glyph, 64, 150);
       tex.needsUpdate = true;
     };
     const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
     paint();
-    document.fonts?.load('700 96px HudBrush', glyph).then(paint, () => {});
+    document.fonts?.load('700 96px Vazirmatn', glyph).then(paint, () => {});
     return tex;
   }
   function build(scene) {
@@ -362,7 +362,7 @@ export function createTitle(el, flow) {
       o.root.traverse((e) => { if (e.isMesh && e.frustumCulled) parts.push(e); });
       cast.push(Object.assign(o, { c, parts }));
       // surname standard: pole + a nobori cloth (CPU wave on a 5 × 12 grid)
-      const tex = bannerTex(CHARS[c.id].name.zh[0]);
+      const tex = bannerTex(officerFa(c.id)[0]);
       const cloth = new THREE.PlaneGeometry(1.15, 3.1, 4, 12);
       // low warm emissive = the low sun glowing through the cloth from behind (the camera sees its shaded face)
       const mat = new THREE.MeshStandardMaterial({ map: tex, emissiveMap: tex, emissive: 0xffa060, emissiveIntensity: 0.3, side: THREE.DoubleSide,
