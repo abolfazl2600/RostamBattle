@@ -120,7 +120,7 @@ jobs:
           mkdir -p release-out
           OUT="release-out/rostams-battle-${VERSION_NAME}-vc${VERSION_CODE}-direct-signed.apk"
           cp "$APK" "$OUT"
-          bash scripts/android/verify-direct-apk.sh "$OUT" | tee "release-out/verification.txt"
+          bash scripts/android/verify-direct-apk.sh "$OUT" 2>&1 | tee "release-out/verification.txt"
 
           EXPECTED_CERT="$(printf '%s' "$ROSTAM_DIRECT_CERT_SHA256" | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
           ACTUAL_CERT="$(sed -n 's/.*certificate SHA-256 digest: *//p' release-out/verification.txt | head -n 1 | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
