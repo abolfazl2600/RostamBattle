@@ -26,12 +26,6 @@ jobs:
     timeout-minutes: 40
     environment:
       name: android-direct-release
-    env:
-      ROSTAM_DIRECT_KEYSTORE_BASE64: ${{ secrets.ROSTAM_DIRECT_KEYSTORE_BASE64 }}
-      ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
-      ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
-      ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,6 +55,11 @@ jobs:
 
       - name: Validate protected signing credentials
         shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE_BASE64: ${{ secrets.ROSTAM_DIRECT_KEYSTORE_BASE64 }}
+          ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
+          ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
+          ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
         run: |
           set -euo pipefail
           for name in ROSTAM_DIRECT_KEYSTORE_BASE64 ROSTAM_DIRECT_STORE_PASSWORD ROSTAM_DIRECT_KEY_ALIAS ROSTAM_DIRECT_KEY_PASSWORD; do
@@ -72,6 +71,8 @@ jobs:
 
       - name: Materialize temporary keystore
         shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE_BASE64: ${{ secrets.ROSTAM_DIRECT_KEYSTORE_BASE64 }}
         run: |
           set -euo pipefail
           umask 077
@@ -92,6 +93,10 @@ jobs:
 
       - name: Assemble official Direct Release APK
         shell: bash
+        env:
+          ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
+          ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
+          ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
         run: |
           set -euo pipefail
           chmod +x android/gradlew
