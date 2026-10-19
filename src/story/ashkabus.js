@@ -130,6 +130,7 @@ const DIALOGUE = [
 
 const NAGS = {
   0: { who: 'raham', zh: 'سردار، پیش از پاک‌سازی میدان جلوتر نروید!', en: 'General, clear the battlefield before advancing!' },
+  3: { who: 'raham', zh: 'رستم، راه گذرگاه هنوز پاک‌سازی نشده است؛ پیش نرو!', en: 'Rostam, the pass is not clear yet. Hold your advance!' },
   6: { who: 'raham', zh: 'دروازه بسته است؛ نخست نگهبان دژ را شکست دهید!', en: 'The gate is barred. Defeat the fortress guard first!' },
 };
 
