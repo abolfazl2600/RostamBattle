@@ -133,6 +133,23 @@ export const BATTLE_EVENTS_FA = {
   'Enemy commander: Xiahou Yuan': 'فرماندهٔ دشمن: شیا‌هو یوان',
   'The Wei war drums thunder — reinforcements!': 'طبل‌های سپاه وی به صدا درآمد؛ نیروهای کمکی رسیدند!',
   'Enemy commander Xiahou Yuan has fallen!': 'فرماندهٔ دشمن، شیا‌هو یوان، شکست خورد!',
+  'Iran and Ashkabus': 'جنگ ایران و اشکبوس',
+  'Iranian Camp': 'اردوگاه ایران',
+  'Battlefield': 'میدان نبرد',
+  'Mountain Pass': 'گذرگاه کوهستانی',
+  'Turanian Camp': 'اردوگاه توران',
+  'High Ground': 'بلندی میدان',
+  'Pass Barricade': 'مانع گذرگاه',
+  'Stronghold Gate': 'دروازهٔ دژ',
+  'High-Ground Barricade': 'مانع بلندی میدان',
+  'Tous': 'طوس',
+  'Roham': 'رهام',
+  'Ashkabus': 'اشکبوس',
+  'Turanian Champion': 'پهلوان تورانی',
+  'Ambush Commander': 'فرماندهٔ کمین',
+  'Fortress Guard': 'نگهبان دژ',
+  'Turanian Soldier': 'سرباز تورانی',
+  'Turanian Elite': 'سرباز برگزیدهٔ توران',
 };
 
 const CASELESS_NAMES_FA = Object.fromEntries(
