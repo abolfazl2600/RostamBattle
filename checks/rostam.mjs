@@ -21,6 +21,16 @@ for (const key of ['scale', 'reach', 'trail', 'weight', 'voice', 'fx'])
   assert.deepEqual(CHARS.rostam.kit[key], CHARS.zhangfei.kit[key], key + ' must match Zhang Fei');
 assert.deepEqual(CH.heroes, ['rostam']);
 assert.equal(CH.id, 'ashkabus');
+// Flags only: the new army shares Shu's unit palettes but has an Iranian standard.
+const { ARMIES, armyPair } = await import('../src/crowd/armies.js');
+assert.equal(CH.army.foe, OLD.army.foe);
+assert.equal(CH.army.ally, 'iran');
+assert.equal(OLD.army.ally, 'shu', 'Dingjun retains its original ally army');
+assert.equal(ARMIES.shu.glyph, '蜀', 'other chapters retain their Chinese flags');
+assert.equal(ARMIES.iran.emblem, 'derafsh');
+assert.equal(armyPair(CH.army).ally, ARMIES.iran);
+assert.equal(ARMIES.iran.grunt, ARMIES.shu.grunt, 'soldier models and palettes unchanged');
+assert.equal(ARMIES.iran.officer, ARMIES.shu.officer, 'officer models unchanged');
 assert.equal(chapter('ashkabus').CH.heroes[0], 'rostam');
 assert.equal(storyContext({ ch: 'ashkabus', char: 'huangzhong' }).char, 'rostam');
 assert.deepEqual(OLD.heroes, ['huangzhong', 'zhaoyun']);
