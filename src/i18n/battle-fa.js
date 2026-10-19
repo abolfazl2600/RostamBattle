@@ -35,7 +35,8 @@ export const BATTLE_NAMES_FA = {
   'Han River Ford': 'گذرگاه رود هان', 'Mountain Pass': 'گذرگاه کوهستانی',
   'Wei Fortified Camp': 'اردوگاه مستحکم وی', 'Dingjun Summit': 'قلهٔ دینگ‌جون',
   'Pass Barricade': 'مانع گذرگاه', 'Camp Gate': 'دروازهٔ اردوگاه',
-  'Summit Barricade': 'مانع بالای کوه',  "Iran and Ashkabus": "جنگ ایران و اشکبوس",
+  'Summit Barricade': 'مانع بالای کوه',
+  "Iran and Ashkabus": "جنگ ایران و اشکبوس",
   "Iranian Camp": "اردوگاه ایران",
   "Battlefield": "میدان نبرد",
   "Turanian Camp": "اردوگاه توران",
@@ -50,7 +51,6 @@ export const BATTLE_NAMES_FA = {
   "Fortress Guard": "نگهبان دژ",
   "Turanian Soldier": "سرباز تورانی",
   "Turanian Elite": "سرباز برگزیدهٔ توران",
-
 };
 
 export const BATTLE_EVENTS_FA = {
@@ -147,7 +147,8 @@ export const BATTLE_EVENTS_FA = {
   'Defeat the enemy commander, Xiahou Yuan': 'شیا‌هو یوان، فرماندهٔ دشمن را شکست دهید.',
   'Enemy commander: Xiahou Yuan': 'فرماندهٔ دشمن: شیا‌هو یوان',
   'The Wei war drums thunder — reinforcements!': 'طبل‌های سپاه وی به صدا درآمد؛ نیروهای کمکی رسیدند!',
-  'Enemy commander Xiahou Yuan has fallen!': 'فرماندهٔ دشمن، شیا‌هو یوان، شکست خورد!',  "Advance across the battlefield": "در میدان نبرد پیشروی کنید.",
+  'Enemy commander Xiahou Yuan has fallen!': 'فرماندهٔ دشمن، شیا‌هو یوان، شکست خورد!',
+  "Advance across the battlefield": "در میدان نبرد پیشروی کنید.",
   "Defeat the Turanian vanguard": "پهلوان پیشتاز توران را شکست دهید.",
   "Open the road to the Turanian stronghold": "راه را به سوی دژ توران باز کنید.",
   "Defeat the Turanian ambush commander": "فرماندهٔ کمین توران را شکست دهید.",
@@ -163,7 +164,6 @@ export const BATTLE_EVENTS_FA = {
   "Ashkabus, the Turanian champion": "اشکبوس، پهلوان تورانی",
   "Turanian war drums sound — reinforcements arrive": "طبل‌های توران به صدا درآمد؛ نیروهای کمکی رسیدند!",
   "Ashkabus has been defeated": "اشکبوس شکست خورد!",
-
 };
 
 const CASELESS_NAMES_FA = Object.fromEntries(
@@ -236,7 +236,6 @@ export const BATTLE_DIALOGUE_FA = {
   "Rostam, the pass is not clear yet. Hold your advance!": "رستم، راه گذرگاه هنوز پاک‌سازی نشده است؛ پیش نرو!",
   "The gate is barred. Defeat the fortress guard first!": "دروازه بسته است؛ نخست نگهبان دژ را شکست دهید!",
   "Ashkabus, the Turanian champion, enters the field!": "اشکبوس، پهلوان تورانی، به میدان آمد!",
-
 };
 
 // First chapter: Hulao Gate dialogue, including all three hero branches.
