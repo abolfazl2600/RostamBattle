@@ -89,7 +89,7 @@ export default {
 
   dress(k) {
     const { r, mats, props, poles, shade } = k;
-    const han = k.banner('漢', { bg: '#2f5a3a', fg: '#e8d6a8', border: '#c7a574', w: 128, h: 256, seed: 8 });
+    const han = mats.ally; // Iranian Derafsh at the allied camp; keep the existing pole layout.
     const xiahou = k.banner('夏侯', { bg: '#1c1414', fg: '#d8b060', border: '#7d2a1f', w: 160, h: 320, seed: 9 });
     // ---- 蜀軍本陣: palisade round three sides and either side of the gate, gate towers, tents, HQ, standards
     k.palisade([[-25.5, -118], [-25.5, -157.5], [25.5, -157.5], [25.5, -118]]);
