@@ -99,8 +99,49 @@ adb shell pm path io.github.abolfazl.nabardrostam
 
 **تست Direct ↔ Play** بعداً و فقط پس از وجود حساب Play Console و دریافت APK توزیعی Play قابل اثبات است (#39، #45، #53، #54). هر دو مسیر با versionCode بالاتر نیازمند تست هستند؛ صرف یکسان بودن applicationId کافی نیست.
 
+## ساخت APK امضاشده از GitHub Actions
+
+فایل `.github/workflows/android-direct-release.yml` مسیر مستقل و دستی برای ساخت APK رسمی دارد. این workflow فقط روی `main` اجرا می‌شود، برای کلید از Environment مخصوص استفاده می‌کند، در نبودن هر secret متوقف می‌شود و فقط APK تأییدشده به‌همراه checksum و گزارش گواهی را به‌صورت artifact تحویل می‌دهد؛ GitHub Release را خودکار منتشر نمی‌کند.
+
+### یک‌بار تنظیم امنیتی توسط مالک مخزن
+
+1. در `Settings → Environments` محیطی با نام دقیق `android-direct-release` بسازید.
+2. برای این Environment، **Required reviewers** را فعال کنید و یک بازبین قابل اعتماد تعیین کنید؛ در صورت امکان تأیید توسط آغازکننده را ممنوع کنید. به workflow اکتفا نکنید: حفاظت محیط باید در تنظیمات GitHub فعال باشد.
+3. این چهار مقدار را فقط به‌عنوان **Environment secrets** در همان محیط ثبت کنید:
+   - `ROSTAM_DIRECT_KEYSTORE_BASE64`: محتوای keystore امضای App Signing به‌صورت Base64؛ این راهنما از قالب **PKCS12** استفاده می‌کند.
+   - `ROSTAM_DIRECT_STORE_PASSWORD`: گذرواژهٔ keystore.
+   - `ROSTAM_DIRECT_KEY_ALIAS`: alias کلید خصوصی.
+   - `ROSTAM_DIRECT_KEY_PASSWORD`: گذرواژهٔ کلید خصوصی.
+4. در همان Environment یک **Variable غیرمحرمانه** با نام `ROSTAM_DIRECT_CERT_SHA256` ثبت کنید؛ مقدار آن fingerprint گواهی SHA-256 کلید App Signing است. برای مشاهدهٔ آن روی رایانهٔ امن اجرا کنید: `keytool -list -v -storetype PKCS12 -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" -alias nabard-rostam-app` و مقدار `SHA256` را وارد کنید. workflow fingerprint واقعی APK را با این مقدار مقایسه می‌کند؛ نبودن یا مغایرت آن باعث توقف انتشار می‌شود.
+5. برای تولید مقدار Base64 روی رایانهٔ امن مالک، فایل keystore را محلی encode کنید؛ برای مثال در Linux/macOS: `base64 < "$HOME/.config/nabard-rostam/keys/app-signing.p12" | tr -d '\n'`. مقدار حاصل را مستقیماً در فرم secret گیت‌هاب وارد کنید. **آن را در گفتگو، Issue، commit، log یا artifact قرار ندهید.**
+6. کلید App Signing باید اختصاصی همین برنامه باشد و دست‌کم دو نسخهٔ پشتیبان رمزگذاری‌شدهٔ آفلاین داشته باشد. کلید آزمایشی CI را هرگز به‌عنوان کلید انتشار استفاده نکنید.
+
+### اگر هنوز کلید App Signing نداری
+
+روی رایانهٔ امن خودت (نه داخل GitHub Actions) این دستور را اجرا کن تا یک کلید جدید محلی ساخته شود؛ `keytool` رمزها را تعاملی می‌پرسد و آن‌ها را داخل دستور/تاریخچهٔ shell قرار نمی‌دهد:
+
+```bash
+umask 077
+mkdir -p "$HOME/.config/nabard-rostam/keys"
+keytool -genkeypair -v -storetype PKCS12 \
+  -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" \
+  -alias nabard-rostam-app -keyalg RSA -keysize 3072 -validity 10000 \
+  -dname "CN=Nabard Rostam App, OU=Release, O=Game Publisher"
+```
+
+این کلید را در دو محل آفلاین رمزگذاری‌شده پشتیبان بگیر. رمزها و فایل `.p12` را در Git، Issue، PR، گفتگو یا artifact قرار نده. سپس fingerprint را با دستور مرحلهٔ قبل بخوان و مقدار Base64 را فقط مستقیماً در Environment secret وارد کن. اگر از قبل کلید App Signing داری، **کلید جدید نساز**؛ همان کلید و fingerprint آن باید برای همهٔ نسخه‌های Direct آینده حفظ شوند.
+
+### اجرای ساخت
+
+1. ابتدا تغییر workflow را در `main` ادغام کنید و چهار Environment secret و تأیید دستی را تنظیم کنید.
+2. در `Actions → Android Direct signed APK → Run workflow` شاخهٔ `main` را انتخاب کنید و `confirm_release` را روی `yes` بگذارید.
+3. پس از تأیید محیط و موفقیت checkها، artifact با نامی شبیه `rostams-battle-direct-signed-<run>` را دریافت کنید. در آن APK، فایل `.sha256` و `verification.txt` شامل بررسی package/version و fingerprint عمومی گواهی قرار دارد.
+4. پیش از توزیع، checksum را بررسی و APK را روی دستگاه واقعی نصب کنید. نسخهٔ فعلی `android/version.properties` برابر `versionCode=1` و `versionName=1.0.0` است؛ برای هر انتشار جدید `versionCode` باید کنترل‌شده افزایش یابد.
+
+اگر Environment یا secretها تنظیم نشده باشند، یا امضای APK/شناسه/نسخه تأیید نشود، workflow نباید artifact انتشار تولید کند. فایل artifact برای مدت ۱۴ روز نگه‌داری می‌شود؛ انتشار GitHub Release و آزمون نصب/به‌روزرسانی واقعی همچنان کارهای جداگانه‌اند.
+
 ## امنیت و محدودیت‌های باقی‌مانده
-- GitHub Actions موجود فقط Debug و Release **بدون امضا** را در PR می‌سازد؛ این PR به هیچ workflow غیرقابل اعتماد دسترسی به کلید App Signing نمی‌دهد. برای امضای ابری آینده، #46 باید محیط محافظت‌شده دارای تأیید دستی یا runner خصوصی و fail-closed داشته باشد.
+- CI عمومی همچنان فقط Debug و Release **بدون امضای انتشار** را می‌سازد؛ workflow دستی Direct Release در `.github/workflows/android-direct-release.yml` فقط روی `main` و با secrets محیط `android-direct-release` اجرا می‌شود. Required reviewers باید جداگانه در تنظیمات GitHub فعال شوند؛ PRها و forkها به این کلیدها دسترسی ندارند.
 - قبل از انتشار عمومی: مجوزها و امنیت WebView (#41)، آیکون/Splash (#42)، مالکیت دارایی‌ها (#50)، و آزمون QA دستگاه‌ها (#34، #35، #40) باید نهایی شوند.
 - وجود حساب Google Play Console **برای APK مستقیم ضروری نیست**؛ اما برای AAB/Play و تطبیق امضای دو کانال ضروری خواهد بود.
 

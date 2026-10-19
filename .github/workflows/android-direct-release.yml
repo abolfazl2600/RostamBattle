@@ -1,0 +1,146 @@
+name: Android Direct signed APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_release:
+        description: "Build the official signed Direct APK from main"
+        type: choice
+        required: true
+        default: "no"
+        options:
+          - "no"
+          - "yes"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-direct-signed-apk
+  cancel-in-progress: false
+
+jobs:
+  direct-release:
+    if: ${{ github.ref == 'refs/heads/main' && inputs.confirm_release == 'yes' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment:
+      name: android-direct-release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: "platform-tools"
+
+      - name: Install Android API 36 and build tools
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+          validate-wrappers: true
+
+      - name: Validate protected signing credentials
+        shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE_BASE64: ${{ secrets.ROSTAM_DIRECT_KEYSTORE_BASE64 }}
+          ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
+          ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
+          ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
+          ROSTAM_DIRECT_CERT_SHA256: ${{ vars.ROSTAM_DIRECT_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          for name in ROSTAM_DIRECT_KEYSTORE_BASE64 ROSTAM_DIRECT_STORE_PASSWORD ROSTAM_DIRECT_KEY_ALIAS ROSTAM_DIRECT_KEY_PASSWORD ROSTAM_DIRECT_CERT_SHA256; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing protected signing secret: $name. Configure the android-direct-release environment." >&2
+              exit 1
+            fi
+          done
+
+      - name: Materialize temporary keystore
+        shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE_BASE64: ${{ secrets.ROSTAM_DIRECT_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          umask 077
+          KEYSTORE="$RUNNER_TEMP/rostam-app-signing.p12"
+          printf '%s' "$ROSTAM_DIRECT_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE"
+          test -s "$KEYSTORE"
+          chmod 600 "$KEYSTORE"
+          echo "ROSTAM_DIRECT_KEYSTORE=$KEYSTORE" >> "$GITHUB_ENV"
+
+      - name: Install dependencies and run project checks
+        run: |
+          npm ci
+          npm run check:build
+          npm run check:game
+
+      - name: Build Android web assets
+        run: npm run android:sync
+
+      - name: Assemble official Direct Release APK
+        shell: bash
+        env:
+          ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
+          ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
+          ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          chmod +x android/gradlew
+          (cd android && ./gradlew --no-daemon :app:assembleDirectRelease)
+
+      - name: Verify APK, certificate, version, and checksum
+        shell: bash
+        env:
+          ROSTAM_DIRECT_CERT_SHA256: ${{ vars.ROSTAM_DIRECT_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          APK="android/app/build/outputs/apk/release/app-release.apk"
+          test -f "$APK"
+
+          VERSION_NAME="$(sed -n 's/^versionName=//p' android/version.properties | tr -d '\r')"
+          VERSION_CODE="$(sed -n 's/^versionCode=//p' android/version.properties | tr -d '\r')"
+          test -n "$VERSION_NAME"
+          test -n "$VERSION_CODE"
+
+          mkdir -p release-out
+          OUT="release-out/rostams-battle-${VERSION_NAME}-vc${VERSION_CODE}-direct-signed.apk"
+          cp "$APK" "$OUT"
+          bash scripts/android/verify-direct-apk.sh "$OUT" 2>&1 | tee "release-out/verification.txt"
+
+          EXPECTED_CERT="$(printf '%s' "$ROSTAM_DIRECT_CERT_SHA256" | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
+          ACTUAL_CERT="$(sed -n 's/.*certificate SHA-256 digest: *//p' release-out/verification.txt | head -n 1 | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
+          if [[ -z "$EXPECTED_CERT" || -z "$ACTUAL_CERT" || "$EXPECTED_CERT" != "$ACTUAL_CERT" ]]; then
+            echo "ERROR: APK signing certificate fingerprint does not match ROSTAM_DIRECT_CERT_SHA256." >&2
+            exit 1
+          fi
+
+          (cd release-out && sha256sum "$(basename "$OUT")" > "$(basename "$OUT").sha256")
+          echo "Verified signed APK: $OUT"
+
+      - name: Upload verified signed APK and verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rostams-battle-direct-signed-${{ github.run_number }}
+          path: release-out/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Remove temporary signing material
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/rostam-app-signing.p12"
