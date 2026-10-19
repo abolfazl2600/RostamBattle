@@ -123,8 +123,8 @@ export function createTitle(el, flow) {
         <div class="t-ccard"><h3></h3><p class="t-cname"><b></b><i></i></p><p class="t-cera"></p>
           <div class="t-cdetail" role="region" aria-label="جزئیات گزینه" tabindex="0"><p class="t-cline"><b></b><small></small></p>
             <p class="t-cfoot"></p></div></div></div>
-      <div class="t-dpanel"><nav class="t-menu t-dif">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${difficultyFa(d.id).name}<i class="t-lk">قفل</i><i class="t-rk"></i></b><small>درجهٔ سختی</small>${SWASH}</button>`).join('')}</nav>
-        <div class="t-dcard"><h3>سختی بازی<small>انتخاب درجهٔ سختی</small></h3><p class="t-dline"><b></b><small></small></p>
+      <div class="t-dpanel" role="region" aria-labelledby="difficulty-heading"><nav class="t-menu t-dif" aria-label="سطح‌های سختی">${DIFFS.map((d, i) => `<button data-d="${i}" style="--i:${i}"><b>${difficultyFa(d.id).name}<i class="t-lk">قفل</i><i class="t-rk"></i></b>${SWASH}</button>`).join('')}</nav>
+        <div class="t-dcard"><h3 id="difficulty-heading">انتخاب درجهٔ سختی</h3><p class="t-dline"><b></b><small></small></p>
           <ul class="s-stats t-dbars">${[['فشار دشمن', 'تعداد مهاجمان'], ['فرماندهان', 'قدرت افسران'], ['آسیب', 'شدت ضربات']].map(([zh, en]) => `<li><b>${zh}</b><small>${en}</small><span>${'<i></i>'.repeat(5)}</span></li>`).join('')}</ul></div></div>
     </div>
     <section class="t-ctl title-panel" role="region" aria-labelledby="controls-heading" tabindex="0" hidden></section>
@@ -167,7 +167,7 @@ export function createTitle(el, flow) {
     const { CH, PROLOGUE } = list[i], story = cmode === 'story', trial = cmode === 'trial', lock = lockOf(i);
     const presentation = story ? storyMenuFa(CH.id) : stageFa(CH.id);
     const p = PROLOGUE?.find((q) => q.cols), field = CHAPTERS.find((m) => m.CH.map === CH.map)?.CH.title;
-    const [zh, en] = lock || [presentation.description, story ? 'نمونهٔ موقت با محتوای دینگ‌جون' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
+    const [zh, en] = lock || [presentation.description, story ? 'روایت فصل' : trial ? 'قانون چالش' : 'نبرد بی‌پایان'];
     $('.t-ccard').classList.toggle('lock', !!lock);
     $('.t-ccard h3').innerHTML = cmode === 'free' ? 'میدان نبرد<small>انتخاب نقشه</small>' : `${presentation.num}<small>${modeFa(cmode)}</small>`;
     $('.t-cname b').textContent = presentation.title; $('.t-cname i').textContent = stageFa(CH.id).seal;
@@ -191,7 +191,7 @@ export function createTitle(el, flow) {
       list = LISTS[mode];
       $('.t-chs').innerHTML = list.map(({ CH }, i) => {
         const meta = story ? storyMenuFa(CH.id) : stageFa(CH.id), closed = !!lockOf(i);
-        return `<button data-c="${i}" aria-disabled="${closed}" class="${closed ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${meta.num}</em>` : ''}${meta.title}<i class="t-lk">${story ? 'به‌زودی' : 'قفل'}</i>${mode === 'free' || (story && closed) ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? closed ? 'این فصل هنوز منتشر نشده است' : 'نمونهٔ موقت با محتوای دینگ‌جون' : meta.description}</small>${SWASH}</button>`;
+        return `<button data-c="${i}" aria-disabled="${closed}" class="${closed ? 'lock' : ''}" style="--i:${i}"><b>${story ? `<em>${meta.num}</em>` : ''}${meta.title}<i class="t-lk">${story ? 'به‌زودی' : 'قفل'}</i>${mode === 'free' || (story && closed) ? '' : rk(best(CH.id)?.rank)}</b><small>${story ? closed ? 'این فصل هنوز منتشر نشده است' : meta.description : meta.description}</small>${SWASH}</button>`;
       }).join('');
       cbtns = [...el.querySelectorAll('.t-chs button')];
       let k = list.findIndex((m) => m.CH.id === id);

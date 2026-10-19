@@ -164,3 +164,26 @@ for (const foreground of ['text','secondary','gold']) for (const background of [
   assert(ratio >= 4.5, `${foreground}/${background}: ${ratio}`);
 }
 console.log('PASS record cards preserve old counts/tier marks/data; touch labels, official brand and opaque-panel text contrast');
+
+
+const { storyMenuFa } = await import('../src/i18n/story-menu-fa.js');
+const ch1 = storyMenuFa('ashkabus');
+assert.match(ch1.description, /رستم.*اشکبوس/);
+assert.doesNotMatch(ch1.description, /موقت|اقتباس نهایی|دینگ.جون/);
+assert.equal(storyMenuFa('hulao').title, 'جنگ رستم و کاموس کشانی');
+assert.equal(difficultyFa('hard').line, 'فرماندهان سرسخت‌ترند و برای جاخالی‌دادن باید زمان‌بندی دقیقی داشته باشید.');
+const titleSource = readFileSync(new URL('../src/ui/title.js', import.meta.url), 'utf8');
+assert(!titleSource.includes('نمونهٔ موقت با محتوای دینگ‌جون'), 'No developer placeholder in chapter menu');
+assert(!titleSource.includes('<small>درجهٔ سختی</small>'), 'No repeated label under difficulty buttons');
+assert(titleSource.includes('id="difficulty-heading">انتخاب درجهٔ سختی</h3>'), 'Single Persian heading');
+assert(!titleSource.includes('سختی بازی<small>'), 'Old duplicate heading removed');
+assert(titleSource.includes('aria-labelledby="difficulty-heading"'), 'Difficulty region has accessible title');
+assert(titleSource.includes('این فصل هنوز منتشر نشده است'), 'Locked chapter label remains intact');
+assert(titleSource.includes('class="t-dif"'), 'Difficulty buttons remain in original selector');
+const difficultyStyles = readFileSync(new URL('../src/ui/title.css', import.meta.url), 'utf8');
+assert(difficultyStyles.includes('.touch-device #title.menu-refined.dif > .ui-foot'));
+assert(difficultyStyles.includes('display: none !important; /* #86:'));
+assert(difficultyStyles.includes('.touch-device #title.menu-refined.dif .t-band'));
+assert(difficultyStyles.includes('bottom: max(10px, var(--safe-bottom))'));
+assert(difficultyStyles.includes('overflow-y: auto'), 'Compact difficulty panes must scroll');
+console.log('PASS #83–#86 story copy, difficulty labels, RTL heading, scoped footer and touch layout');

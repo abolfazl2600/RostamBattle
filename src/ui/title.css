@@ -171,3 +171,82 @@
 @media (prefers-reduced-motion: reduce) {
   #title.menu-refined * { scroll-behavior: auto; }
 }
+
+/* #84-#86: Difficulty only. Keep chapter, records, desktop and controller
+   prompt/footer behavior untouched; no global footer removal. */
+#title.menu-refined.dif .t-dcard h3 {
+  display: block; direction: rtl; text-align: right; letter-spacing: 0;
+  margin: 0 0 10px; font: 800 clamp(17px, calc(3 * var(--game-vh)), 23px)/1.65 var(--fa-font);
+  overflow-wrap: break-word;
+}
+#title.menu-refined.dif :is(.t-dcard, .t-dif) { min-width: 0; }
+.touch-device #title.menu-refined.dif > .ui-foot {
+  display: none !important; /* #86: remove the redundant touch-only footer and its background */
+}
+.touch-device #title.menu-refined.dif .t-band {
+  left: max(12px, var(--safe-left));
+  right: max(12px, var(--safe-right));
+  top: max(62px, calc(var(--safe-top) + 54px));
+  bottom: max(10px, var(--safe-bottom));
+  width: auto; box-sizing: border-box; padding: 0;
+  overflow: hidden; gap: 0; /* no reserved footer height */
+}
+.touch-device #title.menu-refined.dif .t-logo { display: none; }
+.touch-device #title.menu-refined.dif .t-dpanel {
+  display: grid;
+  grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+  direction: ltr; align-items: stretch;
+  gap: clamp(8px, calc(1.5 * var(--game-vw)), 18px);
+  flex: 1 1 auto; width: 100%; min-height: 0; height: 100%;
+  margin: 0; overflow: hidden;
+}
+.touch-device #title.menu-refined.dif .t-dif {
+  display: flex; flex-direction: column; flex: none;
+  direction: rtl; min-height: 0; max-height: 100%;
+  width: 100%; margin: 0; padding: 2px 4px max(8px, var(--safe-bottom));
+  box-sizing: border-box; gap: 6px;
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain; touch-action: pan-y;
+  scrollbar-width: thin;
+}
+.touch-device #title.menu-refined.dif .t-dif button {
+  flex: none; min-height: 48px; width: 100%; box-sizing: border-box;
+  margin: 0; padding: 6px 12px 6px 20px;
+  text-align: right;
+}
+.touch-device #title.menu-refined.dif .t-dif b {
+  display: block; font-size: clamp(15px, calc(3.2 * var(--game-vh)), 21px);
+  line-height: 1.55; overflow-wrap: anywhere;
+}
+.touch-device #title.menu-refined.dif .t-dcard {
+  flex: none; direction: rtl; text-align: right;
+  width: 100%; height: 100%; min-height: 0; max-height: 100%;
+  box-sizing: border-box; margin: 0;
+  padding: clamp(9px, calc(2 * var(--game-vh)), 17px);
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain; touch-action: pan-y;
+  -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+}
+.touch-device #title.menu-refined.dif .t-dcard h3 {
+  font-size: clamp(16px, calc(3 * var(--game-vh)), 21px);
+  line-height: 1.55; margin: 0 0 7px;
+}
+.touch-device #title.menu-refined.dif .t-dline { min-height: 0; margin: 0; }
+.touch-device #title.menu-refined.dif .t-dline b {
+  display: block; font-size: clamp(13px, calc(2.7 * var(--game-vh)), 17px);
+  line-height: 1.65;
+}
+.touch-device #title.menu-refined.dif .t-dbars {
+  margin-top: 8px; gap: clamp(3px, calc(1 * var(--game-vh)), 8px);
+}
+@container game-surface (max-height: 420px) {
+  .touch-device #title.menu-refined.dif .t-band {
+    top: max(58px, calc(var(--safe-top) + 50px));
+  }
+  .touch-device #title.menu-refined.dif .t-dif { gap: 3px; }
+  .touch-device #title.menu-refined.dif .t-dif button {
+    min-height: 44px; padding-top: 3px; padding-bottom: 3px;
+  }
+  .touch-device #title.menu-refined.dif .t-dcard { padding: 8px 10px; }
+  .touch-device #title.menu-refined.dif .t-dcard h3 { font-size: 15px; }
+}
