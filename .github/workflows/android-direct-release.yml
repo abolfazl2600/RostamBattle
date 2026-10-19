@@ -36,6 +36,11 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Stamp unique Android version for this release run
+        id: release-version
+        run: node scripts/android/stamp-release-version.mjs
+
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -118,6 +123,7 @@ jobs:
           test -n "$VERSION_CODE"
 
           mkdir -p release-out
+          printf "versionName=%s\nversionCode=%s\nrunNumber=%s\nrunAttempt=%s\nsourceSha=%s\n" "$VERSION_NAME" "$VERSION_CODE" "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_ATTEMPT" "$GITHUB_SHA" > release-out/version.txt
           OUT="release-out/rostams-battle-${VERSION_NAME}-vc${VERSION_CODE}-direct-signed.apk"
           cp "$APK" "$OUT"
           bash scripts/android/verify-direct-apk.sh "$OUT" 2>&1 | tee "release-out/verification.txt"
@@ -135,7 +141,7 @@ jobs:
       - name: Upload verified signed APK and verification evidence
         uses: actions/upload-artifact@v4
         with:
-          name: rostams-battle-direct-signed-${{ github.run_number }}
+          name: rostams-battle-v${{ steps.release-version.outputs.version_name }}-vc${{ steps.release-version.outputs.version_code }}-direct-signed-${{ github.run_number }}-a${{ github.run_attempt }}
           path: release-out/
           if-no-files-found: error
           retention-days: 14

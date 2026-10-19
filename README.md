@@ -115,6 +115,8 @@
 
 ### ساخت APK مستقیم (مرحله فنی، هنوز منتشرنشده)
 
+**انتشار رسمی از GitHub Actions:** با اجرای دستی `Android Direct signed APK`، برای هر Run جدید `versionCode` و `versionName` خودکار بر اساس نسخهٔ پایهٔ `android/version.properties` و شمارهٔ Run افزایش می‌یابند؛ فایل APK با نسخهٔ جدید امضا و تأیید می‌شود. نسخهٔ پایه در Git تغییر نمی‌کند. Workflow سنگین `Android native build` دیگر پس از هر Merge اجرا نمی‌شود؛ فقط برای PRهای مرتبط با Android یا به‌صورت دستی قابل اجراست. تست وب همچنان برای تغییرات کد اجرا می‌شود. [جزئیات قرارداد نسخه‌بندی](docs/android/DIRECT_APK.md#نسخهگذاری-خودکار-در-انتشار-رسمی).
+
 پس از آماده‌سازی **کلید اختصاصی App Signing در رایانه امن ناشر**، مسیر محلی ساخت نسخه امضاشده `npm run android:direct` است و صحت APK با `npm run android:verify-direct -- PATH_TO_APK` کنترل می‌شود. نسخهٔ واحد در `android/version.properties` قرار دارد. **ساخت این APK به حساب Play Console وابسته نیست، اما هنوز APK رسمیِ دارای امضای مالک و شواهد نصب/ارتقای واقعی منتشر نشده است.** کلید خصوصی/رمز هرگز در GitHub ذخیره نشود.
 
 [راهنمای کامل تولید کلید، امضای APK و آزمون نصب/ارتقا](docs/android/DIRECT_APK.md) · [سیاست دو کلید Direct/Play](docs/android/SIGNING_STRATEGY.md).
