@@ -1,9 +1,18 @@
 name: Android native build
 on:
+  # Native/emulator CI is expensive: do not rebuild Android on every merge to main.
+  # Web-only changes are covered by Web package; official signed builds stay manual.
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
+    paths:
+      - 'android/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/android/**'
+      - 'scripts/ci/android-emulator-smoke.sh'
+      - '.github/workflows/android-native.yml'
+      - '.github/workflows/android-direct-release.yml'
   workflow_dispatch:
 
 permissions:
