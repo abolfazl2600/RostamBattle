@@ -36,6 +36,21 @@ export const BATTLE_NAMES_FA = {
   'Wei Fortified Camp': 'اردوگاه مستحکم وی', 'Dingjun Summit': 'قلهٔ دینگ‌جون',
   'Pass Barricade': 'مانع گذرگاه', 'Camp Gate': 'دروازهٔ اردوگاه',
   'Summit Barricade': 'مانع بالای کوه',
+  "Iran and Ashkabus": "جنگ ایران و اشکبوس",
+  "Iranian Camp": "اردوگاه ایران",
+  "Battlefield": "میدان نبرد",
+  "Turanian Camp": "اردوگاه توران",
+  "High Ground": "بلندی میدان",
+  "Stronghold Gate": "دروازهٔ دژ",
+  "High-Ground Barricade": "مانع بلندی میدان",
+  "Tous": "طوس",
+  "Roham": "رهام",
+  "Ashkabus": "اشکبوس",
+  "Turanian Champion": "پهلوان تورانی",
+  "Ambush Commander": "فرماندهٔ کمین",
+  "Fortress Guard": "نگهبان دژ",
+  "Turanian Soldier": "سرباز تورانی",
+  "Turanian Elite": "سرباز برگزیدهٔ توران",
 };
 
 export const BATTLE_EVENTS_FA = {
@@ -133,6 +148,22 @@ export const BATTLE_EVENTS_FA = {
   'Enemy commander: Xiahou Yuan': 'فرماندهٔ دشمن: شیا‌هو یوان',
   'The Wei war drums thunder — reinforcements!': 'طبل‌های سپاه وی به صدا درآمد؛ نیروهای کمکی رسیدند!',
   'Enemy commander Xiahou Yuan has fallen!': 'فرماندهٔ دشمن، شیا‌هو یوان، شکست خورد!',
+  "Advance across the battlefield": "در میدان نبرد پیشروی کنید.",
+  "Defeat the Turanian vanguard": "پهلوان پیشتاز توران را شکست دهید.",
+  "Open the road to the Turanian stronghold": "راه را به سوی دژ توران باز کنید.",
+  "Defeat the Turanian ambush commander": "فرماندهٔ کمین توران را شکست دهید.",
+  "Defeat the fortress guard and open the gate": "نگهبان دژ را شکست دهید و دروازه را بگشایید.",
+  "Reach the high ground and face Ashkabus": "به بلندی میدان بروید و با اشکبوس روبه‌رو شوید.",
+  "Break through the final barricade": "مانع نهایی را از میان بردارید.",
+  "Defeat Ashkabus, the Turanian champion": "اشکبوس، پهلوان تورانی را شکست دهید.",
+  "The battlefield is secured — Iran advances": "میدان نبرد پاک‌سازی شد؛ راه پیشروی باز است!",
+  "Turanian troops spring an ambush from both sides": "کمین توران! نیروها از دو سوی گذرگاه یورش آوردند!",
+  "The Turanian ambush is broken": "کمین توران درهم شکست!",
+  "The stronghold gate is open": "دروازهٔ دژ گشوده شد!",
+  "The route to the high ground is open": "راه بلندی میدان باز شد!",
+  "Ashkabus, the Turanian champion": "اشکبوس، پهلوان تورانی",
+  "Turanian war drums sound — reinforcements arrive": "طبل‌های توران به صدا درآمد؛ نیروهای کمکی رسیدند!",
+  "Ashkabus has been defeated": "اشکبوس شکست خورد!",
 };
 
 const CASELESS_NAMES_FA = Object.fromEntries(
@@ -179,6 +210,36 @@ export const BATTLE_DIALOGUE_FA = {
   "This old man will hold their reinforcements. Go, Zilong!": "من جلوی نیروهای کمکی را می‌گیرم. برو زی‌لونگ!",
   "Old Huang Zhong has cut down Xiahou Yuan!": "هوانگ ژونگِ کهنه‌کار شیا‌هو یوان را شکست داد!",
   "Xiahou Yuan has fallen to Zhao Zilong of Changshan!": "شیا‌هو یوان به دست ژائو زی‌لونگ از چانگ‌شان شکست خورد!"
+};
+
+// Ashkabus-only lines keep the original Dingjun dialogue table stable.
+export const ASHKABUS_DIALOGUE_FA = {
+  "Warriors of Iran, hold the line and open the road ahead!": "سپاه ایران، صف‌ها را استوار کنید؛ راه پیشروی باید باز شود!",
+  "Ashkabus has challenged Iran. Clear the route before you reach him.": "اشکبوس میدان را به مبارزه طلبیده است؛ پیش از رسیدن به او، راه را پاک‌سازی کنید.",
+  "I am Rostam Dastan. I will not leave this field until I face Ashkabus.": "من رستم دستانم؛ تا اشکبوس را نبینم از این میدان بازنمی‌گردم.",
+  "Rostam, I will support the line. You clear the road to the stronghold.": "رستم، من سپاه را پشتیبانی می‌کنم؛ تو راه دژ را باز کن.",
+  "The Iranians will not pass this way! Hold the line!": "ایرانیان از این گذرگاه نخواهند گذشت! صف‌ها را نگه دارید!",
+  "Shouts will not stop me. Come and face me!": "راه را با فریاد نمی‌بندند؛ پیش بیایید!",
+  "I lead Turan’s vanguard. If you dare, cross this field.": "من پیشتاز سپاه تورانم! اگر جرئت داری، از این میدان بگذر.",
+  "The vanguard has fallen back. Cross the pass and press toward Turan’s stronghold.": "پیشتازان عقب نشستند؛ از گذرگاه بگذر و به سوی دژ توران پیش برو.",
+  "Rostam has reached the pass! Alert the ambush!": "رستم به گذرگاه رسیده است! نیروهای کمین را خبر کنید!",
+  "You have walked into our trap, Iranian champion. This pass will be your grave!": "به دام افتادی، پهلوان ایرانی! این گذرگاه گورستان تو خواهد شد!",
+  "An ambush! Defeat their commander to clear the road to the stronghold!": "کمین است! فرماندهٔ آن‌ها را شکست بده تا راه به دژ باز شود!",
+  "The ambush is broken. The fortress guard stands ahead. Open the gate!": "کمین درهم شکست؛ نگهبان دژ پیش روی توست. دروازه را بگشا!",
+  "I have sworn to hold this gate for Turan. You shall not pass!": "این دروازه را به توران سوگند بسته نگه می‌دارم؛ از من نخواهی گذشت!",
+  "Your gate will fall, and I will find Ashkabus!": "دروازه‌ات فرو می‌ریزد و راه اشکبوس را خواهم یافت!",
+  "The stronghold can no longer hold. Fall back!": "دژ دیگر تاب پایداری ندارد؛ نیروها عقب‌نشینی کنند!",
+  "Ashkabus waits on the high ground. Push through the remaining troops and face him!": "اشکبوس بر بلندی میدان منتظر است؛ از میان نیروهای باقی‌مانده بگذر و با او روبه‌رو شو!",
+  "Do not let Rostam reach our champion!": "نگذارید رستم به پهلوان ما نزدیک شود!",
+  "So you are Rostam Dastan. Today I will erase your name from this field.": "پس تویی رستم دستان! امروز نامت را از میدان پاک خواهم کرد.",
+  "I fight for Iran. My spear will answer your challenge!": "من برای ایران می‌جنگم؛ نیزه‌ام پاسخ هماوردی توست!",
+  "Beat the drums! Bring Rostam down!": "طبل‌ها را بنوازید! رستم را از پای درآورید!",
+  "I will hold the reinforcements. You defeat Ashkabus!": "من نیروهای کمکی را سرگرم می‌کنم؛ تو اشکبوس را شکست بده!",
+  "Ashkabus has fallen, and Iran’s path forward is open!": "اشکبوس شکست خورد و راه سپاه ایران گشوده شد!",
+  "General, clear the battlefield before advancing!": "سردار، پیش از پاک‌سازی میدان جلوتر نروید!",
+  "Rostam, the pass is not clear yet. Hold your advance!": "رستم، راه گذرگاه هنوز پاک‌سازی نشده است؛ پیش نرو!",
+  "The gate is barred. Defeat the fortress guard first!": "دروازه بسته است؛ نخست نگهبان دژ را شکست دهید!",
+  "Ashkabus, the Turanian champion, enters the field!": "اشکبوس، پهلوان تورانی، به میدان آمد!",
 };
 
 // First chapter: Hulao Gate dialogue, including all three hero branches.
@@ -375,5 +436,5 @@ export const CHIBI_DIALOGUE_FA = {
 
 export const battleTextFa = (en, fallback = '') => {
   if (!en) return fallback;
-  return BATTLE_EVENTS_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || CHIBI_DIALOGUE_FA[en] || en;
+  return BATTLE_EVENTS_FA[en] || ASHKABUS_DIALOGUE_FA[en] || BATTLE_DIALOGUE_FA[en] || HULAO_DIALOGUE_FA[en] || CHANGBAN_DIALOGUE_FA[en] || CHIBI_DIALOGUE_FA[en] || en;
 };
