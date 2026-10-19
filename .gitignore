@@ -14,3 +14,10 @@ android/local.properties
 android/**/build/
 *.jks
 *.keystore
+
+# Local signed release files and private signing material
+release-out/
+android-signing/
+*.p12
+*.pfx
+*.pkcs12
