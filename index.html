@@ -258,8 +258,6 @@
   #menu[hidden] { opacity: 0; backdrop-filter: blur(0); }
   @starting-style { #menu { opacity: 0; backdrop-filter: blur(0); } }
   #menu > * { animation: menuIn .45s cubic-bezier(.2,0,.2,1) var(--d, 0s) backwards; }   /* restarts on every open (display) */
-  #menu > table { animation-name: tableIn; --d: .1s; }
-  @keyframes tableIn { from { opacity: 0; translate: 3rem 0; } }
   #menu .t { font: 700 13rem/1 var(--brush); letter-spacing: 1rem; color: #f7f1e8;
     text-shadow: .4rem .5rem 0 rgba(0,0,0,.55), 0 0 3rem rgba(0,0,0,.5); }
   #menu .t i { display: inline-block; vertical-align: 3rem; margin-left: 1.2rem; letter-spacing: 0;
@@ -267,21 +265,15 @@
   #menu .en { font: 500 1.8rem/1 var(--sans); letter-spacing: 1.1em; margin: .6rem 0 0 .6rem; opacity: .85; }
   #menu .sub { font: 700 2.4rem/1 var(--kai); letter-spacing: .6rem; margin: 1.6rem 0 0 .4rem; color: #f2c14e; }
   #menu .sub small { font: 600 1.2rem/1 var(--sans); letter-spacing: .16em; margin-left: 1rem; color: var(--dim); }
-  #menu table { position: absolute; right: 6rem; top: 50%; transform: translateY(-50%); align-self: flex-start; border-collapse: collapse;
-    font: 500 1.45rem/1 var(--sans); border-left: .3rem solid #b3261e;
-    background: linear-gradient(90deg, rgba(12,8,6,.86), rgba(12,8,6,.7)); box-shadow: 0 0 4rem 2rem rgba(12,8,6,.5); }
-  #menu td { padding: .6rem 1.4rem; white-space: nowrap; }
-  #menu td:first-child { font: 700 2.2rem/1 var(--kai); color: #f2c14e; }
-  #menu td:first-child small { font: 500 1.3rem/1 var(--sans); letter-spacing: .15em; color: #cdbb9c; margin-left: .8rem; }
-  #menu td.pad { color: #c9b995; }
-  #menu td:nth-child(2) { white-space: normal; max-width: 34rem; line-height: 1.45; }   /* the pad column must not push the table over the name */
   /* 繼續 / 撤退 (#go / #quit): brush items; the focused one (main.js pause nav, .on) gets the title menu's red diamond + a
      gold swash, nudged right */
   #menu button { position: relative; align-self: flex-start; margin: 1rem 0 0 .2rem; padding: .6rem 0 1rem 3rem; cursor: pointer; border: 0;
-    border-radius: 0; background: none; font: 700 4rem/1 var(--brush); letter-spacing: .4rem; color: rgba(244,234,216,.6);
+    border-radius: 0; background: none; font: 700 4rem/1.4 var(--brush); letter-spacing: .4rem; color: rgba(244,234,216,.6);
+    text-align: right; overflow-wrap: anywhere;
     text-shadow: 0 .3rem .6rem rgba(0,0,0,.7); transition: transform .2s cubic-bezier(.3,0,.2,1), color .2s; }
   #menu #go { margin-top: 3.6rem; }
-  #menu button small { font: 600 max(13px, 1.3rem)/1 var(--sans); letter-spacing: .12em; margin-left: 1rem; opacity: .85; }
+  /* Descriptions are secondary lines, never inline with long RTL button names. */
+  #menu button small { display: block; font: 600 max(13px, 1.3rem)/1.5 var(--sans); letter-spacing: .12em; margin: .15rem 0 0; opacity: .85; }
   #menu button:focus-visible { outline: none; }
   #menu button::before { content: ""; position: absolute; left: .6rem; top: 1.9rem; width: 1.1rem; height: 1.1rem; background: var(--sealr);
     box-shadow: 0 0 0 .15rem #f2c14e; transform: rotate(45deg) scale(0); transition: transform .2s; }
@@ -1252,7 +1244,7 @@
   .touch-device #title :is(.t-ctl, .t-rec) { inset: max(68px, var(--safe-top)) max(16px, var(--safe-right)) 35px max(16px, var(--safe-left));
     transform: none; overflow: auto; max-height: none; max-width: none; padding: 12px; box-sizing: border-box; background: #1a120df5; }
   .touch-device #title.ctl .t-ctl, .touch-device #title.rec .t-rec { transform: none; }
-  .touch-device #title .t-ctl :is(th, td), .touch-device #menu td { font-size: 14px; line-height: 1.7; }
+  .touch-device #title .t-ctl :is(th, td) { font-size: 14px; line-height: 1.7; }
   .touch-device .ui-foot { left: max(16px, var(--safe-left)) !important; right: max(16px, var(--safe-right));
     bottom: max(6px, var(--safe-bottom)); font-size: 12px !important; line-height: 1.4; pointer-events: none; }
   .touch-device #select .s-head { top: max(8px, var(--safe-top)); left: max(16px, var(--safe-left)); }
@@ -1275,16 +1267,47 @@
   .touch-device #select .s-act b, .touch-device #select .s-go b { font-size: 17px; }
   .touch-device #select .s-act button { padding: 8px 20px; }
   .touch-device #select .s-act small { display: none; }
-  .touch-device #menu { z-index: 30; overflow-y: auto; justify-content: flex-start; padding: max(16px, var(--safe-top)) max(20px, var(--safe-right)) max(20px, var(--safe-bottom)) max(20px, var(--safe-left)); }
-  .touch-device #menu .t { font-size: 30px; line-height: 1.6; }
-  .touch-device #menu .en { display: none; }
-  .touch-device #menu .sub { font-size: 16px; margin: 5px 0; line-height: 1.5; }
-  .touch-device #menu .sub small { font-size: 12px; }
-  .touch-device #menu button, .touch-device #menu #go { order: 1; font-size: 20px; margin: 6px 0; padding: 8px 25px; flex: none; }
-  .touch-device #menu .hint { order: 2; margin: 4px 0; font-size: 12px; }
-  .touch-device #menu table { position: static; order: 3; transform: none; margin-top: 16px; max-width: 100%; box-shadow: none; }
-  .touch-device #menu td { padding: 6px; white-space: normal; }
-  .touch-device #menu td.pad { display: none; }
+  /* Mobile battle pause: a short, self-contained menu, never the full controls guide. */
+  .touch-device #menu {
+    z-index: 30; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: clamp(6px, calc(1.4 * var(--game-vh)), 12px);
+    padding: max(12px, var(--safe-top)) max(16px, var(--safe-right))
+      max(12px, var(--safe-bottom)) max(16px, var(--safe-left));
+    overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+    background: rgba(16, 10, 7, .88); text-align: center;
+  }
+  .touch-device #menu[hidden] { display: none; }
+  .touch-device #menu .t {
+    width: min(100%, 420px); flex: none; font-size: clamp(20px, calc(5 * var(--game-vh)), 29px);
+    line-height: 1.35; text-align: center; overflow-wrap: anywhere;
+  }
+  .touch-device #menu .t i, .touch-device #menu .en { display: none; }
+  .touch-device #menu .sub {
+    width: min(100%, 420px); flex: none; font-size: clamp(13px, calc(2.8 * var(--game-vh)), 16px);
+    line-height: 1.5; margin: 0; text-align: center;
+  }
+  .touch-device #menu button, .touch-device #menu #go {
+    order: 0; box-sizing: border-box; flex: none; align-self: center;
+    width: min(100%, 420px); min-height: 48px; margin: 0;
+    padding: 7px 16px; font: 700 clamp(16px, calc(3.4 * var(--game-vh)), 20px)/1.5 var(--fa-font);
+    letter-spacing: 0; text-align: center; overflow-wrap: anywhere;
+    border: 1px solid rgba(216, 189, 126, .65); border-radius: 8px;
+    background: rgba(38, 26, 17, .92); color: #fff1ce;
+    transform: none;
+  }
+  .touch-device #menu button.on {
+    transform: none; color: #fff6e0; border-color: #f2c14e; background: #49331d;
+  }
+  .touch-device #menu button::before, .touch-device #menu button::after { display: none; }
+  .touch-device #menu button small { display: none; }
+  .touch-device #menu #quit.arm { border-color: #d65a42; background: #4b2118; }
+  .touch-device #menu #quit.arm small {
+    display: block; margin: 3px 0 0; font-size: 12px; line-height: 1.5;
+    white-space: normal; overflow-wrap: anywhere;
+  }
+  /* Navigation hints and the full controls table belong to the main menu guide, not pause. */
+  .touch-device #menu .hint { display: none; }
   .touch-device #prologue { touch-action: none; }
   .touch-device #prologue .pl-skip { left: max(16px, var(--safe-left)); right: max(16px, var(--safe-right)); bottom: max(10px, var(--safe-bottom)); font-size: 13px; gap: 12px; }
   .touch-device #prologue .pl-skip-now { padding: 8px 16px; background: #26170bdd; color: #fff1ce; border: 1px solid #b8893a; font: 600 14px var(--sans); }
@@ -1580,9 +1603,9 @@
 <canvas id="c"></canvas>
 <div id="hud" hidden></div>
 <div id="menu" hidden>
-  <div class="t">ژائو یون<i>سردار</i></div>
+  <div class="t">رستم<i>پهلوان</i></div>
   <div class="en" style="--d:.04s">نبرد رستم</div>
-  <div class="sub" style="--d:.08s">نبرد متوقف شد<small>توقف بازی</small></div>
+  <div class="sub" style="--d:.08s">نبرد متوقف شد</div>
   <button id="go" style="--d:.14s">ادامه<small>بازگشت به میدان</small></button>
   <button id="quit" style="--d:.18s">بازگشت به منو<small>خروج از نبرد</small></button>
   <button id="pause-settings" type="button">تنظیمات<small>نمایش، کنترل و گرافیک</small></button>
