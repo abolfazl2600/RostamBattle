@@ -101,6 +101,17 @@ adb shell pm path io.github.abolfazl.nabardrostam
 
 ## ساخت APK امضاشده از GitHub Actions
 
+### نسخه‌گذاری خودکار در انتشار رسمی
+
+در **هر اجرای جدید دستی** Workflow `Android Direct signed APK`، شمارهٔ نسخهٔ APK خودکار افزایش می‌یابد. فایل `android/version.properties` همچنان نسخهٔ پایهٔ محلی را نگه می‌دارد (اکنون `versionCode=1` و `versionName=1.0.0`) و اسکریپت `scripts/android/stamp-release-version.mjs` داخل Checkout موقت GitHub Actions مقدار زیر را محاسبه می‌کند:
+
+- `versionCode = versionCode پایه + GITHUB_RUN_NUMBER`
+- `versionName = major.minor.(patch پایه + GITHUB_RUN_NUMBER)`
+
+برای نمونه، اگر شمارندهٔ اجرای این Workflow برابر `4` باشد، خروجی امضاشدهٔ CI با نسخهٔ `1.0.4` و کد `5` ساخته می‌شود. شماره‌ها ممکن است به‌دلیل اجرای ناموفق یا لغوشده پرش داشته باشند؛ این رفتار طبیعی است. **Re-run همان اجرای قبلی شمارهٔ نسخه را افزایش نمی‌دهد**؛ برای انتشار نسخهٔ جدید از `Run workflow` استفاده کنید. نسخهٔ جدید در APK، نام فایل، `verification.txt` و `version.txt` بررسی/ثبت می‌شود. فایل نسخه در Git Commit نمی‌شود و رمز یا keystore نیز تغییر نمی‌کند.
+
+این سیاست فعلاً مخصوص مسیر **Direct signed APK** است. ساخت محلی `npm run android:direct` همچنان اعداد `android/version.properties` را مستقیماً استفاده می‌کند و برای انتشار محلی جدید باید آن‌ها را با کد نسخهٔ بالاتر از آخرین نسخهٔ توزیع‌شده تنظیم کنید. **قبل از پیاده‌سازی کانال Google Play** لازم است تخصیص `versionCode` دو کانال با هم هماهنگ شود؛ نسخهٔ کوچک‌تر نمی‌تواند روی نسخهٔ نصب‌شدهٔ بزرگ‌تر به‌روزرسانی شود.
+
 فایل `.github/workflows/android-direct-release.yml` مسیر مستقل و دستی برای ساخت APK رسمی دارد. این workflow فقط روی `main` اجرا می‌شود، برای کلید از Environment مخصوص استفاده می‌کند، در نبودن هر secret متوقف می‌شود و فقط APK تأییدشده به‌همراه checksum و گزارش گواهی را به‌صورت artifact تحویل می‌دهد؛ GitHub Release را خودکار منتشر نمی‌کند.
 
 ### یک‌بار تنظیم امنیتی توسط مالک مخزن
@@ -135,13 +146,13 @@ keytool -genkeypair -v -storetype PKCS12 \
 
 1. ابتدا تغییر workflow را در `main` ادغام کنید و چهار Environment secret و تأیید دستی را تنظیم کنید.
 2. در `Actions → Android Direct signed APK → Run workflow` شاخهٔ `main` را انتخاب کنید و `confirm_release` را روی `yes` بگذارید.
-3. پس از تأیید محیط و موفقیت checkها، artifact با نامی شبیه `rostams-battle-direct-signed-<run>` را دریافت کنید. در آن APK، فایل `.sha256` و `verification.txt` شامل بررسی package/version و fingerprint عمومی گواهی قرار دارد.
-4. پیش از توزیع، checksum را بررسی و APK را روی دستگاه واقعی نصب کنید. نسخهٔ فعلی `android/version.properties` برابر `versionCode=1` و `versionName=1.0.0` است؛ برای هر انتشار جدید `versionCode` باید کنترل‌شده افزایش یابد.
+3. پس از تأیید محیط و موفقیت checkها، artifact با نامی شبیه `rostams-battle-v1.0.4-vc5-direct-signed-4-a1` را دریافت کنید (عددهای واقعی به Run بستگی دارند). در آن APK، فایل `.sha256` و `verification.txt` شامل بررسی package/version و fingerprint عمومی گواهی قرار دارد.
+4. پیش از توزیع، checksum را بررسی و APK را روی دستگاه واقعی نصب کنید. در Workflow رسمی نسخه به‌صورت خودکار محاسبه می‌شود؛ در ساخت محلی نسخه باید دستی از آخرین نسخهٔ توزیع‌شده بالاتر باشد.
 
 اگر Environment یا secretها تنظیم نشده باشند، یا امضای APK/شناسه/نسخه تأیید نشود، workflow نباید artifact انتشار تولید کند. فایل artifact برای مدت ۱۴ روز نگه‌داری می‌شود؛ انتشار GitHub Release و آزمون نصب/به‌روزرسانی واقعی همچنان کارهای جداگانه‌اند.
 
 ## امنیت و محدودیت‌های باقی‌مانده
-- CI عمومی همچنان فقط Debug و Release **بدون امضای انتشار** را می‌سازد؛ workflow دستی Direct Release در `.github/workflows/android-direct-release.yml` فقط روی `main` و با secrets محیط `android-direct-release` اجرا می‌شود. Required reviewers باید جداگانه در تنظیمات GitHub فعال شوند؛ PRها و forkها به این کلیدها دسترسی ندارند.
+- CI بومی Android فقط روی PRهای مرتبط با تنظیمات Native یا با اجرای دستی، Debug و Release **بدون امضای انتشار** را می‌سازد و دیگر پس از هر Merge اجرا نمی‌شود؛ workflow دستی Direct Release در `.github/workflows/android-direct-release.yml` فقط روی `main` و با secrets محیط `android-direct-release` اجرا می‌شود. Required reviewers باید جداگانه در تنظیمات GitHub فعال شوند؛ PRها و forkها به این کلیدها دسترسی ندارند.
 - قبل از انتشار عمومی: مجوزها و امنیت WebView (#41)، آیکون/Splash (#42)، مالکیت دارایی‌ها (#50)، و آزمون QA دستگاه‌ها (#34، #35، #40) باید نهایی شوند.
 - وجود حساب Google Play Console **برای APK مستقیم ضروری نیست**؛ اما برای AAB/Play و تطبیق امضای دو کانال ضروری خواهد بود.
 
