@@ -24,7 +24,7 @@
 umask 077
 mkdir -p "$HOME/.config/nabard-rostam/keys"
 keytool -genkeypair -v \
-  -keystore "$HOME/.config/nabard-rostam/keys/app-signing.jks" \
+  -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" \
   -storetype PKCS12 \
   -alias nabard-rostam-app \
   -keyalg RSA -keysize 4096 -validity 10000
@@ -38,7 +38,7 @@ keytool -genkeypair -v \
 در همان ترمینال امن (هیچ رمزی را به command-line literal وارد نکنید تا در history نماند):
 
 ```bash
-export ROSTAM_DIRECT_KEYSTORE="$HOME/.config/nabard-rostam/keys/app-signing.jks"
+export ROSTAM_DIRECT_KEYSTORE="$HOME/.config/nabard-rostam/keys/app-signing.p12"
 export ROSTAM_DIRECT_KEY_ALIAS="nabard-rostam-app"
 read -r -s -p "Store password: " ROSTAM_DIRECT_STORE_PASSWORD; echo
 export ROSTAM_DIRECT_STORE_PASSWORD
@@ -125,7 +125,7 @@ umask 077
 mkdir -p "$HOME/.config/nabard-rostam/keys"
 keytool -genkeypair -v -storetype PKCS12 \
   -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" \
-  -alias nabard-rostam-app -keyalg RSA -keysize 3072 -validity 10000 \
+  -alias nabard-rostam-app -keyalg RSA -keysize 4096 -validity 10000 \
   -dname "CN=Nabard Rostam App, OU=Release, O=Game Publisher"
 ```
 
