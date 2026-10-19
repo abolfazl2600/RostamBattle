@@ -106,7 +106,7 @@
 ### فاز ۴ — نسخهٔ Android، APK و Google Play
 
 - [x] تدوین **پیش‌نویس** جدول تصمیم‌های انتشار و پیش‌نیازهای Android ([PR #51](https://github.com/abolfazl2600/voxel-game/pull/51))؛ تأیید تصمیم‌ها هنوز انجام نشده است.
-- [ ] تعیین نام و ناشر نهایی، `applicationId`، بازار، حساب Play و مدل انتشار ([#32](https://github.com/abolfazl2600/voxel-game/issues/32)).
+- [ ] تکمیل نام ناشر، حساب Play، ثبت‌پذیری `applicationId` مصوب، بازار و مدل انتشار ([#32](https://github.com/abolfazl2600/voxel-game/issues/32)).
 - [ ] بسته‌بندی نسخهٔ وب با Capacitor و آماده‌سازی پروژهٔ Android، محتوای آفلاین، Landscape، چرخهٔ عمر و ذخیره‌ها ([#33](https://github.com/abolfazl2600/voxel-game/issues/33) تا [#39](https://github.com/abolfazl2600/voxel-game/issues/39)).
 - [ ] بررسی سازگاری دستگاه واقعی، WebGL2، امنیت، مجوزها و هویت بصری ([#40](https://github.com/abolfazl2600/voxel-game/issues/40) تا [#42](https://github.com/abolfazl2600/voxel-game/issues/42)).
 - [ ] تعیین راهبرد امضا و ساخت **APK قابل نصب مستقیم** و **AAB ویژهٔ Play**؛ افزودن خروجی‌های مجزا به GitHub Actions ([#43](https://github.com/abolfazl2600/voxel-game/issues/43) تا [#46](https://github.com/abolfazl2600/voxel-game/issues/46)).
@@ -191,4 +191,4 @@ media/           تصویر و ویدئوی معرفی
 
 ---
 
-<sub><strong>English summary:</strong> «نبرد رستم» (official Persian title; Latin release name pending) is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>
+<sub><strong>English summary:</strong> «نبرد رستم» (Rostam’s Battle) is a browser-based voxel Musou action game with Persian UI and landscape touch controls. The long-term direction is a Shahnameh/Rostam adaptation. The current Ashkabus story is a temporary preview using legacy assets, not the finished adaptation. Real-device mobile QA and Android APK / Google Play releases are still pending. <a href="https://abolfazl2600.github.io/voxel-game/">Play in browser</a>.</sub>
