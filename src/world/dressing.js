@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { boxesGeometry, shade } from '../core/voxel.js';
 import { makeRng } from '../core/rng.js';
+import { drawDerafsh } from '../core/derafsh.js';
 import { figureGeometry, watchtower, pagoda, paperLantern, lit } from './castle.js';
 import { TERRAIN, ROUTE, GATES, WATER, ground, waterD, routeDist, routeNear, node } from './map.js';
 import { topAt, GRASS_TIME } from './terrain.js';
@@ -21,7 +22,7 @@ const frac = (x) => x - Math.floor(x);
 const FOCUS = { value: new THREE.Vector3() };   // the camera's focus (hero), for the reeds' sight line
 
 // ---------------------------------------------------------------- banners
-function bannerTexture(ch, { bg, fg, border, w = 128, h = 256, tatter = true, seed = 1 }) {
+function bannerTexture(ch, { bg, fg, border, w = 128, h = 256, tatter = true, seed = 1, emblem } = {}) {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
   const g = c.getContext('2d'), r = makeRng(seed);
   g.fillStyle = bg; g.fillRect(0, 0, w, h);
@@ -30,12 +31,16 @@ function bannerTexture(ch, { bg, fg, border, w = 128, h = 256, tatter = true, se
     g.fillRect(r.int(0, w), r.int(0, h), r.int(2, 10), r.int(1, 4));
   }
   if (border) { g.strokeStyle = border; g.lineWidth = w * 0.09; g.strokeRect(w * 0.045, w * 0.045, w * 0.91, h * 0.86); }
-  g.fillStyle = fg;
-  g.font = `bold ${Math.round(w * 0.66)}px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif`;
-  g.textAlign = 'center'; g.textBaseline = 'middle';
-  // fill only: a stroke closes 魏's dense counters into a blob at gameplay distance. Two glyphs stack (夏侯).
-  if (ch.length > 1) { g.font = g.font.replace(/\d+px/, `${Math.round(w * 0.56)}px`); [...ch].forEach((q, i) => g.fillText(q, w / 2, h * (0.25 + i * 0.33))); }
-  else if (ch) g.fillText(ch, w / 2, h * 0.42);
+  if (emblem === 'derafsh') {
+    drawDerafsh(g, w / 2, h * 0.42, Math.min(w * 0.62, h * 0.64));
+  } else {
+    g.fillStyle = fg;
+    g.font = `bold ${Math.round(w * 0.66)}px "Xingkai SC","STXingkai","Kaiti SC","KaiTi","Songti SC",serif`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    // Preserve the existing Chinese chapter banners.
+    if (ch.length > 1) { g.font = g.font.replace(/\d+px/, `${Math.round(w * 0.56)}px`); [...ch].forEach((q, i) => g.fillText(q, w / 2, h * (0.25 + i * 0.33))); }
+    else if (ch) g.fillText(ch, w / 2, h * 0.42);
+  }
   const grad = g.createLinearGradient(0, 0, 0, h);                    // soot toward the hem
   grad.addColorStop(0.6, 'rgba(20,8,6,0)'); grad.addColorStop(1, 'rgba(20,8,6,0.45)');
   g.fillStyle = grad; g.fillRect(0, 0, w, h);
@@ -509,8 +514,8 @@ export function buildDressing(root, def, { army, castle = null, sites = [] } = {
   const pf = PAL.foe, pa = PAL.ally;
   const mats = {
     foe: banner(A.foe.glyph, { bg: pf.bg, fg: pf.fg, border: pf.border, seed: 3 }),
-    ally: banner(A.ally.glyph, { bg: pa.bg, fg: pa.fg, border: pa.border, w: 192, h: 256, seed: 5 }),
-    allyFlag: banner(A.ally.glyph, { bg: pa.flag[0], fg: pa.fg, border: pa.flag[1], w: 128, h: 96, tatter: false, seed: 6 }),
+    ally: banner(A.ally.glyph, { bg: pa.bg, fg: pa.fg, border: pa.border, w: 192, h: 256, seed: 5, emblem: A.ally.emblem }),
+    allyFlag: banner(A.ally.glyph, { bg: pa.flag[0], fg: pa.fg, border: pa.flag[1], w: 128, h: 96, tatter: false, seed: 6, emblem: A.ally.emblem }),
     pennant: banner('', { bg: pf.pennant[0], fg: '#000', border: pf.pennant[1], w: 64, h: 128, seed: 7 }),
   };
   const addCloth = (mat, w, h, kind, x, y, z, yaw) => {
