@@ -31,14 +31,15 @@ jobs:
         with:
           ref: main
 
-      - name: Stamp unique Android version for this release run
-        id: release-version
-        run: node scripts/android/stamp-release-version.mjs
-
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      - name: Stamp unique Android version for this release run
+        id: release-version
+        run: node scripts/android/stamp-release-version.mjs
+
 
       - uses: actions/setup-java@v4
         with:
