@@ -38,18 +38,18 @@ export default {
   // walk through); the Wei camp courtyard's command table with its stools and brazier (solid set pieces)
   props: [[-4.8, 201.8, 12.8, 214.8], [-6.5, 127.6, -1.5, 132.4]],
   zones: [
-    { id: 'honjin', name: { zh: '蜀軍本陣', en: 'Shu Main Camp' }, x: 0, z: -138, w: 52, d: 40 },
-    { id: 'ford', name: { zh: '漢水渡口', en: 'Han River Ford' }, x: 0, z: -81, w: 96, d: 74 },
-    { id: 'pass', name: { zh: '山道', en: 'Mountain Pass' }, x: 0, z: 16, w: 84, d: 124 },
-    { id: 'camp', name: { zh: '魏軍營寨', en: 'Wei Fortified Camp' }, x: -16, z: 123, w: 76, d: 90 },
-    { id: 'summit', name: { zh: '定軍山頂', en: 'Dingjun Summit' }, x: 2, z: 194, r: 34 },
+    { id: 'honjin', name: { zh: 'اردوگاه ایران', en: 'Iranian Camp' }, x: 0, z: -138, w: 52, d: 40 },
+    { id: 'ford', name: { zh: 'میدان نبرد', en: 'Battlefield' }, x: 0, z: -81, w: 96, d: 74 },
+    { id: 'pass', name: { zh: 'گذرگاه کوهستانی', en: 'Mountain Pass' }, x: 0, z: 16, w: 84, d: 124 },
+    { id: 'camp', name: { zh: 'اردوگاه توران', en: 'Turanian Camp' }, x: -16, z: 123, w: 76, d: 90 },
+    { id: 'summit', name: { zh: 'بلندی میدان', en: 'High Ground' }, x: 2, z: 194, r: 34 },
   ],
   route: [[0, -150], [0, -118], [0, -86], [0, -46], [0, 0], [0, 28], [7, 44], [4, 55], [2, 64], [-5, 72], [-10, 84], [GATE_X, 104],
     [GATE_X, 118], [-22, 128], [-30, 133], [-41, 145], [-45, 159], [-33, 171], [-17, 176.5], [-6, 180], [2, 192]],
   gates: {
-    pass: { rect: [-14, 59.5, 20, 62.5], name: { zh: '山道柵', en: 'Pass Barricade' }, kind: 'barricade', at: [2, 61, 0, 11] },
-    weiCamp: { rect: [GATE_X - 7, 99.5, GATE_X + 7, 102.5], name: { zh: '營寨門', en: 'Camp Gate' }, kind: 'doors' },
-    summit: { rect: [-21.5, 166, -18.5, 186], name: { zh: '山頂柵', en: 'Summit Barricade' }, kind: 'barricade', at: [-20, 176, Math.PI / 2, 9] },
+    pass: { rect: [-14, 59.5, 20, 62.5], name: { zh: 'مانع گذرگاه', en: 'Pass Barricade' }, kind: 'barricade', at: [2, 61, 0, 11] },
+    weiCamp: { rect: [GATE_X - 7, 99.5, GATE_X + 7, 102.5], name: { zh: 'دروازهٔ دژ', en: 'Stronghold Gate' }, kind: 'doors' },
+    summit: { rect: [-21.5, 166, -18.5, 186], name: { zh: 'مانع بلندی میدان', en: 'High-Ground Barricade' }, kind: 'barricade', at: [-20, 176, Math.PI / 2, 9] },
   },
   anchors: { gate: [GATE_X, WALL_Z] },   // ch1.js ['gate', dx, dz]: metres from the camp gate
   // story: at the head of the Shu ranks just inside the 本陣 gate, facing the ford through it (tilt levels the camera a
