@@ -60,9 +60,10 @@ jobs:
           ROSTAM_DIRECT_STORE_PASSWORD: ${{ secrets.ROSTAM_DIRECT_STORE_PASSWORD }}
           ROSTAM_DIRECT_KEY_ALIAS: ${{ secrets.ROSTAM_DIRECT_KEY_ALIAS }}
           ROSTAM_DIRECT_KEY_PASSWORD: ${{ secrets.ROSTAM_DIRECT_KEY_PASSWORD }}
+          ROSTAM_DIRECT_CERT_SHA256: ${{ vars.ROSTAM_DIRECT_CERT_SHA256 }}
         run: |
           set -euo pipefail
-          for name in ROSTAM_DIRECT_KEYSTORE_BASE64 ROSTAM_DIRECT_STORE_PASSWORD ROSTAM_DIRECT_KEY_ALIAS ROSTAM_DIRECT_KEY_PASSWORD; do
+          for name in ROSTAM_DIRECT_KEYSTORE_BASE64 ROSTAM_DIRECT_STORE_PASSWORD ROSTAM_DIRECT_KEY_ALIAS ROSTAM_DIRECT_KEY_PASSWORD ROSTAM_DIRECT_CERT_SHA256; do
             if [[ -z "${!name:-}" ]]; then
               echo "Missing protected signing secret: $name. Configure the android-direct-release environment." >&2
               exit 1
@@ -104,6 +105,8 @@ jobs:
 
       - name: Verify APK, certificate, version, and checksum
         shell: bash
+        env:
+          ROSTAM_DIRECT_CERT_SHA256: ${{ vars.ROSTAM_DIRECT_CERT_SHA256 }}
         run: |
           set -euo pipefail
           APK="android/app/build/outputs/apk/release/app-release.apk"
@@ -118,6 +121,14 @@ jobs:
           OUT="release-out/rostams-battle-${VERSION_NAME}-vc${VERSION_CODE}-direct-signed.apk"
           cp "$APK" "$OUT"
           bash scripts/android/verify-direct-apk.sh "$OUT" | tee "release-out/verification.txt"
+
+          EXPECTED_CERT="$(printf '%s' "$ROSTAM_DIRECT_CERT_SHA256" | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
+          ACTUAL_CERT="$(sed -n 's/.*certificate SHA-256 digest: *//p' release-out/verification.txt | head -n 1 | tr -d '[:space:]:' | tr '[:lower:]' '[:upper:]')"
+          if [[ -z "$EXPECTED_CERT" || -z "$ACTUAL_CERT" || "$EXPECTED_CERT" != "$ACTUAL_CERT" ]]; then
+            echo "ERROR: APK signing certificate fingerprint does not match ROSTAM_DIRECT_CERT_SHA256." >&2
+            exit 1
+          fi
+
           (cd release-out && sha256sum "$(basename "$OUT")" > "$(basename "$OUT").sha256")
           echo "Verified signed APK: $OUT"
 
