@@ -16,6 +16,20 @@ const { createInput } = await import('../src/core/input.js');
 const { emit } = await import('../src/core/events.js');
 const { viewport, updateViewport, gamePoint, gameRect } = await import('../src/core/viewport.js');
 const { joystickVector } = await import('../src/ui/touch-controls.js');
+const { TOUCH_ACTIONS, touchActionIcon, touchButtonMarkup } = await import('../src/ui/touch-layout.js');
+// Controls should never render visible Persian labels or require animated/external icons.
+assert.equal(TOUCH_ACTIONS.length, 6);
+for (const action of TOUCH_ACTIONS) {
+  const markup = touchButtonMarkup(action);
+  assert(markup.includes(`data-action="${action.id}"`));
+  assert(markup.includes(`aria-label="${action.label}"`), 'Accessible labels remain in Persian');
+  assert(markup.includes('aria-pressed="false"'));
+  assert(markup.includes(touchActionIcon(action.id)), 'Each button contains a static vector icon');
+  assert(!markup.slice(markup.indexOf('>') + 1, markup.indexOf('</button>')).includes(action.label),
+    'The displayed icon must not be followed by a Persian caption');
+  assert(!/<(?:animate|image|text|filter)\b/.test(markup), 'Icons avoid extra rendering effects');
+}
+assert.throws(() => touchActionIcon('missing'), /Unknown touch action/);
 const { defaultQuality, createAdaptiveScale, resolveQuality, qualityOverride, normalizeQuality } = await import('../src/post/quality.js');
 const input = createInput(), touch = input.touch;
 const el = { setPointerCapture() {}, hasPointerCapture: () => false };
