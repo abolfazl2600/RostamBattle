@@ -1,3 +1,2 @@
-// Approved public brand. Technical IDs, URLs and save keys intentionally stay stable.
+// Canonical public game name. Android strings, web title and in-game title use the same spelling.
 export const GAME_NAME_FA = 'نبرد رستم';
-// An official Latin release name has not been approved.
