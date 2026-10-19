@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+// Signed direct APK uses an explicit opt-in task. Plain assembleRelease stays unsigned
+// for untrusted pull-request CI. Credentials are read from the environment, never Git.
+def versionProperties = new Properties()
+rootProject.file('version.properties').withInputStream { versionProperties.load(it) }
+def releaseCode = versionProperties.getProperty('versionCode', '').trim()
+def releaseName = versionProperties.getProperty('versionName', '').trim()
+if (!(releaseCode ==~ /[1-9][0-9]*/) || !(releaseName ==~ /[0-9]+(\.[0-9]+){1,2}([-.][A-Za-z0-9]+)*?/)) {
+    throw new GradleException('Invalid android/version.properties (versionCode/versionName)')
+}
+def directRequested = gradle.startParameter.taskNames.any {
+    it.tokenize(':').last() == 'assembleDirectRelease'
+}
+def directEnvNames = [
+    'ROSTAM_DIRECT_KEYSTORE', 'ROSTAM_DIRECT_STORE_PASSWORD',
+    'ROSTAM_DIRECT_KEY_ALIAS', 'ROSTAM_DIRECT_KEY_PASSWORD'
+]
+if (directRequested) {
+    def missing = directEnvNames.findAll { !System.getenv(it) }
+    if (!missing.isEmpty()) {
+        throw new GradleException('Direct release signing is not configured. Missing environment variables: ' + missing.join(', '))
+    }
+    if (!file(System.getenv('ROSTAM_DIRECT_KEYSTORE')).isFile()) {
+        throw new GradleException('Direct release keystore file not found (ROSTAM_DIRECT_KEYSTORE)')
+    }
+}
+
 android {
     namespace = "io.github.abolfazl.nabardrostam"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,13 +33,23 @@ android {
         applicationId "io.github.abolfazl.nabardrostam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode releaseCode.toInteger()
+        versionName releaseName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        direct {
+            if (directRequested) {
+                storeFile file(System.getenv('ROSTAM_DIRECT_KEYSTORE'))
+                storePassword System.getenv('ROSTAM_DIRECT_STORE_PASSWORD')
+                keyAlias System.getenv('ROSTAM_DIRECT_KEY_ALIAS')
+                keyPassword System.getenv('ROSTAM_DIRECT_KEY_PASSWORD')
+            }
         }
     }
     buildTypes {
@@ -22,6 +58,9 @@ android {
             versionNameSuffix '-dev'
         }
         release {
+            if (directRequested) {
+                signingConfig signingConfigs.direct
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -55,4 +94,11 @@ try {
     }
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
+
+ // Do not run assembleRelease alone for distribution: it is deliberately unsigned.
+tasks.register('assembleDirectRelease') {
+    group = 'build'
+    description = 'Build an app-signed direct-distribution APK (requires protected env credentials).'
+    dependsOn ':app:assembleRelease'
 }
