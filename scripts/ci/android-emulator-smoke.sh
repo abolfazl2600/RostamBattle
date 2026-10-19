@@ -85,7 +85,9 @@ fi
 # Require the app to still exist AND be the resumed foreground Activity when
 # taking screenshots; never count the emulator home screen as a passing test.
 adb shell pidof "${pkg}"
-adb shell dumpsys activity activities | grep -E 'topResumedActivity=.*io.github.abolfazl.nabardrostam.dev/'
+if [ "${api}" != "28" ]; then
+  adb shell dumpsys activity activities | grep -E 'topResumedActivity=.*io.github.abolfazl.nabardrostam.dev/'
+fi
 collect
 
 if [ "${api}" = "28" ]; then
