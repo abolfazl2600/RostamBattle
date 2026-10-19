@@ -126,7 +126,7 @@ mkdir -p "$HOME/.config/nabard-rostam/keys"
 keytool -genkeypair -v -storetype PKCS12 \
   -keystore "$HOME/.config/nabard-rostam/keys/app-signing.p12" \
   -alias nabard-rostam-app -keyalg RSA -keysize 4096 -validity 10000 \
-  -dname "CN=Nabard Rostam App, OU=Release, O=Game Publisher"
+  -dname "CN=Nabard Rostam, OU=Release, O=Nabard Rostam"
 ```
 
 این کلید را در دو محل آفلاین رمزگذاری‌شده پشتیبان بگیر. رمزها و فایل `.p12` را در Git، Issue، PR، گفتگو یا artifact قرار نده. سپس fingerprint را با دستور مرحلهٔ قبل بخوان و مقدار Base64 را فقط مستقیماً در Environment secret وارد کن. اگر از قبل کلید App Signing داری، **کلید جدید نساز**؛ همان کلید و fingerprint آن باید برای همهٔ نسخه‌های Direct آینده حفظ شوند.
