@@ -13,6 +13,7 @@
 //   rankBonus / rankMax   story rank: extra points / best rank reachable
 //   bars       title card pips 1-5: [敵勢 pressure, 敵將 officers, 傷害 damage]
 import { locked } from './progress.js';
+import { readGameStorage, writeGameStorage } from './storage.js';
 
 export const DIFFS = [
   { id: 'easy', zh: '初級', en: 'Easy', line: ['新兵亦可橫掃千軍', 'Even a recruit can sweep a thousand.'], bars: [1, 1, 1],
@@ -24,12 +25,11 @@ export const DIFFS = [
   { id: 'chaos', zh: '修羅', en: 'Chaos', line: ['一騎當千，九死一生', 'One against a thousand. Few come back.'], bars: [5, 5, 5],
     gruntHp: 1.3, officerHp: 2, dmg: 2.2, windup: 30, strikers: 3, gap: 0.6, grace: 0.3, armor: true, heal: 0.4, rankBonus: 2, rankMax: 'S' },
 ];
-const KEY = 'voxel-musou.diff';
-const get = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const get = () => { try { return readGameStorage('diff'); } catch { return null; } };
 
 /** A tier is open unless the records still lock it (修羅: progress.js). */
 export const unlocked = (d) => !locked(d.id);
-let cur = DIFFS.find((d) => d.id === get(KEY) && unlocked(d)) || DIFFS[1];
+let cur = DIFFS.find((d) => d.id === get() && unlocked(d)) || DIFFS[1];
 
 export const difficulty = () => cur;
-export function setDifficulty(d) { cur = d; try { localStorage.setItem(KEY, d.id); } catch { /* no storage */ } }
+export function setDifficulty(d) { cur = d; try { writeGameStorage('diff', d.id); } catch { /* no storage */ } }
