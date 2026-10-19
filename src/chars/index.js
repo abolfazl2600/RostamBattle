@@ -104,8 +104,8 @@ const PAL = { K: '#1d1514', k: '#4a3834', S: '#efc3a0', s: '#c38a6c', E: '#140c0
 
 export const CHARS = {
   liubei: {
-    id: 'liubei',
-    name: { zh: '劉備', en: 'Liu Bei' }, courtesy: { zh: '玄德', en: 'Xuande' }, seal: '皇叔',
+    id: 'liubei', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'کیخسرو', en: 'Kay Khosrow' }, courtesy: { zh: '玄德', en: 'Xuande' }, seal: '皇叔',
     title: { zh: '仁德之主', en: 'The Benevolent Lord' }, motto: '中山靖王之後 · 桃園結義 · 仁德昭烈',
     weapon: { zh: '雙股劍', en: 'Twin Swords' },
     bio: {
@@ -123,8 +123,8 @@ export const CHARS = {
     kit: LIUBEI_KIT,
   },
   zhaoyun: {
-    id: 'zhaoyun',
-    name: { zh: '趙雲', en: 'Zhao Yun' }, courtesy: { zh: '子龍', en: 'Zilong' }, seal: '常山',
+    id: 'zhaoyun', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'سهراب', en: 'Sohrab' }, courtesy: { zh: '子龍', en: 'Zilong' }, seal: '常山',
     title: { zh: '常山龍膽', en: 'The Dragon of Changshan' }, motto: '常山龍膽 · 單騎無雙 · 義貫雲天',
     weapon: { zh: '龍膽槍', en: 'Dragon-Heart Spear' },
     bio: {
@@ -141,8 +141,8 @@ export const CHARS = {
     kit: ZHAOYUN_KIT,
   },
   huangzhong: {
-    id: 'huangzhong',
-    name: { zh: '黃忠', en: 'Huang Zhong' }, courtesy: { zh: '漢升', en: 'Hansheng' }, seal: '老將',
+    id: 'huangzhong', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'آرش کمانگیر', en: 'Arash the Archer' }, courtesy: { zh: '漢升', en: 'Hansheng' }, seal: '老將',
     title: { zh: '老當益壯', en: 'The Veteran Who Never Ages' }, motto: '老當益壯 · 百步穿楊 · 定軍斬將',
     weapon: { zh: '破軍弓', en: 'Army-Breaker Longbow' },
     bio: {
@@ -159,8 +159,8 @@ export const CHARS = {
     kit: HUANGZHONG_KIT,
   },
   zhangfei: {
-    id: 'zhangfei',
-    name: { zh: '張飛', en: 'Zhang Fei' }, courtesy: { zh: '翼德', en: 'Yide' }, seal: '燕人',
+    id: 'zhangfei', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'گیو', en: 'Giv' }, courtesy: { zh: '翼德', en: 'Yide' }, seal: '燕人',
     title: { zh: '萬人之敵', en: 'A Match for Ten Thousand' }, motto: '燕人張翼德 · 當陽一喝 · 萬夫莫當',
     weapon: { zh: '丈八蛇矛', en: 'Eighteen-Foot Serpent Spear' },
     bio: {
@@ -199,8 +199,8 @@ export const CHARS = {
     kit: ROSTAM_KIT,
   },
   guanyu: {
-    id: 'guanyu', side: { zh: '蜀', en: 'Shu Han' },
-    name: { zh: '關羽', en: 'Guan Yu' }, courtesy: { zh: '雲長', en: 'Yunchang' }, seal: '武聖',
+    id: 'guanyu', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'گودرز', en: 'Goudarz' }, courtesy: { zh: '雲長', en: 'Yunchang' }, seal: '武聖',
     title: { zh: '美髯公', en: 'Lord of the Magnificent Beard' }, motto: '河東關雲長 · 溫酒斬將 · 義貫古今',
     weapon: { zh: '青龍偃月刀', en: 'Green Dragon Blade' },
     bio: {
@@ -218,8 +218,8 @@ export const CHARS = {
     kit: GUANYU_KIT,
   },
   zhugeliang: {
-    id: 'zhugeliang', side: { zh: '蜀', en: 'Shu Han' },
-    name: { zh: '諸葛亮', en: 'Zhuge Liang' }, courtesy: { zh: '孔明', en: 'Kongming' }, seal: '臥龍',
+    id: 'zhugeliang', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'زال', en: 'Zal' }, courtesy: { zh: '孔明', en: 'Kongming' }, seal: '臥龍',
     title: { zh: '臥龍', en: 'The Sleeping Dragon' }, motto: '羽扇綸巾 · 運籌帷幄 · 決勝千里',
     weapon: { zh: '白羽扇', en: 'White Feather Fan' },
     bio: {
@@ -237,8 +237,8 @@ export const CHARS = {
     kit: ZHUGELIANG_KIT,
   },
   lubu: {
-    id: 'lubu', side: { zh: '群', en: 'Warlords' },
-    name: { zh: '呂布', en: 'Lü Bu' }, courtesy: { zh: '奉先', en: 'Fengxian' }, seal: '飛將',
+    id: 'lubu', side: { zh: 'ایران', en: 'Iran' },
+    name: { zh: 'اسفندیار', en: 'Esfandiyar' }, courtesy: { zh: '奉先', en: 'Fengxian' }, seal: '飛將',
     title: { zh: '飛將', en: 'The Flying General' }, motto: '人中呂布 · 馬中赤兔 · 天下無雙',
     weapon: { zh: '方天畫戟', en: 'Sky-Piercer Halberd' },
     bio: {
