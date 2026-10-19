@@ -46,6 +46,26 @@ jobs:
           chmod +x android/gradlew
           cd android
           ./gradlew --no-daemon assembleDebug assembleRelease
+      - name: Direct release must fail closed without secrets
+        shell: bash
+        env:
+          ROSTAM_DIRECT_KEYSTORE: ''
+          ROSTAM_DIRECT_STORE_PASSWORD: ''
+          ROSTAM_DIRECT_KEY_ALIAS: ''
+          ROSTAM_DIRECT_KEY_PASSWORD: ''
+        run: |
+          set -euo pipefail
+          cd android
+          if ./gradlew --no-daemon :app:assembleDirectRelease > /tmp/rostam-direct-unsigned-block.log 2>&1; then
+            echo "FAIL: Direct release succeeded with no signing credentials." >&2
+            exit 1
+          fi
+          if ! grep -Fq "Direct release signing is not configured." /tmp/rostam-direct-unsigned-block.log; then
+            echo "FAIL: Direct release did not fail for the expected missing-signing reason." >&2
+            tail -n 45 /tmp/rostam-direct-unsigned-block.log >&2
+            exit 1
+          fi
+          echo "PASS: Missing signing credentials block Direct release."
       - name: Verify Android application metadata
         shell: bash
         run: |
@@ -64,6 +84,24 @@ jobs:
           grep -F "targetSdkVersion:'36'" /tmp/rostam-release.badging
           # Ensure release variant is not mistakenly uploaded as signed.
           echo "Native Debug APK compiled; release compiled for verification only (unsigned)."
+      - name: Prove Direct release signing with a disposable CI-only key
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          KEY_DIR="$(mktemp -d)"
+          trap 'rm -rf "$KEY_DIR"; rm -f android/app/build/outputs/apk/release/app-release.apk' EXIT
+          export ROSTAM_DIRECT_KEYSTORE="$KEY_DIR/disposable-ci-only.p12"
+          export ROSTAM_DIRECT_KEY_ALIAS='ci-disposable-never-publish'
+          export ROSTAM_DIRECT_STORE_PASSWORD="$(openssl rand -hex 24)"
+          export ROSTAM_DIRECT_KEY_PASSWORD="$ROSTAM_DIRECT_STORE_PASSWORD"
+          keytool -genkeypair -noprompt -storetype PKCS12 -keyalg RSA -keysize 3072 \
+            -keystore "$ROSTAM_DIRECT_KEYSTORE" -alias "$ROSTAM_DIRECT_KEY_ALIAS" \
+            -storepass "$ROSTAM_DIRECT_STORE_PASSWORD" -keypass "$ROSTAM_DIRECT_KEY_PASSWORD" \
+            -validity 365 -dname 'CN=Disposable CI Test, O=Rostam CI, C=CA'
+          (cd android && ./gradlew --no-daemon :app:assembleDirectRelease)
+          bash scripts/android/verify-direct-apk.sh android/app/build/outputs/apk/release/app-release.apk
+          echo 'PASS: Signed Direct variant verified with throwaway key; signed APK is not uploaded.'
       - uses: actions/upload-artifact@v4
         with:
           name: rostams-battle-debug-apk

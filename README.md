@@ -115,6 +115,12 @@
 - [ ] ممیزی داده‌ها و مجوز محتوا، Privacy Policy، سیاست‌های Google Play و آماده‌سازی صفحهٔ فروشگاه ([#47](https://github.com/abolfazl2600/voxel-game/issues/47) تا [#52](https://github.com/abolfazl2600/voxel-game/issues/52)).
 - [ ] تست داخلی/بسته، عبور از معیار پذیرش و انتشار مرحله‌ای APK و Google Play ([#53](https://github.com/abolfazl2600/voxel-game/issues/53) تا [#55](https://github.com/abolfazl2600/voxel-game/issues/55)).
 
+### ساخت APK مستقیم (مرحله فنی، هنوز منتشرنشده)
+
+پس از آماده‌سازی **کلید اختصاصی App Signing در رایانه امن ناشر**، مسیر محلی ساخت نسخه امضاشده `npm run android:direct` است و صحت APK با `npm run android:verify-direct -- PATH_TO_APK` کنترل می‌شود. نسخهٔ واحد در `android/version.properties` قرار دارد. **ساخت این APK به حساب Play Console وابسته نیست، اما هنوز APK رسمیِ دارای امضای مالک و شواهد نصب/ارتقای واقعی منتشر نشده است.** کلید خصوصی/رمز هرگز در GitHub ذخیره نشود.
+
+[راهنمای کامل تولید کلید، امضای APK و آزمون نصب/ارتقا](docs/android/DIRECT_APK.md) · [سیاست دو کلید Direct/Play](docs/android/SIGNING_STRATEGY.md).
+
 **مرجع دقیق ترتیب ۲۲ کار اندروید:** [نقشهٔ راه Android — Issue #56](https://github.com/abolfazl2600/voxel-game/issues/56) · [تصمیم‌های باز](docs/android/RELEASE_DECISIONS.md). ساخت فایل تصمیم‌ها به معنی وجود پروژهٔ Android یا انتشار نسخهٔ نهایی نیست.
 
 ## راهنمای کنترل
