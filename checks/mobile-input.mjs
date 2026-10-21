@@ -16,6 +16,61 @@ const { createInput } = await import('../src/core/input.js');
 const { emit } = await import('../src/core/events.js');
 const { viewport, updateViewport, gamePoint, gameRect } = await import('../src/core/viewport.js');
 const { joystickVector } = await import('../src/ui/touch-controls.js');
+const { TOUCH_ACTIONS, touchActionIcon, touchButtonMarkup } = await import('../src/ui/touch-layout.js');
+// Controls should never render visible Persian labels or require animated/external icons.
+assert.equal(TOUCH_ACTIONS.length, 6);
+for (const action of TOUCH_ACTIONS) {
+  const markup = touchButtonMarkup(action);
+  assert(markup.includes(`data-action="${action.id}"`));
+  assert(markup.includes(`aria-label="${action.label}"`), 'Accessible labels remain in Persian');
+  assert(markup.includes('aria-pressed="false"'));
+  assert(markup.includes(touchActionIcon(action.id)), 'Each button contains a static vector icon');
+  assert(!markup.slice(markup.indexOf('>') + 1, markup.indexOf('</button>')).includes(action.label),
+    'The displayed icon must not be followed by a Persian caption');
+  assert(!/<(?:animate|image|text|filter)\b/.test(markup), 'Icons avoid extra rendering effects');
+}
+assert.throws(() => touchActionIcon('missing'), /Unknown touch action/);
+assert.equal(TOUCH_ACTIONS.find((a) => a.id === 'musou').label, 'یورش', 'Persian special-action label');
+// Check the actual stylesheet tokens and calculate pointer hit boxes from its placement formulas.
+const { readFileSync } = await import('node:fs');
+const touchCSS = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+assert.match(touchCSS, /--touch-minor:\s*52px;/);
+assert.match(touchCSS, /@container game-surface \(max-width:\s*420px\)/);
+assert.match(touchCSS, /inset:\s*7px;\s*border: 1px solid rgba\(242,214,160/);
+const clampSize = (v, min, max) => Math.max(min, Math.min(max, v));
+const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+function touchBoxes(width, height, safeLeft = 0, safeRight = 0) {
+  const primary = clampSize(height * .16, 68, 82), medium = clampSize(height * .11, 48, 55);
+  const minor = 52, gap = clampSize(height * .0115, 6, 8);
+  const rightEdge = Math.max(8, safeRight), bottomEdge = 8;
+  const joyLeft = Math.max(10, safeLeft), joyBottom = 10, joySize = clampSize(height * .23, 96, 128);
+  const stick = { left: joyLeft, right: joyLeft + joySize, top: height - joyBottom - joySize, bottom: height - joyBottom };
+  const box = (right, bottom, size) => ({ left: width - rightEdge - right - size, right: width - rightEdge - right,
+    top: height - bottomEdge - bottom - size, bottom: height - bottomEdge - bottom });
+  const compact = width <= 420, upper = primary + gap + (compact ? 28 : 0);
+  return { stick, buttons: [
+    box(0, 0, primary), box(primary + gap, 0, minor),
+    box(0, upper, medium),
+    box(compact ? minor + gap : medium + gap, upper, medium),
+    box(compact ? 2 * minor + 2 * gap : primary + minor + 2 * gap, compact ? upper : 0, minor),
+    box(compact ? 3 * minor + 3 * gap : primary + 2 * minor + 3 * gap, compact ? upper : 0, minor),
+  ] };
+}
+for (const [width, height, safeLeft, safeRight] of [
+  [812, 375, 0, 0], [667, 375, 0, 0], [568, 320, 0, 0], [320, 200, 0, 0],
+  [375, 200, 44, 44],
+]) {
+  const { stick, buttons } = touchBoxes(width, height, safeLeft, safeRight);
+  for (const b of buttons) {
+    assert(b.left >= 0 && b.right <= width && b.top >= 0 && b.bottom <= height,
+      `Touch button out of bounds at ${width}x${height}`);
+    assert(!intersects(stick, b), `Joystick overlaps button at ${width}x${height}`);
+  }
+  for (let i = 0; i < buttons.length; i++) for (let j = i + 1; j < buttons.length; j++) {
+    assert(!intersects(buttons[i], buttons[j]), `Actions ${i}/${j} overlap at ${width}x${height}`);
+  }
+}
+
 const { defaultQuality, createAdaptiveScale, resolveQuality, qualityOverride, normalizeQuality } = await import('../src/post/quality.js');
 const input = createInput(), touch = input.touch;
 const el = { setPointerCapture() {}, hasPointerCapture: () => false };

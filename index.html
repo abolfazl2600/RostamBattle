@@ -1147,29 +1147,95 @@
   .touch-device .scr, .touch-device #menu { overscroll-behavior: contain; touch-action: pan-y; }
   #touch-controls { position: fixed; inset: 0; z-index: 25; pointer-events: none; user-select: none; direction: ltr; }
   #touch-controls[hidden] { display: none; }
-  .touch-stick { position: absolute; left: max(16px, var(--safe-left)); bottom: max(12px, var(--safe-bottom));
-    width: clamp(108px, calc(25 * var(--game-vh)), 152px); aspect-ratio: 1; border: 2px solid #f4ead866; border-radius: 50%;
-    background: #1a120d66; pointer-events: auto; touch-action: none; display: grid; place-items: center; }
-  .touch-stick i { width: 38%; aspect-ratio: 1; border-radius: 50%; background: #f2c14e88; border: 1px solid #f4ead8aa; }
-  .touch-stick span { position: absolute; bottom: 7px; color: #fff; font: 12px var(--sans); pointer-events: none; }
+  /* Low-cost icon-only touch HUD: flat color layers, static paths, no visual filters or animation.
+     The secondary circles look small but preserve a 46px hit target. */
+  .touch-stick {
+    position: absolute; left: max(10px, var(--safe-left)); bottom: max(10px, var(--safe-bottom));
+    width: clamp(96px, calc(23 * var(--game-vh)), 128px); aspect-ratio: 1;
+    box-sizing: border-box; border: 1.5px solid rgba(238,226,200,.4); border-radius: 50%;
+    background: rgba(20,16,12,.34); pointer-events: auto; touch-action: none;
+    display: grid; place-items: center;
+  }
+  .touch-stick i { width: 40%; aspect-ratio: 1; border-radius: 50%; background: rgba(242,193,78,.52);
+    border: 1px solid rgba(255,233,192,.7); pointer-events: none; }
   .touch-stick.held { border-color: #f2c14e; }
-  .touch-actions { position: absolute; right: max(12px, var(--safe-right)); bottom: max(10px, var(--safe-bottom));
-    display: grid; grid-template-columns: repeat(3, var(--touch-button)); grid-template-rows: repeat(2, var(--touch-button)); gap: 8px;
-    --touch-button: clamp(48px, calc(12 * var(--game-vh)), 66px); }
-  .touch-actions button { pointer-events: auto; touch-action: none; border: 1px solid #f4ead899; border-radius: 50%;
-    background: #1a120da8; color: #fff1ce; font: 600 13px var(--sans); padding: 0; min-width: 48px; min-height: 48px; }
-  .touch-actions button[data-action="attack"] { grid-column: 3; grid-row: 2; transform: scale(1.12); background: #775b20bb; }
-  .touch-actions button[data-action="charge"] { grid-column: 2; grid-row: 2; }
-  .touch-actions button[data-action="jump"] { grid-column: 3; grid-row: 1; }
-  .touch-actions button[data-action="dodge"] { grid-column: 1; grid-row: 2; }
-  .touch-actions button[data-action="musou"] { grid-column: 2; grid-row: 1; }
-  .touch-actions button[data-action="target"] { grid-column: 1; grid-row: 1; }
-  .touch-actions button.held { background: #ac7c24; box-shadow: 0 0 12px #f2c14e88; }
-  .touch-actions button[aria-disabled="true"] { color: #b8b0a0; border-style: dashed; }
-  .touch-actions button.ready { border-color: #ffe09a; box-shadow: 0 0 12px #f2c14eaa; }
-  .touch-pause { position: absolute; top: max(8px, var(--safe-top)); right: max(12px, var(--safe-right));
-    min-width: 64px; min-height: 48px; pointer-events: auto; touch-action: manipulation; padding: 6px 10px;
-    border: 1px solid #d8bd7e; border-radius: 10px; background: #1a120dcc; color: #fff1ce; font: 600 14px var(--sans); }
+  .touch-actions {
+    --touch-primary: clamp(68px, calc(16 * var(--game-vh)), 82px);
+    --touch-medium: clamp(48px, calc(11 * var(--game-vh)), 55px);
+    --touch-minor: 52px;
+    --touch-gap: clamp(6px, calc(1.15 * var(--game-vh)), 8px);
+    position: absolute; right: max(8px, var(--safe-right)); bottom: max(8px, var(--safe-bottom));
+    width: calc(var(--touch-primary) + var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
+    height: calc(var(--touch-primary) + var(--touch-medium) + var(--touch-gap));
+  }
+  .touch-actions button {
+    position: absolute; bottom: 0; display: grid; place-items: center;
+    width: var(--touch-minor); height: var(--touch-minor);
+    padding: 0; min-width: 0; min-height: 0; border: 0; background: none;
+    color: #f1e4ca; pointer-events: auto; touch-action: none; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .touch-actions button::before {
+    content: ""; position: absolute; inset: 7px; border: 1px solid rgba(242,214,160,.58);
+    border-radius: 50%; background: rgba(20,15,11,.67); pointer-events: none;
+  }
+  .touch-actions button svg { position: relative; width: 19px; height: 19px; pointer-events: none; }
+  .touch-actions button[data-action="attack"] {
+    right: 0; width: var(--touch-primary); height: var(--touch-primary); color: #ffe5a0;
+  }
+  .touch-actions button[data-action="attack"]::before {
+    inset: 0; border: 2px solid #eec77f; background: rgba(45,30,17,.79);
+  }
+  .touch-actions button[data-action="attack"] svg { width: 38px; height: 38px; }
+  .touch-actions button[data-action="jump"],
+  .touch-actions button[data-action="dodge"] {
+    bottom: calc(var(--touch-primary) + var(--touch-gap));
+    width: var(--touch-medium); height: var(--touch-medium);
+  }
+  .touch-actions button[data-action="jump"] { right: 0; }
+  .touch-actions button[data-action="dodge"] { right: calc(var(--touch-medium) + var(--touch-gap)); }
+  .touch-actions button[data-action="jump"]::before,
+  .touch-actions button[data-action="dodge"]::before { inset: 0; }
+  .touch-actions button[data-action="jump"] svg,
+  .touch-actions button[data-action="dodge"] svg { width: 26px; height: 26px; }
+  .touch-actions button[data-action="charge"] { right: calc(var(--touch-primary) + var(--touch-gap)); }
+  .touch-actions button[data-action="musou"] {
+    right: calc(var(--touch-primary) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap));
+  }
+  .touch-actions button[data-action="target"] {
+    right: calc(var(--touch-primary) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
+  }
+  .touch-actions button.held::before { background: rgba(126,86,36,.94); border-color: #ffe09a; }
+  .touch-actions button.ready::before { border-color: #f2c14e; border-width: 2px; }
+  .touch-actions button[aria-disabled="true"] { color: #9d9689; }
+  .touch-actions button[aria-disabled="true"]::before { border-style: dashed; border-color: #a49a82; }
+  .touch-actions button:focus-visible { outline: 2px solid #ffe09a; outline-offset: 0; border-radius: 50%; }
+  .touch-pause {
+    position: absolute; top: max(8px, var(--safe-top)); right: max(8px, var(--safe-right));
+    width: 48px; height: 48px; padding: 0; border: 1px solid #d8bd7e; border-radius: 10px;
+    background: rgba(20,15,11,.8); color: #fff1ce; pointer-events: auto;
+    touch-action: manipulation; display: grid; place-items: center; -webkit-tap-highlight-color: transparent;
+  }
+  .touch-pause-icon { display: flex; align-items: center; justify-content: center; gap: 5px; pointer-events: none; }
+  .touch-pause-icon i { display: block; width: 5px; height: 21px; background: currentColor; border-radius: 1px; }
+  .touch-pause:focus-visible { outline: 2px solid #ffe09a; outline-offset: 2px; }
+  /* Narrow logical landscapes: move secondary actions above the joystick's vertical band.
+     Button hit targets remain 52px; this avoids overlap even with large safe-area insets. */
+  @container game-surface (max-width: 420px) {
+    .touch-actions {
+      width: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
+      height: calc(var(--touch-primary) + var(--touch-gap) + 28px + var(--touch-medium));
+    }
+    .touch-actions button[data-action="jump"],
+    .touch-actions button[data-action="dodge"],
+    .touch-actions button[data-action="musou"],
+    .touch-actions button[data-action="target"] {
+      bottom: calc(var(--touch-primary) + var(--touch-gap) + 28px);
+    }
+    .touch-actions button[data-action="dodge"] { right: calc(var(--touch-minor) + var(--touch-gap)); }
+    .touch-actions button[data-action="musou"] { right: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap)); }
+    .touch-actions button[data-action="target"] { right: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap)); }
+  }
   /* Battle touch layout reserves the entire bottom corners for controls. */
   .touch-device #hud { --safe-l: max(10px, var(--safe-left)); --safe-r: max(12px, var(--safe-right));
     --safe-t: max(8px, var(--safe-top)); --map-size: clamp(72px, calc(20 * var(--game-vh)), 138px); }

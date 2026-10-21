@@ -102,20 +102,28 @@
 .record-hero-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,180px),1fr)); }
 .record-hero span, .record-unlock strong { color: var(--menu-gold); }
 .record-unlock.locked { border-style: dashed; }
-/* Schematic mirrors the real left joystick / right 3×2 action grid, with matching labels. */
+/* Static guide reflects the live compact icon-only button arrangement. */
 .touch-guide { margin: 0 0 18px; }
 .guide-field { display: grid; grid-template-areas: ". . pause" "stick look actions"; grid-template-columns: minmax(110px,1fr) minmax(100px,1fr) max-content;
   gap: 14px; align-items: center; padding: 14px; border: 1px solid var(--menu-border); border-radius: 12px; background: #140e09; direction: ltr; }
-.guide-pause { grid-area: pause; justify-self: end; padding: 7px 12px; border: 1px solid var(--menu-gold); border-radius: 8px; direction: rtl; }
+.guide-pause { grid-area: pause; justify-self: end; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--menu-gold); border-radius: 8px; font-size: 23px; }
 .guide-stick { grid-area: stick; justify-self: start; width: 110px; height: 110px; border: 2px solid var(--menu-gold); border-radius: 50%; display: grid; place-content: center; text-align: center; }
 .guide-stick i { width: 32px; height: 32px; margin: 2px auto; border-radius: 50%; border: 1px solid var(--menu-gold); background: #775b20; }
 .guide-stick small { display: block; direction: rtl; }
 .guide-look { grid-area: look; text-align: center; direction: rtl; max-width: 200px; justify-self: center; }
 .guide-look svg { width: 80px; max-width: 100%; height: 52px; display: block; margin: auto; fill: none; stroke: var(--menu-gold); stroke-width: 3; }
 .guide-look small { display: block; }
-.guide-actions { grid-area: actions; display: grid; grid-template-columns: repeat(3,54px); grid-template-rows: repeat(2,54px); gap: 10px; direction: ltr; }
-.guide-action { display: grid; place-items: center; border: 1px solid var(--menu-border); border-radius: 50%; background: var(--menu-card); font-size: 12px; direction: rtl; }
-.guide-action[data-guide-action="attack"] { border: 2px solid var(--menu-gold); background: #49331d; }
+.guide-actions { grid-area: actions; position: relative; width: 202px; height: 125px; direction: ltr; }
+.guide-action { position: absolute; bottom: 0; display: grid; place-items: center; width: 40px; height: 40px;
+  box-sizing: border-box; border: 1px solid var(--menu-border); border-radius: 50%; background: var(--menu-card); color: var(--menu-text); }
+.guide-action svg { width: 19px; height: 19px; }
+.guide-action[data-guide-action="attack"] { right: 0; width: 72px; height: 72px; border: 2px solid var(--menu-gold); background: #49331d; }
+.guide-action[data-guide-action="attack"] svg { width: 32px; height: 32px; }
+.guide-action[data-guide-action="jump"] { right: 0; bottom: 79px; width: 46px; height: 46px; }
+.guide-action[data-guide-action="dodge"] { right: 53px; bottom: 79px; width: 46px; height: 46px; }
+.guide-action[data-guide-action="charge"] { right: 79px; }
+.guide-action[data-guide-action="musou"] { right: 121px; }
+.guide-action[data-guide-action="target"] { right: 163px; }
 .touch-guide figcaption { font: 500 12px/1.8 var(--fa-font); color: var(--menu-secondary); margin-top: 6px; }
 .guide-notes { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 14px; }
 .guide-notes article { padding: 12px; border: 1px solid #806744; background: var(--menu-card); }
@@ -127,13 +135,7 @@
 .control-row h3 small { display: block; }
 .control-pad { color: var(--menu-secondary); }
 #title.menu-refined .guide-note { margin-top: 16px; }
-/* State distinction uses borders and text as well as color; targets keep a real 48px diameter. */
-.touch-actions { gap: 10px; }
-.touch-actions button[data-action="attack"] { transform: none; border: 2px solid #ffe09a; background: #49331df5; }
-.touch-actions button { background: #21170ff5; color: #fff1ce; border-color: #d8bd83; }
-.touch-actions button.held { border: 3px double #ffe09a; background: #654820; }
-.touch-actions button[aria-disabled="true"] { border-style: dashed; color: #e3d6ba; background: #21170ff5; }
-.touch-actions button.ready { border: 3px double #ffe09a; background: #49331df5; }
+/* Live touch controls are styled in index.html; avoid overriding the lightweight layout here. */
 /* The brand in the initial boot is horizontal Persian, not a two-glyph vertical stamp. */
 #ink .ink-wait i { writing-mode: horizontal-tb; direction: rtl; font: 800 clamp(18px,calc(3.6 * var(--game-vh)),32px)/1.8 var(--fa-font);
   white-space: nowrap; padding: 6px 12px; max-width: none; letter-spacing: 0; }
@@ -152,9 +154,8 @@
   #title.menu-refined .title-panel h2 { font-size: 22px; }
 }
 @container game-surface (max-width: 650px) {
-  .guide-field { grid-template-columns: 100px minmax(60px,1fr) 164px; gap: 8px; padding: 10px; }
+  .guide-field { grid-template-columns: 100px minmax(60px,1fr) 202px; gap: 8px; padding: 10px; }
   .guide-stick { width: 94px; height: 94px; }
-  .guide-actions { grid-template-columns: repeat(3,48px); grid-template-rows: repeat(2,48px); gap: 10px; }
   .guide-look svg { width: 54px; }
   #title.menu-refined .guide-look small { font-size: 11px; }
 }
