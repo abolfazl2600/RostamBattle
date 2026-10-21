@@ -54,7 +54,7 @@ export function createSelect(el, flow) {
       <p class="s-wpn"><span>سلاح</span><b></b><small></small></p>
       <p class="s-bio"></p>
       <ul class="s-stats">${STATS.map(([k, zh, en]) => `<li data-k="${k}"><b>${zh}</b><small>${en}</small><span>${[0, 1, 2, 3, 4].map((j) => `<i style="--i:${j}"></i>`).join('')}</span></li>`).join('')}</ul>
-      <div class="s-musou"><span>قدرت ویژهٔ موسو</span><b></b><small></small>${SWASH}</div>
+      <div class="s-musou"><span>یورش</span><b></b><small></small>${SWASH}</div>
     </article>
     <div class="s-line"><p></p><small></small></div>
     <p class="s-rec"><span>رکورد</span><b></b><small></small></p>
