@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { boxesGeometry, shade } from '../core/voxel.js';
 import { makeRng } from '../core/rng.js';
 import { drawDerafsh } from '../core/derafsh.js';
+import { drawTuranEmblem } from '../core/turan-emblem.js';
 import { figureGeometry, watchtower, pagoda, paperLantern, lit } from './castle.js';
 import { TERRAIN, ROUTE, GATES, WATER, ground, waterD, routeDist, routeNear, node } from './map.js';
 import { topAt, GRASS_TIME } from './terrain.js';
@@ -33,6 +34,8 @@ function bannerTexture(ch, { bg, fg, border, w = 128, h = 256, tatter = true, se
   if (border) { g.strokeStyle = border; g.lineWidth = w * 0.09; g.strokeRect(w * 0.045, w * 0.045, w * 0.91, h * 0.86); }
   if (emblem === 'derafsh') {
     drawDerafsh(g, w / 2, h * 0.42, Math.min(w * 0.62, h * 0.64));
+  } else if (emblem === 'turan') {
+    drawTuranEmblem(g, w / 2, h * 0.42, Math.min(w * 0.62, h * 0.64));
   } else {
     g.fillStyle = fg;
     g.font = `bold ${Math.round(w * 0.66)}px "Xingkai SC","STXingkai","Kaiti SC","KaiTi","Songti SC",serif`;
@@ -513,7 +516,7 @@ export function buildDressing(root, def, { army, castle = null, sites = [] } = {
   const banner = (glyph, o) => cm(bannerTexture(glyph, o), o.tatter !== false);
   const pf = PAL.foe, pa = PAL.ally;
   const mats = {
-    foe: banner(A.foe.glyph, { bg: pf.bg, fg: pf.fg, border: pf.border, seed: 3 }),
+    foe: banner(A.foe.glyph, { bg: pf.bg, fg: pf.fg, border: pf.border, seed: 3, emblem: A.foe.emblem }),
     ally: banner(A.ally.glyph, { bg: pa.bg, fg: pa.fg, border: pa.border, w: 192, h: 256, seed: 5, emblem: A.ally.emblem }),
     allyFlag: banner(A.ally.glyph, { bg: pa.flag[0], fg: pa.fg, border: pa.flag[1], w: 128, h: 96, tatter: false, seed: 6, emblem: A.ally.emblem }),
     pennant: banner('', { bg: pf.pennant[0], fg: '#000', border: pf.pennant[1], w: 64, h: 128, seed: 7 }),
@@ -743,7 +746,7 @@ export function buildDressing(root, def, { army, castle = null, sites = [] } = {
       meshArmies();
       if (standards) {
         const [n, x0, z0, x1, z1] = standards, P = PAL.foe.fallen;
-        const fallenTex = bannerTexture(A.foe.glyph, { bg: P[0], fg: P[1], border: P[2], seed: 11 });   // trampled, sun-faded, dusty
+        const fallenTex = bannerTexture(A.foe.glyph, { bg: P[0], fg: P[1], border: P[2], seed: 11, emblem: A.foe.emblem });   // trampled, sun-faded, dusty
         const fallenMat = new THREE.MeshStandardMaterial({ map: fallenTex, emissiveMap: fallenTex, emissive: 0xffffff, emissiveIntensity: 0.12, side: THREE.DoubleSide, alphaTest: 0.5, roughness: 0.95 });
         for (let i = 0, got = 0; i < n * 6 && got < n; i++) {
           const x = r.range(x0, x1), z = r.range(z0, z1), yaw = r.range(0, 6.28);

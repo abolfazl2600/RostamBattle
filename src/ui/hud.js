@@ -94,7 +94,7 @@ export function createHud(root, game, camera) {
     <div class="h-copy"></div>
     <div class="h-player"><div class="badge"><canvas width="20" height="20"></canvas></div><div class="name"></div>
       <div class="bar hp"><em></em><i></i></div>
-      <div class="mu"><div><i></i></div><div><i></i></div><div><i></i></div><span>موسو</span></div></div>
+      <div class="mu"><div><i></i></div><div><i></i></div><div><i></i></div><span>یورش</span></div></div>
     <div class="h-ko"><div class="num"><b class="dig" data-t="0"><span>0</span></b><u>0</u></div><small><em>شکست</em>دشمنان</small></div>`;
   const $ = (s) => root.querySelector(s), $$ = (s) => [...root.querySelectorAll(s)];
   const intro = $('.h-intro'), player = $('.h-player'), hpI = $('.hp i'), hpE = $('.hp em'), muSeg = $$('.mu i'), mu = $('.mu');
@@ -138,7 +138,7 @@ export function createHud(root, game, camera) {
     // keys row from the kit: an aim mode (kit.moves.aim, 黃忠) puts hold-K aim first, before the charge
     $('.h-intro .keys').innerHTML = `<kbd>WASD</kbd> حرکت · <kbd>J</kbd> حمله · ${ch.kit.moves.aim
       ? '<kbd>K</kbd> نگه‌دارید تا نشانه بگیرید' : '<kbd>K</kbd> حملهٔ قدرتی'}<br>
-      <kbd>Space</kbd> پرش · <kbd>L</kbd> جاخالی · <kbd>I</kbd> موسو · <kbd>R</kbd> دوربین · <kbd>H</kbd> راهنما`;
+      <kbd>Space</kbd> پرش · <kbd>L</kbd> جاخالی · <kbd>I</kbd> یورش · <kbd>R</kbd> دوربین · <kbd>H</kbd> راهنما`;
     paintPortrait($('.h-player canvas'), ch);
     for (const g of chainG) g.f = -99;
     for (const o of offs) o.lag = 1;

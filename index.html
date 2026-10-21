@@ -1162,10 +1162,10 @@
   .touch-actions {
     --touch-primary: clamp(68px, calc(16 * var(--game-vh)), 82px);
     --touch-medium: clamp(48px, calc(11 * var(--game-vh)), 55px);
-    --touch-minor: 46px;
-    --touch-gap: clamp(5px, calc(1.15 * var(--game-vh)), 8px);
+    --touch-minor: 52px;
+    --touch-gap: clamp(6px, calc(1.15 * var(--game-vh)), 8px);
     position: absolute; right: max(8px, var(--safe-right)); bottom: max(8px, var(--safe-bottom));
-    width: calc(var(--touch-primary) + 138px + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
+    width: calc(var(--touch-primary) + var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
     height: calc(var(--touch-primary) + var(--touch-medium) + var(--touch-gap));
   }
   .touch-actions button {
@@ -1176,7 +1176,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   .touch-actions button::before {
-    content: ""; position: absolute; inset: 4px; border: 1px solid rgba(242,214,160,.58);
+    content: ""; position: absolute; inset: 7px; border: 1px solid rgba(242,214,160,.58);
     border-radius: 50%; background: rgba(20,15,11,.67); pointer-events: none;
   }
   .touch-actions button svg { position: relative; width: 19px; height: 19px; pointer-events: none; }
@@ -1219,6 +1219,23 @@
   .touch-pause-icon { display: flex; align-items: center; justify-content: center; gap: 5px; pointer-events: none; }
   .touch-pause-icon i { display: block; width: 5px; height: 21px; background: currentColor; border-radius: 1px; }
   .touch-pause:focus-visible { outline: 2px solid #ffe09a; outline-offset: 2px; }
+  /* Narrow logical landscapes: move secondary actions above the joystick's vertical band.
+     Button hit targets remain 52px; this avoids overlap even with large safe-area insets. */
+  @container game-surface (max-width: 420px) {
+    .touch-actions {
+      width: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap));
+      height: calc(var(--touch-primary) + var(--touch-gap) + 28px + var(--touch-medium));
+    }
+    .touch-actions button[data-action="jump"],
+    .touch-actions button[data-action="dodge"],
+    .touch-actions button[data-action="musou"],
+    .touch-actions button[data-action="target"] {
+      bottom: calc(var(--touch-primary) + var(--touch-gap) + 28px);
+    }
+    .touch-actions button[data-action="dodge"] { right: calc(var(--touch-minor) + var(--touch-gap)); }
+    .touch-actions button[data-action="musou"] { right: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap)); }
+    .touch-actions button[data-action="target"] { right: calc(var(--touch-minor) + var(--touch-minor) + var(--touch-minor) + var(--touch-gap) + var(--touch-gap) + var(--touch-gap)); }
+  }
   /* Battle touch layout reserves the entire bottom corners for controls. */
   .touch-device #hud { --safe-l: max(10px, var(--safe-left)); --safe-r: max(12px, var(--safe-right));
     --safe-t: max(8px, var(--safe-top)); --map-size: clamp(72px, calc(20 * var(--game-vh)), 138px); }

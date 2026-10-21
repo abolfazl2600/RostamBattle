@@ -5,7 +5,7 @@ export const TOUCH_ACTIONS = Object.freeze([
   { id: 'charge', label: 'قدرتی' },
   { id: 'jump', label: 'پرش' },
   { id: 'dodge', label: 'جاخالی' },
-  { id: 'musou', label: 'موسو' },
+  { id: 'musou', label: 'یورش' },
   { id: 'target', label: 'هدف' },
 ]);
 

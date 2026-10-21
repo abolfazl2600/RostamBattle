@@ -14,7 +14,7 @@ export const CH = {
   seal: 'ایران',
   era: { zh: 'روزگار شاهنامه', en: 'Shahnameh era' },
   heroes: ['rostam'],
-  army: { ...base.army, ally: 'iran' }, // visual identity only; enemy and encounter logic unchanged
+  army: { ...base.army, foe: 'turan', ally: 'iran' }, // Iranian/Turanian flags only; encounters unchanged
   ally: { ...base.ally, rostam: 'zhaoyun' },
 };
 

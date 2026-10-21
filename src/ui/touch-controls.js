@@ -83,7 +83,7 @@ export function createTouchControls(touch, { isActive, pause, musouReady = () =>
       lastReady = ready;
       musou.classList.toggle('ready', ready);
       musou.setAttribute('aria-disabled', String(!ready));
-      musou.title = ready ? 'موسو آماده است' : 'موسو: پرشدن نوار طلایی و قرارگرفتن روی زمین لازم است';
+      musou.title = ready ? 'یورش آماده است' : 'یورش: نوار طلایی باید پر باشد و شخصیت روی زمین قرار داشته باشد';
     }
   }
   on('viewport', update);
