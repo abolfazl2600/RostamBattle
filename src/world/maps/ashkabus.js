@@ -91,7 +91,7 @@ export default {
     const { r, mats, props, poles, shade } = k;
     const han = k.army.ally.emblem === 'derafsh' ? mats.ally
       : k.banner('漢', { bg: '#2f5a3a', fg: '#e8d6a8', border: '#c7a574', w: 128, h: 256, seed: 8 }); // preserve free-map look
-    const xiahou = k.banner('夏侯', { bg: '#1c1414', fg: '#d8b060', border: '#7d2a1f', w: 160, h: 320, seed: 9 });
+    const ashkabusStandard = k.banner(k.army.foe.glyph, { bg: '#381e24', fg: '#efd39a', border: '#a66b43', w: 160, h: 320, seed: 9, emblem: k.army.foe.emblem });
     // ---- 蜀軍本陣: palisade round three sides and either side of the gate, gate towers, tents, HQ, standards
     k.palisade([[-25.5, -118], [-25.5, -157.5], [25.5, -157.5], [25.5, -118]]);
     k.palisade([[-25, -119.5], [-10.5, -119.5]]);
@@ -149,7 +149,7 @@ export default {
     for (const [x, z, yaw] of [[2.5, 113, Math.PI / 2], [2.5, 124, Math.PI / 2], [-40.5, 128, -Math.PI / 2], [-6, 138.6, Math.PI], [-26, 138.6, Math.PI]]) k.supplies(x, z, yaw, r.int(5, 7));
     for (const [x, z, yaw] of [[-41.2, 118, Math.PI / 2], [-41.2, 122.5, Math.PI / 2], [-14, 139.3, Math.PI], [3.4, 131, -Math.PI / 2]]) k.shieldRack(x, z, yaw);
     k.commandTable(-4, 130.5, 0.2);
-    k.standard(-7.5, 134.5, 1.0, xiahou, 7.5, [-4, 124]); k.standard(-0.5, 134.5, 1.0, mats.foe, 7.5, [-4, 124]);
+    k.standard(-7.5, 134.5, 1.0, ashkabusStandard, 7.5, [-4, 124]); k.standard(-0.5, 134.5, 1.0, mats.foe, 7.5, [-4, 124]);
     k.lamp(-2.2, 128.3, 0.55); k.lamp(-30, 116, 0.55);                           // (the table + this brazier: a map prop cut-out)
     k.supplies(-33, 113, 0.1, 6); k.supplies(-16, 138.6, Math.PI, 6); k.supplies(0.5, 138.6, Math.PI, 5);
     k.drum(1.5, 119, -Math.PI / 2); k.drum(-24, 137.5, 0.15);
@@ -194,7 +194,7 @@ export default {
       k.drum(-2.5, 205.4, -Math.PI / 2 + 0.35, gy + 1.2); k.drum(10.5, 205.4, Math.PI / 2 - 0.35, gy + 1.2); }   // side-on: frame to the lens
     { const x = -6, z = 213, gy = k.ground(x, z), P = 20;
       poles.push({ s: [0.4, P, 0.4], p: [x, gy + P / 2, z], c: 0x2e1d15 }, { s: [5.6, 0.3, 0.3], p: [x + 2.6, gy + P - 0.5, z], c: 0x2e1d15 }, { s: [0.3, 1.4, 0.3], p: [x, gy + P + 0.7, z], c: 0xc9a040 });
-      k.cloth(xiahou, 5, 10, 'hang', x + 0.2, gy + P - 0.7, z, 0.1); }
+      k.cloth(ashkabusStandard, 5, 10, 'hang', x + 0.2, gy + P - 0.7, z, 0.1); }
     k.fire(15, k.beaconTower(15, 215), 215, 3.2, true);                         // the beacon: its smoke marks the goal from the valley
     // braziers flanking the pavilion steps (they light its backlit front), and a jagged crest of voxel crags round the
     // back of the rim so the summit reads as a mountain top against the sky
@@ -223,7 +223,7 @@ export default {
 
     // ---- the castle's banners (castle frame → + its plateau): 夏侯 drape beside the gate, red flags along the wall walk
     const c = k.castle, wy = CAMP_H + c.H;
-    k.cloth(xiahou, 6, 9.5, 'drape', GATE_X - 18 + 3, wy - 0.3, WALL_Z - 0.35, Math.PI);   // faces the plaza (-Z)
+    k.cloth(ashkabusStandard, 6, 9.5, 'drape', GATE_X - 18 + 3, wy - 0.3, WALL_Z - 0.35, Math.PI);   // faces the plaza (-Z)
     poles.push({ s: [7.1, 0.35, 0.35], p: [GATE_X - 18, wy - 0.15, WALL_Z - 0.4], c: 0x3b2a1e });
     for (let x = c.x0 + 4; x < c.x1 - 4; x += 16) if (Math.abs(x - GATE_X) > 12) k.flag(x + r.range(-2, 2), wy, WALL_Z + 0.8, 3.2, mats.pennant);
     k.flag(GATE_X - 7, wy + 0.6, WALL_Z + 1, 9, mats.pennant);

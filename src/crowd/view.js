@@ -23,6 +23,7 @@ import { HUD_TAG_R } from '../ui/hud.js';
 import { ground } from '../world/map.js';
 import { palette } from './armies.js';
 import { drawDerafsh } from '../core/derafsh.js';
+import { drawTuranEmblem } from '../core/turan-emblem.js';
 
 const V = 0.042;
 const b = (a, bb, c, paint) => ({ a, b: bb, c, paint });
@@ -226,6 +227,8 @@ function flagTexture(glyph, bg, ink = '#1a0f0c', emblem) {
   g.fillStyle = 'rgba(255,225,180,0.28)'; g.fillRect(10, 16, 44, 60);                  // lighter panel behind the character
   if (emblem === 'derafsh') {
     drawDerafsh(g, 32, 46, 42);
+  } else if (emblem === 'turan') {
+    drawTuranEmblem(g, 32, 46, 42);
   } else {
     g.fillStyle = ink;
     g.font = 'bold 44px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif';
@@ -470,7 +473,7 @@ export function createCrowdView(scene, game) {
   let farNow = false, midNow = false;
   const uTime = { value: 0 };
   const flagGeo = new THREE.PlaneGeometry(0.9, 1.5, 4, 6).rotateX(Math.PI / 2).translate(0.5, 0, 1.78);
-  const flagMat = new THREE.MeshStandardMaterial({ map: flagTexture(foe.glyph, foe.flag, foe.ink), side: THREE.DoubleSide, alphaTest: 0.5, roughness: 0.9 });
+  const flagMat = new THREE.MeshStandardMaterial({ map: flagTexture(foe.glyph, foe.flag, foe.ink, foe.emblem), side: THREE.DoubleSide, alphaTest: 0.5, roughness: 0.9 });
   const flagWave = (sh) => {
     sh.uniforms.uTime = uTime;
     sh.vertexShader = 'uniform float uTime;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
