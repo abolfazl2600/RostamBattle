@@ -132,6 +132,21 @@ ARMIES.iran = {
   ink: '#f2cf78',
 };
 
+// Chapter-specific Turanian identity. Keep Wei's unit models and combat colours,
+// while replacing Chinese characters on enemy standards with an original sun emblem.
+ARMIES.turan = {
+  ...ARMIES.wei,
+  name: { zh: 'سپاه توران', en: 'Turanian Army' },
+  glyph: '✦', // compact HUD symbol; flags use the Canvas-drawn emblem
+  emblem: 'turan',
+  officers: [
+    { zh: 'پهلوان تورانی', en: 'Turanian Champion' },
+    { zh: 'فرماندهٔ کمین', en: 'Ambush Commander' },
+    { zh: 'نگهبان دژ', en: 'Fortress Guard' },
+    { zh: 'سرباز برگزیدهٔ توران', en: 'Turanian Elite' },
+  ],
+};
+
 /** Free mode's pair (ids). */
 export const FREE_ARMY = { foe: 'wei', ally: 'shu' };
 /** { foe, ally } ids → { foe, ally } army objects (game.army). */
