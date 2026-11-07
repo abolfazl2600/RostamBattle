@@ -127,7 +127,7 @@ export function createMusouView(parent, game, camera) {
   }
 
   // ---- Musou grade (DOM layers above the canvas, below the HUD) + cut-in
-  const ov = createOverlay({ sub: '老將 黃漢升', seal: '老將', css: {
+  const ov = createOverlay({ sub: 'آرش کمانگیر', seal: 'تیر', css: {
     big: 'color: #fbf1e2; -webkit-text-stroke: .5vh #1a0905; paint-order: stroke fill; text-shadow: 0 0 .3vh #1a0c06, .6vh .8vh 0 rgba(20,6,2,.75), 0 0 3vh rgba(255,150,60,.55);',
     sub: 'color: #ffe2b8; text-shadow: 0 0 10px rgba(255,140,40,.75), 2px 2px 0 rgba(0,0,0,.6);' } });
   const { dim: dimEl, wash: washEl, setStyle, show } = ov;
