@@ -16,16 +16,16 @@ export function createOverlay({ sub, seal, css }) {
   const logicalCss = (s = '') => s.replace(/(-?\d*\.?\d+)vh\b/g, 'calc($1 * var(--game-vh))');
   const style = document.createElement('style');
   style.textContent = `
-    .mu-cut { position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: 0; display: none; font-family: "Xingkai SC", "STXingkai", "Libian SC", "Kaiti SC", "STKaiti", serif; }
-    .mu-cut .big { position: absolute; right: 11%; top: 36%; writing-mode: vertical-rl; font-size: calc(18 * var(--game-vh)); line-height: 1; transform-origin: 50% 40%; letter-spacing: calc(-1 * var(--game-vh)); ${logicalCss(css.big)} }
-    .mu-cut .seal { position: absolute; right: 21.5%; top: 64%; width: calc(7 * var(--game-vh)); height: calc(7 * var(--game-vh)); background: #a8261b; color: #f3e2c8; border-radius: calc(0.8 * var(--game-vh));
-      font: calc(3.1 * var(--game-vh))/calc(3.4 * var(--game-vh)) "Kaiti SC", "STKaiti", serif; writing-mode: vertical-rl; display: flex; align-items: center; justify-content: center;
+    .mu-cut { position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: 0; display: none; font-family: var(--fa-font, "Vazirmatn", Tahoma, sans-serif); direction: rtl; }
+    .mu-cut .big { position: absolute; right: 11%; top: 38%; writing-mode: horizontal-tb; white-space: nowrap; font-size: calc(8 * var(--game-vh)); line-height: 1.25; transform-origin: 50% 40%; letter-spacing: 0; ${logicalCss(css.big)} }
+    .mu-cut .seal { position: absolute; right: 20%; top: 60%; width: calc(10 * var(--game-vh)); height: calc(8 * var(--game-vh)); background: #a8261b; color: #f3e2c8; border-radius: calc(0.8 * var(--game-vh));
+      font: 700 calc(2.7 * var(--game-vh))/1.3 var(--fa-font, "Vazirmatn", Tahoma, sans-serif); writing-mode: horizontal-tb; text-align: center; display: flex; align-items: center; justify-content: center;
       box-shadow: 0 0 0 calc(0.35 * var(--game-vh)) rgba(243,226,200,.25) inset, 3px 4px 0 rgba(0,0,0,.4); transform-origin: 50% 50%; }
-    .mu-cut .sub { position: absolute; right: 22.5%; top: 37%; writing-mode: vertical-rl; font: calc(3 * var(--game-vh))/1 "Kaiti SC", "STKaiti", serif; letter-spacing: calc(1.2 * var(--game-vh)); ${logicalCss(css.sub)} }`;
+    .mu-cut .sub { position: absolute; right: 13%; top: 29%; max-width: 48%; writing-mode: horizontal-tb; font: 700 calc(2.9 * var(--game-vh))/1.5 var(--fa-font, "Vazirmatn", Tahoma, sans-serif); letter-spacing: 0; ${logicalCss(css.sub)} }`;
   document.head.appendChild(style);
   const cutEl = document.createElement('div');
   cutEl.className = 'mu-cut';
-  cutEl.innerHTML = `<div class="sub">${sub}</div><div class="big">無雙</div><div class="seal">${seal}</div>`;
+  cutEl.innerHTML = `<div class="sub">${sub}</div><div class="big">یورش</div><div class="seal">${seal}</div>`;
   document.getElementById('game-shell').appendChild(cutEl);
   const [cutSub, cutBig, cutSeal] = cutEl.children;
   const setStyle = (el, k, v) => { if (el.style[k] !== v) el.style[k] = v; };

@@ -51,7 +51,7 @@ export const GUANYU_KIT = defKit({
     mu: { crack: [0.6, 2.6, 1.1], wall: [0.2, 0.85, 0.35], light: [0.5, 1, 0.7] },
   },
   look: {
-    cut: { sub: '河東 關雲長', seal: '武聖', css: {
+    cut: { sub: 'گودرز کشوادگان', seal: 'وفا', css: {
       big: 'color: #f2fff4; text-shadow: 0 0 2px #04140a, 6px 8px 0 rgba(2,14,6,.55), 0 0 28px rgba(60,230,130,.6);',
       sub: 'color: #d8ffe4; text-shadow: 0 0 10px rgba(50,220,120,.75), 2px 2px 0 rgba(0,0,0,.6);' } },
     // the jade 青龍 (musou/view.js dragon palette: linear HDR; shell = its rim glow, ink = its outline)

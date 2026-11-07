@@ -1,3 +1,4 @@
+import { glyphFa } from '../../i18n/glyph-fa.js';
 // 赤壁 (Red Cliffs, winter 208 AD) laid out along +Z, ≈ 380 m from 七星壇 to the mouth of 華容道: a night battle
 // between two walls — the 赤壁 red cliffs rise on the -X side, the Yangtze runs the whole length of the +X side, a
 // 150 m band of black water with 曹操's chained fleet moored along our shore. Format: ./index.js.
@@ -306,11 +307,19 @@ function glowTex() {
 
 /** Painted characters on a transparent plane (the cliff carving, the road sign). */
 function glyphPlane(text, w, h, colour, font = 0.8, vertical = true) {
-  const cv = document.createElement('canvas'); cv.width = vertical ? 256 : 128 * text.length; cv.height = vertical ? 256 * text.length : 256;
+  const translated = glyphFa(text);
+  const lines = translated.split(/\s+/).filter(Boolean);
+  const cv = document.createElement('canvas');
+  cv.width = 256;
+  cv.height = vertical ? 256 * Math.max(1, lines.length) : 256;
   const g = cv.getContext('2d');
-  g.fillStyle = colour; g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.font = `bold ${Math.round(256 * font)}px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif`;
-  [...text].forEach((c, i) => g.fillText(c, vertical ? 128 : 64 + i * 128, vertical ? 128 + i * 256 : 128));
+  g.fillStyle = colour;
+  g.direction = 'rtl';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = `bold ${Math.round(156 * font)}px "Vazirmatn",Tahoma,sans-serif`;
+  // Keep Persian shaping: paint complete words, not disconnected letters.
+  if (vertical) lines.forEach((line, i) => g.fillText(line, 128, 128 + i * 256, 225));
+  else g.fillText(translated, 128, 128, 225);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace;
   return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: t, transparent: true, alphaTest: 0.3, roughness: 0.9, emissive: 0x8a1a0a, emissiveMap: t }));
 }

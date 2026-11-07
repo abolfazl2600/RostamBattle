@@ -16,13 +16,13 @@ import { locked } from './progress.js';
 import { readGameStorage, writeGameStorage } from './storage.js';
 
 export const DIFFS = [
-  { id: 'easy', zh: '初級', en: 'Easy', line: ['新兵亦可橫掃千軍', 'Even a recruit can sweep a thousand.'], bars: [1, 1, 1],
+  { id: 'easy', zh: 'آسان', en: 'Easy', line: ['تازه‌کاران هم می‌توانند از پس این نبرد برآیند.', 'Even a recruit can sweep a thousand.'], bars: [1, 1, 1],
     gruntHp: 1, officerHp: 0.6, dmg: 0.5, windup: 50, strikers: 1, gap: 1.4, grace: 1.6, armor: false, heal: 1.5, rankBonus: 0, rankMax: 'A' },
-  { id: 'normal', zh: '普通', en: 'Normal', line: ['沙場本色', 'The battlefield as it is.'], bars: [2, 2, 2],
+  { id: 'normal', zh: 'معمولی', en: 'Normal', line: ['تجربه‌ای متعادل از میدان نبرد.', 'The battlefield as it is.'], bars: [2, 2, 2],
     gruntHp: 1, officerHp: 1, dmg: 1, windup: 40, strikers: 2, gap: 1, grace: 1, armor: false, heal: 1, rankBonus: 0, rankMax: 'S' },
-  { id: 'hard', zh: '上級', en: 'Hard', line: ['敵將兇猛，須善用閃避', 'Fierce officers. Read the wind-up and dodge.'], bars: [4, 3, 3],
+  { id: 'hard', zh: 'سخت', en: 'Hard', line: ['فرماندهان سرسخت‌ترند؛ جاخالی‌دادن دقیق ضروری است.', 'Fierce officers. Read the wind-up and dodge.'], bars: [4, 3, 3],
     gruntHp: 1, officerHp: 1.4, dmg: 1.5, windup: 35, strikers: 2, gap: 0.8, grace: 0.6, armor: false, heal: 0.7, rankBonus: 1, rankMax: 'S' },
-  { id: 'chaos', zh: '修羅', en: 'Chaos', line: ['一騎當千，九死一生', 'One against a thousand. Few come back.'], bars: [5, 5, 5],
+  { id: 'chaos', zh: 'آشوب', en: 'Chaos', line: ['یک جنگجو در برابر هزاران دشمن.', 'One against a thousand. Few come back.'], bars: [5, 5, 5],
     gruntHp: 1.3, officerHp: 2, dmg: 2.2, windup: 30, strikers: 3, gap: 0.6, grace: 0.3, armor: true, heal: 0.4, rankBonus: 2, rankMax: 'S' },
 ];
 const get = () => { try { return readGameStorage('diff'); } catch { return null; } };

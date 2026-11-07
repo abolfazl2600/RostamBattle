@@ -26,7 +26,7 @@ export const LUBU_KIT = defKit({
     mu: { crack: [2.8, 0.45, 0.35], wall: [0.9, 0.12, 0.12], light: [1, 0.3, 0.28] },
   },
   look: {
-    cut: { sub: '人中呂布 呂奉先', seal: '飛將', css: {
+    cut: { sub: 'اسفندیار رویین‌تن', seal: 'رزم', css: {
       big: 'color: #fff0ee; text-shadow: 0 0 2px #1a0406, 6px 8px 0 rgba(24,2,6,.6), 0 0 30px rgba(255,40,60,.65);',
       sub: 'color: #ffd6de; text-shadow: 0 0 10px rgba(220,40,90,.8), 2px 2px 0 rgba(0,0,0,.6);' } },
     pal: { rays: [1.4, 0.2, 0.22], ring: [2.2, 0.4, 0.4], bolt: null, burst: [2.0, 0.4, 0.4], ko: [1.1, 0.2, 0.2], glow: 0xff5060,

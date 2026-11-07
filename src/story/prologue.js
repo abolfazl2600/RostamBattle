@@ -53,7 +53,7 @@ export function createPrologue(el, flow) {
       <div class="pl-pips"></div>
     </div>
     <i class="pl-rod l"></i><i class="pl-rod r"></i>
-    <div class="pl-skip"><span><kbd>Enter</kbd><kbd>Click</kbd>صفحهٔ بعد<small>ادامه</small></span>
+    <div class="pl-skip"><span><kbd>Enter</kbd><kbd>کلیک</kbd>صفحهٔ بعد<small>ادامه</small></span>
       <span><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15"/><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>نگه‌دارید تا رد شود<small>پرش از داستان</small></span>
       <span><kbd>Esc</kbd>رد کردن<small>شروع نبرد</small></span></div>`;
   if (viewport.touch) el.querySelector('.pl-skip').innerHTML = '<span>لمس: ادامه · نگه‌داشتن: پرش از داستان</span><button type="button" class="pl-skip-now">رد کردن داستان</button><svg viewBox="0 0 36 36"><circle class="p" cx="18" cy="18" r="15" pathLength="1"/></svg>';

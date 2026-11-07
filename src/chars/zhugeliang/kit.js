@@ -27,7 +27,7 @@ export const ZHUGELIANG_KIT = defKit({
     mu: { crack: [2.4, 1.9, 0.8], wall: [0.8, 0.7, 1.4], light: [0.85, 0.78, 1] },
   },
   look: {
-    cut: { sub: '南陽 諸葛孔明', seal: '臥龍', css: {
+    cut: { sub: 'زال، پهلوان سپیدموی', seal: 'خرد', css: {
       big: 'color: #f6f4ff; text-shadow: 0 0 2px #0a0818, 6px 8px 0 rgba(6,4,16,.55), 0 0 28px rgba(160,140,255,.6);',
       sub: 'color: #e6e0ff; text-shadow: 0 0 10px rgba(150,130,255,.75), 2px 2px 0 rgba(0,0,0,.6);' } },
     pal: { rays: [1.0, 0.9, 1.4], ring: [1.7, 1.5, 2.4], bolt: null, burst: [1.4, 1.2, 2.0], ko: [0.8, 0.7, 1.1], glow: 0xc8b8ff,

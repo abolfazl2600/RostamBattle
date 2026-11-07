@@ -54,7 +54,7 @@ const ITEMS = [
   { go: 'settings', zh: 'تنظیمات', en: 'نمایش، کنترل و گرافیک' },
 ];
 // the trial panel's last entry: not a trial (no records, no map of its own) — picking it opens the battlefield list
-const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پایان' }, title: { zh: 'نبرد آزاد', en: 'نبرد آزاد' }, seal: '無盡',
+const FREE = { CH: { id: 'free', num: { zh: 'بی‌پایان', en: 'بی‌پایان' }, title: { zh: 'نبرد آزاد', en: 'نبرد آزاد' }, seal: 'آزاد',
   rule: { zh: 'هر شخصیت و میدان نبردی را انتخاب کنید؛ رکوردی ثبت نمی‌شود.', en: 'موج‌های بی‌پایان دشمنان' } } };
 const LISTS = { story: STORY_CHAPTERS, trial: [...TRIALS, FREE], free: CHAPTERS };   // what the chapter panel lists per mode
 const mmss = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
