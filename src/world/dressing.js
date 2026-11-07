@@ -1,3 +1,4 @@
+import { glyphFa } from '../i18n/glyph-fa.js';
 // Battlefield dressing kit: the loaded map's def.dress(k) lays out its standards, camps, towers, fires, carts, reserve
 // armies… through the kit k (buildDressing below; API in the header of src/world/maps/index.js), in army colours
 // (k.army: banners carry the foe's / ally's glyph). Wind-driven cloth, fires (voxel flames + embers), smoke columns.
