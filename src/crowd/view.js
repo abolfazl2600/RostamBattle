@@ -1,3 +1,4 @@
+import { glyphFa } from '../i18n/glyph-fa.js';
 // Crowd renderer (render-only). Voxel soldiers of the battle's two armies (game.army = { foe, ally }, crowd/armies.js)
 // built from shared instanced parts — hips, torso, head, arms, thighs, shins — plus per-kind weapons (spear, dao + round
 // shield, captain glaive, the army's standard) and a separate officer set. Per soldier the parts form a small hierarchy
@@ -231,9 +232,10 @@ function flagTexture(glyph, bg, ink = '#1a0f0c', emblem) {
     drawTuranEmblem(g, 32, 46, 42);
   } else {
     g.fillStyle = ink;
-    g.font = 'bold 44px "Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","Songti SC",serif';
+    g.font = 'bold 32px "Vazirmatn",Tahoma,sans-serif';
+    g.direction = 'rtl';
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillText(glyph, 32, 46);
+    g.fillText(glyphFa(glyph), 32, 46, 50);
   }
   g.globalCompositeOperation = 'destination-out';                                    // swallow-tail bottom
   g.beginPath(); g.moveTo(14, 112); g.lineTo(32, 88); g.lineTo(50, 112); g.fill();
