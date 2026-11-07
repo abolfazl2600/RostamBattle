@@ -38,12 +38,19 @@ function bannerTexture(ch, { bg, fg, border, w = 128, h = 256, tatter = true, se
   } else if (emblem === 'turan') {
     drawTuranEmblem(g, w / 2, h * 0.42, Math.min(w * 0.62, h * 0.64));
   } else {
+    const label = glyphFa(ch);
     g.fillStyle = fg;
-    g.font = `bold ${Math.round(w * 0.66)}px "Xingkai SC","STXingkai","Kaiti SC","KaiTi","Songti SC",serif`;
+    g.direction = 'rtl';
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    // Preserve the existing Chinese chapter banners.
-    if (ch.length > 1) { g.font = g.font.replace(/\d+px/, `${Math.round(w * 0.56)}px`); [...ch].forEach((q, i) => g.fillText(q, w / 2, h * (0.25 + i * 0.33))); }
-    else if (ch) g.fillText(ch, w / 2, h * 0.42);
+    g.font = `bold ${Math.round(w * 0.53)}px "Vazirmatn",Tahoma,sans-serif`;
+    // Persian words are joined and drawn whole; never split into separate glyphs.
+    const words = label.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 1) g.fillText(words[0], w / 2, h * 0.42, w * 0.82);
+    else if (words.length > 1) {
+      g.font = `bold ${Math.round(w * 0.44)}px "Vazirmatn",Tahoma,sans-serif`;
+      for (const [i, word] of words.slice(0, 3).entries())
+        g.fillText(word, w / 2, h * (0.24 + i * 0.19), w * 0.86);
+    }
   }
   const grad = g.createLinearGradient(0, 0, 0, h);                    // soot toward the hem
   grad.addColorStop(0.6, 'rgba(20,8,6,0)'); grad.addColorStop(1, 'rgba(20,8,6,0.45)');
