@@ -98,7 +98,7 @@ const HEAD_SCALE = 2.3;
  *  (payoff whiteout stops, sRGB 0-255). */
 export const ZY_LOOK = {
   dragon: true,
-  cut: { sub: '常山 趙子龍', seal: '龍膽', css: {
+  cut: { sub: 'سهراب، پهلوان جوان', seal: 'دلیر', css: {
     big: 'color: #f7f3ea; text-shadow: 0 0 2px #0b1418, 6px 8px 0 rgba(4,10,14,.55), 0 0 28px rgba(110,220,255,.55);',
     sub: 'color: #d8f4ff; text-shadow: 0 0 10px rgba(80,200,255,.7), 2px 2px 0 rgba(0,0,0,.6);' } },
   pal: { rays: [0.42, 0.95, 1.25], ring: [0.75, 1.6, 2.1], bolt: [1.2, 2.0, 2.6], burst: [0.5, 1.3, 1.9], ko: [0.3, 0.75, 1.05], glow: 0x9fefff,
