@@ -25,7 +25,7 @@ export const ZHANGFEI_KIT = defKit({
     mu: { crack: [2.8, 0.8, 0.18], wall: [0.85, 0.26, 0.06], light: [1, 0.5, 0.22] },
   },
   look: {
-    cut: { sub: '燕人 張翼德', seal: '咆哮', css: {
+    cut: { sub: 'گیو، پهلوان ایران', seal: 'شیر', css: {
       big: 'color: #fff3e4; text-shadow: 0 0 2px #1c0804, 6px 8px 0 rgba(22,5,2,.55), 0 0 28px rgba(255,110,40,.6);',
       sub: 'color: #ffe0c4; text-shadow: 0 0 10px rgba(255,100,36,.75), 2px 2px 0 rgba(0,0,0,.6);' } },
     pal: { rays: [1.35, 0.6, 0.16], ring: [2.2, 0.95, 0.28], bolt: null, burst: [1.9, 0.85, 0.28], ko: [1.05, 0.48, 0.14], glow: 0xffa060,
