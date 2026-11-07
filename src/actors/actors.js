@@ -142,7 +142,7 @@ export function createActors(game) {
     const hp = Math.round((d.hp ?? (foe ? ACTOR.hp : ACTOR.allyHp)) * (foe ? game.diff.officerHp : 1)), poise = d.poise ?? kit.bossPoise ?? ACTOR.poise;   // (kit.bossPoise: the kit's boss profile)
     const a = {
       id: ++ids, key, role, isFoe: foe, kit, char: ch, intro: d.intro || null,
-      name: d.name || (ch ? ch.name : { zh: '敵將', en: 'OFFICER' }), seal: d.seal ?? (ch ? ch.seal : '將'),
+      name: d.name || (ch ? ch.name : { zh: 'فرماندهٔ دشمن', en: 'OFFICER' }), seal: d.seal ?? (ch ? ch.seal : 'رزم'),
       scale: d.scale ?? (foe ? 1.15 : 1), x, z, y: 0, yaw: d.yaw ?? Math.atan2(h.x - x, h.z - z),
       hp, hpMax: hp, poise, poiseMax: poise, retreatAt: d.retreatAt || 0, invuln: d.invuln ?? !foe, dead: false,
       state: 'idle', stT: 0, mode: foe ? 'join' : 'follow', hx: x, hz: z, rx: x, rz: z, far: false,
