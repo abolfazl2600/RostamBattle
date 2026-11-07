@@ -167,7 +167,10 @@ export function createHud(root, game, camera) {
     const spoken = en && en === hero.lines.intro.en ? OFFICERS_FA[hero.id].intro : battleTextFa(en, zh);
     S.dlg = { zh: spoken, en: '', f: game.frame, dur };
     text(dlgN, battleNameFa(speaker)); text(dlgE, '');
-    const seal = portrait.seal;
+    // Older chapters retain Chinese seal data, but the speech panel displays Persian.
+    const originalSeal = portrait.seal;
+    const seal = originalSeal && /[\u3400-\u9fff]/u.test(originalSeal)
+      ? battleNameFa(speaker).trim().split(/\s+/)[0].slice(0, 4) : originalSeal;
     if (!seal) paintPortrait(dlgCv, CHARS[portrait] || NPCS[portrait]);
     set(dlgCv, 'display', seal ? 'none' : '');
     set(dlgSeal, 'display', seal ? 'block' : 'none'); if (seal) text(dlgSeal, seal);
