@@ -91,7 +91,7 @@ const PORTRAITS = {
 };
 
 export const NPCS = {
-  caocao: { id: 'caocao', name: { zh: '曹操', en: 'Cao Cao' }, courtesy: { zh: '孟德', en: 'Mengde' }, seal: '奸雄', portrait: PORTRAITS.caocao, kit: npcKit(CAOCAO, SWORD) },
-  zhangliao: { id: 'zhangliao', name: { zh: '張遼', en: 'Zhang Liao' }, courtesy: { zh: '文遠', en: 'Wenyuan' }, seal: '雁門', portrait: PORTRAITS.zhangliao, kit: npcKit(ZHANGLIAO, POLEARM) },
-  xiahouyuan: { id: 'xiahouyuan', name: { zh: '夏侯淵', en: 'Xiahou Yuan' }, courtesy: { zh: '妙才', en: 'Miaocai' }, seal: '虎步', portrait: PORTRAITS.xiahouyuan, kit: npcKit(XIAHOUYUAN, POLEARM) },
+  caocao: { id: 'caocao', name: { zh: 'سائو سائو', en: 'Cao Cao' }, courtesy: { zh: 'مِنگ‌ده', en: 'Mengde' }, seal: 'سائو', portrait: PORTRAITS.caocao, kit: npcKit(CAOCAO, SWORD) },
+  zhangliao: { id: 'zhangliao', name: { zh: 'ژانگ لیائو', en: 'Zhang Liao' }, courtesy: { zh: 'ون‌یوان', en: 'Wenyuan' }, seal: 'ژانگ', portrait: PORTRAITS.zhangliao, kit: npcKit(ZHANGLIAO, POLEARM) },
+  xiahouyuan: { id: 'xiahouyuan', name: { zh: 'شیا‌هو یوان', en: 'Xiahou Yuan' }, courtesy: { zh: 'میائو‌تسای', en: 'Miaocai' }, seal: 'یوان', portrait: PORTRAITS.xiahouyuan, kit: npcKit(XIAHOUYUAN, POLEARM) },
 };
